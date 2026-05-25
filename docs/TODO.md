@@ -65,9 +65,9 @@
 - [x] PostgreSQL bağlantısı quruldu (`src/config/db.ts` — Prisma Client)
 - [x] Prisma quraşdırıldı (`npm install prisma @prisma/client`)
 - [x] `prisma/schema.prisma` bütün modellər yazıldı
-- [ ] İlk migration icra edildi (`npx prisma migrate dev --name init`)
+- [x] İlk migration icra edildi (`npx prisma migrate dev --name init`)
 - [x] Seed data hazırlandı (`prisma/seed.ts`)
-- [ ] Seed icra edildi (`npx prisma db seed`)
+- [x] Seed icra edildi (`npx prisma db seed`)
 - [x] Helmet quraşdırıldı və konfiqurasiya edildi
 - [x] CORS konfiqurasiya edildi (`src/config/corsOptions.ts`)
 - [x] Morgan (HTTP logging) quraşdırıldı
@@ -115,24 +115,24 @@
 ### 2.1 Backend — Auth
 **Branch:** `feature/m02-auth-backend`
 
-- [ ] `User` modeli Prisma-da hazırdır (Mərhələ 1-də)
-- [ ] Şifrə hashlanması tətbiq edildi (bcryptjs, salt: 12)
-- [ ] JWT token generasiyası yazıldı (`src/utils/generateToken.ts`)
-- [ ] `POST /api/auth/register` endpointi hazırlandı
-- [ ] `POST /api/auth/login` endpointi hazırlandı
-- [ ] `POST /api/auth/logout` endpointi hazırlandı
-- [ ] `POST /api/auth/refresh-token` endpointi hazırlandı
-- [ ] `POST /api/auth/google` — Google OAuth endpointi hazırlandı (`google-auth-library`)
-- [ ] `POST /api/auth/forgot-password` endpointi hazırlandı
-- [ ] `POST /api/auth/reset-password/:token` endpointi hazırlandı
-- [ ] `GET /api/auth/verify-email/:token` endpointi hazırlandı
-- [ ] Auth middleware yazıldı (`src/middleware/authMiddleware.ts`)
-- [ ] Rol middleware yazıldı (`src/middleware/roleMiddleware.ts`)
-- [ ] Resend quraşdırıldı (`npm install resend`)
-- [ ] Email göndərmə utility yazıldı (`src/utils/sendEmail.ts`)
-- [ ] Refresh token httpOnly cookie ilə idarə edilir
-- [ ] Rate limiting auth endpointlərə tətbiq edildi
-- [ ] Auth validasiyaları tətbiq edildi (express-validator)
+- [x] `User` modeli Prisma-da hazırdır (Mərhələ 1-də)
+- [x] Şifrə hashlanması tətbiq edildi (bcryptjs, salt: 12)
+- [x] JWT token generasiyası yazıldı (`src/utils/generateToken.ts`)
+- [x] `POST /api/auth/register` endpointi hazırlandı
+- [x] `POST /api/auth/login` endpointi hazırlandı
+- [x] `POST /api/auth/logout` endpointi hazırlandı
+- [x] `POST /api/auth/refresh-token` endpointi hazırlandı
+- [x] `POST /api/auth/google` — Google OAuth endpointi hazırlandı (`google-auth-library`)
+- [x] `POST /api/auth/forgot-password` endpointi hazırlandı
+- [x] `POST /api/auth/reset-password/:token` endpointi hazırlandı
+- [x] `GET /api/auth/verify-email/:token` endpointi hazırlandı
+- [x] Auth middleware yazıldı (`src/middleware/authMiddleware.ts`)
+- [x] Rol middleware yazıldı (`src/middleware/roleMiddleware.ts`)
+- [x] Resend quraşdırıldı (`npm install resend`)
+- [x] Email göndərmə utility yazıldı (`src/utils/sendEmail.ts`)
+- [x] Refresh token httpOnly cookie ilə idarə edilir
+- [x] Rate limiting auth endpointlərə tətbiq edildi
+- [x] Auth validasiyaları tətbiq edildi (express-validator)
 
 ### 2.2 Frontend — Auth
 **Branch:** `feature/m02-auth-frontend`

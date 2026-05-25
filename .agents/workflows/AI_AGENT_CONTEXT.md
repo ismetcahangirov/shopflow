@@ -13,9 +13,9 @@ description:
 ## 🔴 İndi haradayıq?
 
 ```
-Cari mərhələ : Mərhələ 0 — tamamlandı
-Növbəti      : Mərhələ 1.1 — Backend qurulumu
-Branch       : chore/m01-backend-setup   (hələ açılmayıb)
+Cari mərhələ : Mərhələ 2.1 — Backend Auth (Tamamlandı)
+Növbəti      : Mərhələ 2.2 — Frontend Auth Forms
+Branch       : feature/m02-auth-backend (Tamamlanıb, PR gözləyir)
 Bloklanma    : Yoxdur
 ```
 
@@ -25,8 +25,8 @@ Bloklanma    : Yoxdur
 
 ```
 PR nömrəsi  : —
-Branch      : docs/m00-documentation
-Nə edildi   : Bütün sənədlər hazırlandı (README, API, AUTH, DATABASE və s.)
+Branch      : feature/m02-auth-backend
+Nə edildi   : Backend Auth endpointləri (register, login, logout, refresh-token, google OAuth, verify, password reset), rate limiters və validation tamamlandı. 21/21 integration testləri keçir.
 Birləşmə    : —
 ```
 
@@ -35,25 +35,26 @@ Birləşmə    : —
 ## Növbəti tapşırıq — agent bunu götürür
 
 ```
-Mərhələ     : 1.1 — Backend Qurulumu
-Branch adı  : chore/m01-backend-setup
-Sənəd       : ARCHITECTURE.md, DATABASE.md, ERROR_HANDLING.md
+Mərhələ     : Mərhələ 2.2 — Frontend Auth Forms
+Branch adı  : feature/m02-auth-frontend
+Sənəd       : AUTH.md, COMPONENTS.md
 ```
 
 **Alt-tapşırıqlar:**
-- [ ] Node.js + Express + TypeScript layihəsi yaradıldı
-- [ ] `tsconfig.json` konfiqurasiya edildi
-- [ ] `package.json` scripts (dev, build, start, test, lint)
-- [ ] `src/server.ts` entry point yazıldı
-- [ ] PostgreSQL bağlantısı (`src/config/db.ts` — Prisma Client)
-- [ ] Prisma quraşdırıldı, `prisma/schema.prisma` bütün modellər yazıldı
-- [ ] İlk migration icra edildi (`npx prisma migrate dev --name init`)
-- [ ] Seed data hazırlandı və icra edildi
-- [ ] Helmet, CORS, Morgan, Winston konfiqurasiya edildi
-- [ ] Rate limiter, global error handler yazıldı
-- [ ] `AppError`, `asyncHandler`, `apiResponse`, `slugify` utilityləri
-- [ ] Health check endpoint (`GET /api/health`)
-- [ ] `express.d.ts` — `req.user` tipi genişləndirildi
+- [x] Zustand `authStore` yaradıldı (`src/store/authStore.ts`)
+- [ ] Login səhifəsi yaradıldı (`app/[locale]/(auth)/login/page.tsx`)
+- [ ] Register səhifəsi yaradıldı (`app/[locale]/(auth)/register/page.tsx`)
+- [ ] Şifrəni unutdum səhifəsi yaradıldı
+- [ ] Şifrə sıfırlama səhifəsi yaradıldı
+- [ ] Email doğrulama səhifəsi yaradıldı
+- [ ] Google OAuth düyməsi əlavə edildi (`@react-oauth/google`)
+- [ ] Google OAuth inteqrasiyası tamamlandı
+- [ ] Forma validasiyası (React Hook Form + Zod) tətbiq edildi
+- [x] Token saxlama strategiyası (Zustand memory + httpOnly cookie)
+- [x] Axios interceptor ilə auto token refresh tətbiq edildi
+- [ ] `ProtectedRoute` komponenti yaradıldı
+- [ ] Auth layout yaradıldı
+- [ ] `useRole` hook yazıldı
 
 ---
 
@@ -61,7 +62,7 @@ Sənəd       : ARCHITECTURE.md, DATABASE.md, ERROR_HANDLING.md
 
 | Xidmət     | Status       | Qeyd                          |
 |------------|--------------|-------------------------------|
-| Supabase   | ⬜ Qurulmayıb | Pulsuz PostgreSQL              |
+| Supabase   | ✅ Qoşulub   | Tokyo region IPv4 connection pooler (port 6543) |
 | Cloudinary | ⬜ Qurulmayıb | Şəkil saxlama                  |
 | Resend     | ⬜ Qurulmayıb | Email göndərmə                 |
 | Stripe     | ⬜ Qurulmayıb | Test modu — test key lazımdır  |
@@ -90,8 +91,8 @@ Sənəd       : ARCHITECTURE.md, DATABASE.md, ERROR_HANDLING.md
 | Mərhələ               | Status        | Faiz  |
 |-----------------------|---------------|-------|
 | 0 — Sənədləşmə        | ✅ Tamamlandı  | 100%  |
-| 1 — Qurulum           | ⬜ Gözləyir   | 0%    |
-| 2 — Auth              | ⬜ Gözləyir   | 0%    |
+| 1 — Qurulum           | ✅ Tamamlandı  | 100%  |
+| 2 — Auth              | [~] Davam edir | 50%   |
 | 3 — Layout            | ⬜ Gözləyir   | 0%    |
 | 4 — Komponentlər      | ⬜ Gözləyir   | 0%    |
 | 5 — Kateqoriyalar     | ⬜ Gözləyir   | 0%    |

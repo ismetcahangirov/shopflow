@@ -16,6 +16,7 @@ import { apiLimiter } from './middleware/rateLimiter';
 import { errorMiddleware } from './middleware/errorMiddleware';
 
 import healthRoutes from './routes/healthRoutes';
+import authRoutes from './routes/authRoutes';
 
 // ── App setup ────────────────────────────────────────────
 const app = express();
@@ -59,6 +60,7 @@ app.use('/api/', apiLimiter);
 
 // ── Routes ────────────────────────────────────────────────
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {
@@ -105,9 +107,11 @@ async function main(): Promise<void> {
   });
 }
 
-main().catch((err: unknown) => {
-  logger.error('Failed to start server', { err });
-  process.exit(1);
-});
+if (config.NODE_ENV !== 'test') {
+  main().catch((err: unknown) => {
+    logger.error('Failed to start server', { err });
+    process.exit(1);
+  });
+}
 
 export { app };
