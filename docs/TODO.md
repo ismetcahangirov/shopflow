@@ -85,28 +85,28 @@
 ### 1.2 Frontend (Client)
 **Branch:** `chore/m01-frontend-setup`
 
-- [ ] Next.js 14 + TypeScript layihəsi yaradıldı (`npx create-next-app@latest`)
-- [ ] App Router konfigurasiya edildi
-- [ ] Tailwind CSS konfiqurasiya edildi (`tailwind.config.ts`)
-- [ ] Shadcn/ui quraşdırıldı (`npx shadcn@latest init`)
-- [ ] Lucide React quraşdırıldı
-- [ ] Zustand quraşdırıldı
-- [ ] TanStack Query v5 quraşdırıldı
-- [ ] React Hook Form quraşdırıldı
-- [ ] Zod quraşdırıldı
-- [ ] Axios instance yaradıldı (`src/lib/api.ts` — base URL, interceptors)
-- [ ] TanStack Query client yaradıldı (`src/lib/queryClient.ts`)
-- [ ] next-intl quraşdırıldı
-- [ ] `middleware.ts` yazıldı (i18n + route qoruması)
-- [ ] `src/i18n/request.ts` yazıldı
-- [ ] `az.json`, `en.json`, `ru.json` yaradıldı (tam açarlar)
-- [ ] `next.config.ts` konfigurasiya edildi (next-intl plugin)
-- [ ] Tailwind rəng palitası konfiqurasiya edildi (primary, accent, semantic rənglər)
-- [ ] Global CSS dəyişənləri yaradıldı
-- [ ] `cn()` utility (clsx + tailwind-merge)
-- [ ] Qovluq strukturu yaradıldı (`app/`, `components/`, `store/`, `hooks/`, `types/`, `utils/`, `lib/`, `i18n/`)
-- [ ] TypeScript tipləri yaradıldı (`src/types/`)
-- [ ] `shared/schemas/` — Zod schema-ları yaradıldı
+- [x] Next.js 14 + TypeScript layihəsi yaradıldı (`npx create-next-app@latest`)
+- [x] App Router konfigurasiya edildi
+- [x] Tailwind CSS konfiqurasiya edildi (`tailwind.config.ts`)
+- [x] Shadcn/ui quraşdırıldı (`npx shadcn@latest init`)
+- [x] Lucide React quraşdırıldı
+- [x] Zustand quraşdırıldı
+- [x] TanStack Query v5 quraşdırıldı
+- [x] React Hook Form quraşdırıldı
+- [x] Zod quraşdırıldı
+- [x] Axios instance yaradıldı (`src/lib/api.ts` — base URL, interceptors)
+- [x] TanStack Query client yaradıldı (`src/lib/queryClient.ts`)
+- [x] next-intl quraşdırıldı
+- [x] `middleware.ts` yazıldı (i18n + route qoruması)
+- [x] `src/i18n/request.ts` yazıldı
+- [x] `az.json`, `en.json`, `ru.json` yaradıldı (tam açarlar)
+- [x] `next.config.ts` konfigurasiya edildi (next-intl plugin)
+- [x] Tailwind rəng palitası konfiqurasiya edildi (primary, accent, semantic rənglər)
+- [x] Global CSS dəyişənləri yaradıldı
+- [x] `cn()` utility (clsx + tailwind-merge)
+- [x] Qovluq strukturu yaradıldı (`app/`, `components/`, `store/`, `hooks/`, `types/`, `utils/`, `lib/`, `i18n/`)
+- [x] TypeScript tipləri yaradıldı (`src/types/`)
+- [x] `shared/schemas/` — Zod schema-ları yaradıldı
 
 ---
 
@@ -137,7 +137,7 @@
 ### 2.2 Frontend — Auth
 **Branch:** `feature/m02-auth-frontend`
 
-- [ ] Zustand `authStore` yaradıldı (`src/store/authStore.ts`)
+- [x] Zustand `authStore` yaradıldı (`src/store/authStore.ts`)
 - [ ] Login səhifəsi yaradıldı (`app/[locale]/(auth)/login/page.tsx`)
 - [ ] Register səhifəsi yaradıldı (`app/[locale]/(auth)/register/page.tsx`)
 - [ ] Şifrəni unutdum səhifəsi yaradıldı
@@ -146,8 +146,8 @@
 - [ ] Google OAuth düyməsi əlavə edildi (`@react-oauth/google`)
 - [ ] Google OAuth inteqrasiyası tamamlandı
 - [ ] Forma validasiyası (React Hook Form + Zod) tətbiq edildi
-- [ ] Token saxlama strategiyası (Zustand memory + httpOnly cookie)
-- [ ] Axios interceptor ilə auto token refresh tətbiq edildi
+- [x] Token saxlama strategiyası (Zustand memory + httpOnly cookie)
+- [x] Axios interceptor ilə auto token refresh tətbiq edildi
 - [ ] `ProtectedRoute` komponenti yaradıldı
 - [ ] Auth layout yaradıldı
 - [ ] `useRole` hook yazıldı
@@ -589,8 +589,8 @@
 | Mərhələ | Status | Tamamlanma |
 |---|---|---|
 | 0 — Sənədləşmə | `[x]` tamamlandı | 100% |
-| 1 — Qurulum | `[~]` davam edir | 90% (migration+seed DB gözləyir) |
-| 2 — Auth | `[ ]` gözləyir | 0% |
+| 1 — Qurulum | `[x]` tamamlandı | 100% |
+| 2 — Auth | `[~]` davam edir | 20% |
 | 3 — Layout | `[ ]` gözləyir | 0% |
 | 4 — Komponentlər | `[ ]` gözləyir | 0% |
 | 5 — Kateqoriyalar | `[ ]` gözləyir | 0% |
