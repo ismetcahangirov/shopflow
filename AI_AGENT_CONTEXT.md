@@ -4,64 +4,43 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `chore/m01-backend-setup`
-**Cari Mərhələ:** 1.1 — Backend Setup
+**Aktiv Branch:** `chore/m01-frontend-setup`
+**Cari Mərhələ:** 1.2 — Frontend Setup (Tamamlandı) & 2.2 — Frontend Auth Foundation (Başlanıldı)
 **Status:** Tamamlandı, PR gözləyir
 
 ## Tamamlanan Mərhələlər
 
 ### Mərhələ 0 — Sənədləşmə ✅
-- Branch: `docs/m00-documentation` → main-ə merge edildi (PR #1)
-- Bütün sənədlər (`README.md`, `ARCHITECTURE.md`, `DATABASE.md`, `API.md`, `AUTH.md`, `SECURITY.md`, `ERROR_HANDLING.md`, `TESTING.md`, `ROLES_PERMISSIONS.md`, `COMPONENTS.md`, `I18N.md`, `DEPLOYMENT.md`, `PAYMENT.md`, `MEDIA.md`, `SEO.md`, `CONTRIBUTING.md`, `TODO.md`, `WORKFLOW.md`, `rules.md`) hazırlandı
+- Bütün sənədlər (`README.md`, `ARCHITECTURE.md`, `DATABASE.md`, `API.md` və s.) hazırlandı.
 
 ### Mərhələ 1.1 — Backend Setup ✅
-- Branch: `chore/m01-backend-setup`
-- **Yaradılan fayllar:**
-  - `server/package.json` — bütün dependencies (express, prisma, stripe, resend, cloudinary, bcryptjs, jsonwebtoken, winston, zod, multer, cors, helmet, morgan, express-rate-limit, express-validator)
-  - `server/tsconfig.json` — strict TypeScript config
-  - `server/.eslintrc.json` — TypeScript ESLint rules
-  - `server/.prettierrc` — code formatting
-  - `server/.env.example` — bütün env variables sənədləşdirildi
-  - `server/.gitignore`
-  - `server/jest.config.ts` — ts-jest, 80% coverage threshold
-  - `server/src/config/env.ts` — Zod ilə startup env validation
-  - `server/src/config/db.ts` — Prisma Client singleton
-  - `server/src/config/logger.ts` — Winston structured logger
-  - `server/src/config/corsOptions.ts` — CORS strict whitelist
-  - `server/src/utils/AppError.ts` — Custom error class
-  - `server/src/utils/asyncHandler.ts` — try/catch wrapper
-  - `server/src/utils/apiResponse.ts` — standardized response helpers
-  - `server/src/utils/slugify.ts` — Azerbaijani char normalization
-  - `server/src/types/express.d.ts` — req.user type augmentation
-  - `server/src/middleware/errorMiddleware.ts` — global error handler
-  - `server/src/middleware/rateLimiter.ts` — 3 rate limit configs
-  - `server/src/controllers/healthController.ts` — DB health check
-  - `server/src/routes/healthRoutes.ts`
-  - `server/src/server.ts` — Express entry point
-  - `server/prisma/schema.prisma` — full DB schema (15 models)
-  - `server/prisma/seed.ts` — admin/vendor/customer/categories/products/coupons/settings
+- Express, TypeScript, Prisma, Winston, Rate limiting və s. təməl qurulumlar bitib.
+
+### Mərhələ 1.2 — Frontend Setup ✅
+- Next.js 14 layihəsi `client/` qovluğunda quruldu.
+- **Dizayn Sistemi & Stil:** Tailwind CSS xüsusi rəng palitrası və animasiyalarla tənzimləndi. Shadcn/ui və `cn()` utility quraşdırıldı.
+- **İnfrastruktur:** TanStack Query v5 `Providers.tsx` vasitəsilə inteqrasiya edildi, auto-refresh interceptors daxil Axios `api.ts` hazırlandı.
+- **i18n:** `next-intl` ilə çoxdilli marşrutlaşdırma (`az`, `en`, `ru`) və qorunan marşrutlar üçün `middleware.ts` təyin edildi.
+- **Validasiya & Tiplər:** `shared/schemas/auth.ts` Zod sxemləri və `src/types/index.ts` vahid TypeScript tipləri yaradıldı.
+- **Təhlükəsizlik & State:** Zustand `authStore.ts` ilə təhlükəsiz in-memory access token və cookie userRole sinxronizasiyası quruldu.
+- **Test:** Vitest + React Testing Library + jsdom konfiqurasiya edilib `@vitest/coverage-v8` ilə 80% limit tətbiq olundu. `authStore.test.ts` testləri 100% uğurla keçdi.
 
 ## Növbəti Addımlar
 
-1. Sahibin PR-i review edib merge etməsini gözlə
-2. PR merge olunduqdan sonra: **Mərhələ 1.2 — Frontend Setup** başla
-   - Branch: `chore/m01-frontend-setup`
-   - Next.js 14 + TypeScript + Tailwind + Shadcn/ui + Zustand + TanStack Query + next-intl
+1. Sahibin PR-i review edib merge etməsini gözlə.
+2. PR merge olunduqdan sonra: **Mərhələ 2.1 — Backend Auth & 2.2 — Frontend Auth Forms** başla.
+   - Branch: `feature/m02-auth-backend` və `feature/m02-auth-frontend`
 
 ## Əsas Texniki Qərarlar
 
 | Qərar | Səbəb |
 |---|---|
-| `env.ts` Zod validation | Startup-da fail fast — eksik env var production-da səssiz problem yaratmasın |
-| Prisma global singleton | Hot reload zamanı çoxlu connection pool açılmasın |
-| `asyncHandler` wrapper | Controller-lərdə try/catch olmasın — DRY principle |
-| 3 ayrı rate limiter | API (100/15dəq), Auth (10/15dəq), Password reset (5/saat) — layihəyə uyğun fərqli limitlər |
-| `directUrl` Prisma schema | Supabase PgBouncer migration-ı blokladığı üçün |
-| Winston JSON logs production | Structured logging — log aggregation tools (Datadog, Logtail) ilə uyğun |
+| Zustand persisted metadata | İstifadəçi məlumatlarını səhifə yenilənəndə saxlamaq üçün (localStorage persist), lakin JWT token təhlükəsizliyi üçün in-memory `__accessToken` |
+| next-intl + Custom Route middleware.ts | Localization routing-i təmin etmək və qorunan səhifələrə (Checkout, Admin, Vendor) girişi süzgəcdən keçirmək üçün |
+| Vitest component test mühiti | Jest-ə nisbətən Next.js ESM dəstəyi və daha sürətli icra müddəti üçün |
+| Vahid Zod sxemləri | Frontend və backend arasında validasiya kodunu eyni saxlayaraq xəta ehtimalını minimuma endirmək |
 
 ## Vacib Qeydlər
 
-- **Stripe webhook route** `express.json()`-dan əvvəl qeydiyyata alınmalıdır (Mərhələ 10-da)
-- **Migration** yalnız `npx prisma migrate dev` ilə, production-da `migrate deploy`
-- **Seed data** hazır: admin@shopflow.az / Admin@1234
-- `server/.env` faylı lazımdır — `.env.example`-dan kopyala, real dəyərləri doldur
+- Vitest testlərini icra etmək üçün: `npm run test` (client/ daxilində)
+- Bütün testlər və lint yoxlamaları PR açılmadan əvvəl 100% yaşıl olmalıdır (`rules.md` tələbi).
