@@ -4,8 +4,8 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `chore/m01-frontend-setup`
-**Cari Mərhələ:** 1.2 — Frontend Setup (Tamamlandı) & 2.2 — Frontend Auth Foundation (Başlanıldı)
+**Aktiv Branch:** `feature/m02-auth-backend`
+**Cari Mərhələ:** 2.1 — Backend Auth (Tamamlandı) & 2.2 — Frontend Auth Forms (Növbəti)
 **Status:** Tamamlandı, PR gözləyir
 
 ## Tamamlanan Mərhələlər
@@ -25,11 +25,14 @@
 - **Təhlükəsizlik & State:** Zustand `authStore.ts` ilə təhlükəsiz in-memory access token və cookie userRole sinxronizasiyası quruldu.
 - **Test:** Vitest + React Testing Library + jsdom konfiqurasiya edilib `@vitest/coverage-v8` ilə 80% limit tətbiq olundu. `authStore.test.ts` testləri 100% uğurla keçdi.
 
+### Mərhələ 2.1 — Backend Auth ✅
+- Bütün auth endpointləri (register, login, logout, refresh-token, google, forgot/reset password, verify email), auth/role middleware-lər, validasiyalar və integration testləri tamamlanmışdır. 21/21 auth testləri 100% yaşıl keçir.
+
 ## Növbəti Addımlar
 
 1. Sahibin PR-i review edib merge etməsini gözlə.
-2. PR merge olunduqdan sonra: **Mərhələ 2.1 — Backend Auth & 2.2 — Frontend Auth Forms** başla.
-   - Branch: `feature/m02-auth-backend` və `feature/m02-auth-frontend`
+2. PR merge olunduqdan sonra: **Mərhələ 2.2 — Frontend Auth Forms** başla.
+   - Branch: `feature/m02-auth-frontend`
 
 ## Əsas Texniki Qərarlar
 

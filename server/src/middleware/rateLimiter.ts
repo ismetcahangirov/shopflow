@@ -10,6 +10,7 @@ export const apiLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (_req, res) => {
     errorResponse(res, 429, 'Çox sayda sorğu göndərdiniz. Bir az gözləyin.', 'RATE_LIMIT_EXCEEDED');
   },
@@ -21,6 +22,7 @@ export const authLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (_req, res) => {
     errorResponse(
       res,
@@ -37,6 +39,7 @@ export const passwordResetLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (_req, res) => {
     errorResponse(
       res,
@@ -46,3 +49,4 @@ export const passwordResetLimiter = rateLimit({
     );
   },
 });
+
