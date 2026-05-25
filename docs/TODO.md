@@ -58,29 +58,29 @@
 ### 1.1 Backend (Server)
 **Branch:** `chore/m01-backend-setup`
 
-- [ ] Node.js + Express + TypeScript layihəsi yaradıldı
-- [ ] `tsconfig.json` konfiqurasiya edildi
-- [ ] `package.json` scripts (dev, build, start, test, lint)
-- [ ] `src/server.ts` entry point yazıldı
-- [ ] PostgreSQL bağlantısı quruldu (`src/config/db.ts` — Prisma Client)
-- [ ] Prisma quraşdırıldı (`npm install prisma @prisma/client`)
-- [ ] `prisma/schema.prisma` bütün modellər yazıldı
+- [x] Node.js + Express + TypeScript layihəsi yaradıldı
+- [x] `tsconfig.json` konfiqurasiya edildi
+- [x] `package.json` scripts (dev, build, start, test, lint)
+- [x] `src/server.ts` entry point yazıldı
+- [x] PostgreSQL bağlantısı quruldu (`src/config/db.ts` — Prisma Client)
+- [x] Prisma quraşdırıldı (`npm install prisma @prisma/client`)
+- [x] `prisma/schema.prisma` bütün modellər yazıldı
 - [ ] İlk migration icra edildi (`npx prisma migrate dev --name init`)
-- [ ] Seed data hazırlandı (`prisma/seed.ts`)
+- [x] Seed data hazırlandı (`prisma/seed.ts`)
 - [ ] Seed icra edildi (`npx prisma db seed`)
-- [ ] Helmet quraşdırıldı və konfiqurasiya edildi
-- [ ] CORS konfiqurasiya edildi (`src/config/corsOptions.ts`)
-- [ ] Morgan (HTTP logging) quraşdırıldı
-- [ ] Winston (structured logging) quraşdırıldı (`src/config/logger.ts`)
-- [ ] dotenv konfiqurasiya edildi
-- [ ] Rate limiter yazıldı (`src/middleware/rateLimiter.ts`)
-- [ ] Global error handler yazıldı (`src/middleware/errorMiddleware.ts`)
-- [ ] `AppError` sinifi yazıldı (`src/utils/AppError.ts`)
-- [ ] `asyncHandler` yazıldı (`src/utils/asyncHandler.ts`)
-- [ ] `apiResponse` utility yazıldı (`src/utils/apiResponse.ts`)
-- [ ] `slugify` utility yazıldı (`src/utils/slugify.ts`)
-- [ ] Health check endpoint yazıldı (`GET /api/health`)
-- [ ] `express.d.ts` — `req.user` tipi genişləndirildi
+- [x] Helmet quraşdırıldı və konfiqurasiya edildi
+- [x] CORS konfiqurasiya edildi (`src/config/corsOptions.ts`)
+- [x] Morgan (HTTP logging) quraşdırıldı
+- [x] Winston (structured logging) quraşdırıldı (`src/config/logger.ts`)
+- [x] dotenv konfiqurasiya edildi
+- [x] Rate limiter yazıldı (`src/middleware/rateLimiter.ts`)
+- [x] Global error handler yazıldı (`src/middleware/errorMiddleware.ts`)
+- [x] `AppError` sinifi yazıldı (`src/utils/AppError.ts`)
+- [x] `asyncHandler` yazıldı (`src/utils/asyncHandler.ts`)
+- [x] `apiResponse` utility yazıldı (`src/utils/apiResponse.ts`)
+- [x] `slugify` utility yazıldı (`src/utils/slugify.ts`)
+- [x] Health check endpoint yazıldı (`GET /api/health`)
+- [x] `express.d.ts` — `req.user` tipi genişləndirildi
 
 ### 1.2 Frontend (Client)
 **Branch:** `chore/m01-frontend-setup`
@@ -589,7 +589,7 @@
 | Mərhələ | Status | Tamamlanma |
 |---|---|---|
 | 0 — Sənədləşmə | `[x]` tamamlandı | 100% |
-| 1 — Qurulum | `[ ]` gözləyir | 0% |
+| 1 — Qurulum | `[~]` davam edir | 90% (migration+seed DB gözləyir) |
 | 2 — Auth | `[ ]` gözləyir | 0% |
 | 3 — Layout | `[ ]` gözləyir | 0% |
 | 4 — Komponentlər | `[ ]` gözləyir | 0% |
