@@ -230,21 +230,21 @@
 
 ## Mərhələ 6 — Məhsullar
 
-### 6.1 Backend
+### 6.1 Backend ✅
 **Branch:** `feature/m06-products-backend`
 
-- [ ] `GET /api/products` — siyahı (filter, sort, pagination, axtarış)
-- [ ] `GET /api/products/:slug` — tək məhsul
-- [ ] `GET /api/products/featured` — öne çıxanlar
-- [ ] `GET /api/products/search` — autocomplete
-- [ ] `POST /api/products` — yarat (Admin/Vendor, şəkil yükləmə)
-- [ ] `PUT /api/products/:id` — yenilə (Admin/Vendor — öz məhsulu)
-- [ ] `DELETE /api/products/:id` — sil
-- [ ] `POST /api/products/:id/images` — şəkil əlavə et
-- [ ] `DELETE /api/products/:id/images/:imageId` — şəkil sil
-- [ ] Cloudinary inteqrasiyası (uploadMultipleImages)
-- [ ] Multer middleware (productImageUpload)
-- [ ] Validasiya (express-validator)
+- [x] `GET /api/products` — siyahı (filter, sort, pagination, axtarış)
+- [x] `GET /api/products/:slug` — tək məhsul
+- [x] `GET /api/products/featured` — öne çıxanlar
+- [x] `GET /api/products/search` — autocomplete
+- [x] `POST /api/products` — yarat (Admin/Vendor, şəkil yükləmə)
+- [x] `PUT /api/products/:id` — yenilə (Admin/Vendor — öz məhsulu)
+- [x] `DELETE /api/products/:id` — sil
+- [x] `POST /api/products/:id/images` — şəkil əlavə et
+- [x] `DELETE /api/products/:id/images/:imageId` — şəkil sil
+- [x] Cloudinary inteqrasiyası (uploadToCloudinary — mövcud middleware istifadə edildi)
+- [x] Multer middleware (uploadImage — mövcud middleware istifadə edildi)
+- [x] Validasiya (express-validator)
 
 ### 6.2 Frontend
 **Branch:** `feature/m06-products-frontend`
