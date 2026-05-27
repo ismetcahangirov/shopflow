@@ -183,24 +183,24 @@
 ## Mərhələ 4 — Common Komponentlər
 **Branch:** `feature/m04-common-components`
 
-- [ ] `Button.tsx` yaradıldı (5 variant, isLoading, icon dəstəyi)
-- [ ] `Input.tsx` yaradıldı (label, error, hint, icon, forwardRef)
-- [ ] `Modal.tsx` yaradıldı (size, footer, closeOnBackdrop)
-- [ ] `Badge.tsx` yaradıldı (5 variant, dot)
-- [ ] `Avatar.tsx` yaradıldı (ölçü, fallback)
-- [ ] `Spinner.tsx` yaradıldı
-- [ ] `Skeleton.tsx` yaradıldı (ProductCardSkeleton, ProductGridSkeleton)
-- [ ] `EmptyState.tsx` yaradıldı (icon, title, description, action)
-- [ ] `ErrorState.tsx` yaradıldı (message, onRetry)
-- [ ] `ErrorBoundary.tsx` yaradıldı
-- [ ] `Pagination.tsx` yaradıldı (showInfo daxil)
-- [ ] `ConfirmDialog.tsx` yaradıldı
-- [ ] `Table.tsx` yaradıldı
-- [ ] `DataTable.tsx` yaradıldı (sortable, selectable, actions, skeleton)
-- [ ] `StatCard.tsx` yaradıldı (dəyişim %, rəng)
-- [ ] `PageHeader.tsx` yaradıldı
-- [ ] `SearchBar.tsx` yaradıldı (debounce 300ms)
-- [ ] `PriceRange.tsx` yaradıldı (ikili slider)
+- [x] `Button.tsx` yaradıldı (5 variant, isLoading, icon dəstəyi)
+- [x] `Input.tsx` yaradıldı (label, error, hint, icon, forwardRef)
+- [x] `Modal.tsx` yaradıldı (size, footer, closeOnBackdrop)
+- [x] `Badge.tsx` yaradıldı (5 variant, dot)
+- [x] `Avatar.tsx` yaradıldı (ölçü, fallback)
+- [x] `Spinner.tsx` yaradıldı
+- [x] `Skeleton.tsx` yaradıldı (ProductCardSkeleton, ProductGridSkeleton)
+- [x] `EmptyState.tsx` yaradıldı (icon, title, description, action)
+- [x] `ErrorState.tsx` yaradıldı (message, onRetry)
+- [x] `ErrorBoundary.tsx` yaradıldı
+- [x] `Pagination.tsx` yaradıldı (showInfo daxil)
+- [x] `ConfirmDialog.tsx` yaradıldı
+- [x] `Table.tsx` yaradıldı
+- [x] `DataTable.tsx` yaradıldı (sortable, selectable, actions, skeleton)
+- [x] `StatCard.tsx` yaradıldı (dəyişim %, rəng)
+- [x] `PageHeader.tsx` yaradıldı
+- [x] `SearchBar.tsx` yaradıldı (debounce 300ms)
+- [x] `PriceRange.tsx` yaradıldı (ikili slider)
 
 ---
 
