@@ -4,8 +4,8 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m03-layout`
-**Cari Mərhələ:** Mərhələ 3 — Layout & Naviqasiya (Tamamlandı, PR gözləyir)
+**Aktiv Branch:** `feature/m04-common-components`
+**Cari Mərhələ:** Mərhələ 4 — Common UI Komponentləri (Tamamlandı, PR gözləyir)
 **Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -50,10 +50,32 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
+### Mərhələ 4 — Common UI Komponentləri ✅
+- **Button:** 6 variant (default, outline, secondary, ghost, destructive, link), isLoading, icon dəstəyi, premium fokus ring.
+- **Modal:** Portal-əsaslı, ESC + backdrop click, dinamik ölçü (sm→full), animasiyalı açılış/bağlanış.
+- **Badge:** 6 variant, animasiyalı dot indikatoru, 3 ölçü.
+- **Avatar:** `next/image` inteqrasiyalı, initials fallback, loading state, 5 ölçü.
+- **Spinner:** Müxtəlif ölçü və variantlarda loading indikatoru.
+- **Skeleton:** Pulse animasiyalı baza skeleton + `ProductCardSkeleton` + `ProductGridSkeleton`.
+- **EmptyState:** Premium placeholder, icon, title, description, action slot.
+- **ErrorState:** Retry callback, premium error UI.
+- **ErrorBoundary:** Class-based crash recovery, hasError state, retry trigger.
+- **Pagination:** Sibling ranges, ellipsis, info indicators (toplam, cari), `showInfo` prop.
+- **ConfirmDialog:** Modal-əsaslı, primary/destructive/warning variantları.
+- **Table + DataTable:** Type-safe, sortable sütunlar, checkbox seçimi, skeleton + empty state inteqrasiyası, row actions.
+- **StatCard:** Dashboard kartı, trend yönü (+/-), colorTheme, icon slot.
+- **PageHeader:** Title, description, breadcrumbs, actions.
+- **SearchBar:** 300ms debounce, clear button, focus styling.
+- **PriceRange:** İkili slider, aktiv track highlight, min/max value göstəricisi.
+
+**Test nəticəsi:** 94/94 frontend testi ✅ | 21/21 backend testi ✅
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
+**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+
 ## Növbəti Addımlar
 
 1. PR-i review et, `main`-ə merge et.
-2. Növbəti tapşırıq: **Mərhələ 4 — Common UI Komponentləri** (Button, Input, Modal, DataTable, Badge, Avatar, Spinner və s.)
+2. Növbəti tapşırıq: **Mərhələ 5 — Kateqoriyalar** (Backend CRUD + Frontend kateqoriya səhifəsi)
 
 ## Əsas Texniki Qərarlar
 
