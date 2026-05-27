@@ -267,14 +267,15 @@
 
 ## Mərhələ 7 — Səbət
 
-### 7.1 Backend
-**Branch:** `feature/m07-cart-backend`
+### 7.1 Backend ✅
+**Branch:** `feature/m07-cart-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/cart` — səbəti al
-- [ ] `POST /api/cart/items` — məhsul əlavə et
-- [ ] `PATCH /api/cart/items/:productId` — miqdar dəyiş
-- [ ] `DELETE /api/cart/items/:productId` — məhsul çıxar
-- [ ] `DELETE /api/cart` — səbəti təmizlə
+- [x] `GET /api/cart` — səbəti al
+- [x] `POST /api/cart/items` — məhsul əlavə et
+- [x] `PATCH /api/cart/items/:productId` — miqdar dəyiş
+- [x] `DELETE /api/cart/items/:productId` — məhsul çıxar
+- [x] `DELETE /api/cart` — səbəti təmizlə
 
 ### 7.2 Frontend
 **Branch:** `feature/m07-cart-frontend`
