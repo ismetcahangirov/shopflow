@@ -130,6 +130,7 @@
   },
   "cart": {
     "title": "Your Cart",
+    "price": "Price",
     "empty": "Your cart is empty",
     "summary": "Order Summary",
     "subtotal": "Subtotal",

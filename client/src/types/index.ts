@@ -102,12 +102,28 @@ export interface Review {
   };
 }
 
+export interface CartProduct {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  stock: number;
+  image: string | null;
+}
+
 export interface CartItem {
   id: string;
-  productId: string;
   quantity: number;
-  product: Product;
+  product: CartProduct;
 }
+
+export interface Cart {
+  id: string;
+  itemCount: number;
+  subtotal: number;
+  items: CartItem[];
+}
+
 
 export interface OrderItem {
   id: string;
