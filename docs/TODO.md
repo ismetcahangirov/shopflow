@@ -138,18 +138,21 @@
 **Branch:** `feature/m02-auth-frontend`
 
 - [x] Zustand `authStore` yaradıldı (`src/store/authStore.ts`)
-- [ ] Login səhifəsi yaradıldı (`app/[locale]/(auth)/login/page.tsx`)
-- [ ] Register səhifəsi yaradıldı (`app/[locale]/(auth)/register/page.tsx`)
-- [ ] Şifrəni unutdum səhifəsi yaradıldı
-- [ ] Şifrə sıfırlama səhifəsi yaradıldı
-- [ ] Email doğrulama səhifəsi yaradıldı
-- [ ] Google OAuth düyməsi əlavə edildi (`@react-oauth/google`)
-- [ ] Google OAuth inteqrasiyası tamamlandı
-- [ ] Forma validasiyası (React Hook Form + Zod) tətbiq edildi
+- [x] Login səhifəsi yaradıldı (`app/[locale]/(auth)/login/page.tsx`)
+- [x] Register səhifəsi yaradıldı (`app/[locale]/(auth)/register/page.tsx`)
+- [x] Şifrəni unutdum səhifəsi yaradıldı (`app/[locale]/(auth)/forgot-password/page.tsx`)
+- [x] Şifrə sıfırlama səhifəsi yaradıldı (`app/[locale]/(auth)/reset-password/page.tsx`)
+- [x] Email doğrulama səhifəsi yaradıldı (`app/[locale]/(auth)/verify-email/page.tsx`)
+- [x] Google OAuth düyməsi əlavə edildi (GIS script, `components/auth/GoogleAuthButton.tsx`)
+- [x] Google OAuth inteqrasiyası tamamlandı (GIS → backend `/auth/google`)
+- [x] Forma validasiyası (React Hook Form + Zod) tətbiq edildi
 - [x] Token saxlama strategiyası (Zustand memory + httpOnly cookie)
 - [x] Axios interceptor ilə auto token refresh tətbiq edildi
+- [x] Auth layout yaradıldı (`app/[locale]/(auth)/layout.tsx` — split-screen premium dizayn)
+- [x] UI komponentlər yaradıldı (`Input`, `Label`, `FormField`)
+- [x] Unauthorized səhifəsi yaradıldı (`app/[locale]/unauthorized/page.tsx`)
+- [x] `useAuth` hook-ları yazıldı (TanStack Query mutations)
 - [ ] `ProtectedRoute` komponenti yaradıldı
-- [ ] Auth layout yaradıldı
 - [ ] `useRole` hook yazıldı
 
 ---
