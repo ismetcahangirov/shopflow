@@ -4,8 +4,8 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m02-auth-frontend`
-**Cari Mərhələ:** 2.2 — Frontend Auth Forms (Tamamlandı, PR gözləyir)
+**Aktiv Branch:** `feature/m03-layout`
+**Cari Mərhələ:** Mərhələ 3 — Layout & Naviqasiya (Tamamlandı, PR gözləyir)
 **Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -25,54 +25,49 @@
 - **State:** Zustand `authStore.ts` — in-memory access token + cookie userRole.
 - **Test:** Vitest + React Testing Library + jsdom konfiqurasiya.
 
-### Mərhələ 2.1 — Backend Auth ✅
-- Bütün auth endpointləri, middleware-lər, validasiyalar tamamlandı. 21/21 test 100% yaşıl.
+### Mərhələ 2 — Autentifikasiya ✅
+- **Backend Auth:** Bütün auth endpointləri, middleware-lər, validasiyalar tamamlandı. 21/21 test 100% yaşıl.
+- **Frontend Auth Forms:** Split-screen premium login, register, şifrəni unutdum/sıfırlama, email verify səhifələri.
+- **ProtectedRoute & useRole:** Rol əsaslı qoruma middleware və hook qurularaq frontend unit testləri (Vitest) ilə əhatə olundu.
 
-### Mərhələ 2.2 — Frontend Auth Forms ✅
-**Branch:** `feature/m02-auth-frontend`
+### Mərhələ 3 — Layout & Naviqasiya ✅
+- **Root Layout:** LocaleProvider, fonts, responsive provider-lər və React Query client konfiqurasiya edildi.
+- **Workspace Layouts:** 
+  - `app/[locale]/(shop)/layout.tsx` (Premium Navbar & Footer)
+  - `app/[locale]/admin/layout.tsx` (Rol əsaslı qoruma, AdminSidebar, mobil drawer və analitik dashboard mockup)
+  - `app/[locale]/vendor/layout.tsx` (Satıcıya xas sidebar, balans və sifarişlər analitikası)
+- **Responsive Naviqasiya:**
+  - `Navbar` — Axtarış, səbət sayğacı, dil keçidi və rol əsaslı profil dropdown-u
+  - `Footer` — Premium dizayn, sosial şəbəkələr və naviqasiya linkləri
+  - `AdminSidebar` & `VendorSidebar` — Aktiv marşrutları vurğulayan panel naviqasiyası
+  - `BottomTabs` — Mobil cihazlar üçün rola xas sürətli alt naviqasiya
+- **SEO & i18n:**
+  - `Breadcrumb` — Dinamik yol izi və SEO JSON-LD struktur dəstəyi
+  - `LanguageSwitcher` — `az`, `en`, `ru` dilləri arasında problemsiz keçid
+- **Lint & TypeScript Təmizliyi:** Bütün linter xəbərdarlıqları və unused imports aradan qaldırıldı.
 
-Yaradılan fayllar:
-- `src/components/ui/input.tsx` — Password toggle, leading icon, error state
-- `src/components/ui/label.tsx` — Accessible label with required indicator
-- `src/components/ui/form-field.tsx` — Label + Input + animated error wrapper
-- `src/components/auth/GoogleAuthButton.tsx` — GIS script-based Google OAuth
-- `src/components/auth/AuthDivider.tsx` — "or" separator
-- `src/hooks/useAuth.ts` — TanStack Query mutations (login, register, forgot/reset password, verify)
-- `src/app/[locale]/(auth)/layout.tsx` — Premium split-screen auth layout
-- `src/app/[locale]/(auth)/login/page.tsx` — Login form + post-register/reset banners
-- `src/app/[locale]/(auth)/register/page.tsx` — Register form with CUSTOMER/VENDOR role selector
-- `src/app/[locale]/(auth)/forgot-password/page.tsx` — Email form + success state
-- `src/app/[locale]/(auth)/reset-password/page.tsx` — New password form + missing token guard
-- `src/app/[locale]/(auth)/verify-email/page.tsx` — Auto-trigger token verification
-- `src/app/[locale]/unauthorized/page.tsx` — Role-guard redirect page
-- `client/.env.local` + `client/.env.example` — NEXT_PUBLIC env vars documented
-- `src/components/ui/input.test.tsx` — 8 tests
-- `src/components/ui/form-field.test.tsx` — 8 tests
-
-**Test nəticəsi:** 22/22 test (6 authStore + 8 input + 8 form-field) ✅
+**Test nəticəsi:** 29/29 frontend testi ✅ | 21/21 backend testi ✅
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
-**Lint:** `next lint` — 0 xəbərdarlıq ✅
+**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
 ## Növbəti Addımlar
 
 1. PR-i review et, `main`-ə merge et.
-2. Növbəti tapşırıq: **Mərhələ 2.2 qalan** — `ProtectedRoute` komponenti, `useRole` hook
-3. Sonra: **Mərhələ 3 — Layout & Naviqasiya** (Navbar, Footer, Shop layout)
+2. Növbəti tapşırıq: **Mərhələ 4 — Common UI Komponentləri** (Button, Input, Modal, DataTable, Badge, Avatar, Spinner və s.)
 
 ## Əsas Texniki Qərarlar
 
 | Qərar | Səbəb |
 |---|---|
-| GIS script (Google Identity Services) | `@react-oauth/google` package-ı olmadan Google OAuth — yeni npm asılılığı əlavə etmədən |
-| Split-screen auth layout | Sol panel branding (indigo gradient), sağ panel form — premium UX |
-| TanStack Query mutations | `useAuth` hook-ları — loading/error state avtomatik idarə olunur |
-| Zustand persisted metadata | Token in-memory (təhlükəsiz), user metadata localStorage-da |
-| next-intl + middleware.ts | Localization + role-based route qoruması eyni yerdə |
+| JSON-LD Breadcrumb | Axtarış motorlarında daha yaxşı SEO nəticələri üçün strukturlaşdırılmış schema inteqrasiyası |
+| Zustand state (`uiStore`) | Responsive mobil sidebar/menyuların və səbət drawer-lərinin vahid nöqtədən idarə olunması |
+| Zustand hydration tracking (`isHydrated`) | Server və brauzer arasında baş verə biləcək HTML uyğunsuzluqlarının (hydration mismatch) qarşısını almaq |
+| Premium Dark/Glassmorphic Stil | Vanilla Tailwind imkanları ilə premium, modern və dinamik interfeyslər |
 
 ## Vacib Qeydlər
 
 - Client env: `client/.env.local` — `NEXT_PUBLIC_API_URL` və `NEXT_PUBLIC_GOOGLE_CLIENT_ID` lazımdır
 - Server env: `server/.env` — `GOOGLE_CLIENT_ID` və `GOOGLE_CLIENT_SECRET` lazımdır
-- Google OAuth: GIS script `accounts.google.com/gsi/client` — Next.js `Script` komponenti ilə lazy yüklənir
 - Vitest testləri: `cd client && npm run test`
-- TypeScript yoxlaması: `cd client && npx tsc --noEmit`
+- Jest testləri: `cd server && npm run test`
+- TypeScript yoxlaması: `cd client && npx tsc --noEmit` / `cd server && npx tsc --noEmit`
