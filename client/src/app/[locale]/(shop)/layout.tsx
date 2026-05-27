@@ -10,6 +10,7 @@ import { X, ShoppingBag, ChevronDown } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { BottomTabs } from '@/components/layout/BottomTabs';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 import { useUiStore } from '@/store/uiStore';
 import { shopNavItems } from '@/config/navItems';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
@@ -43,6 +44,9 @@ export default function ShopLayout({ children }: ShopLayoutProps): React.JSX.Ele
 
       {/* Mobile view quick action tabs */}
       <BottomTabs />
+
+      {/* Sliding Cart Drawer Offcanvas */}
+      <CartDrawer />
 
       {/* Mobile Offcanvas Drawer Menu */}
       {isSidebarOpen && (

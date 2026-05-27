@@ -20,10 +20,12 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
+import { useCartStore } from '@/store/cartStore';
 import { useRole } from '@/hooks/useRole';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { shopNavItems } from '@/config/navItems';
 import { useCategoriesQuery } from '@/hooks/useCategories';
+import { useEffect } from 'react';
 
 export function Navbar(): React.JSX.Element {
   const t = useTranslations('common');
@@ -33,6 +35,7 @@ export function Navbar(): React.JSX.Element {
   const { user, logout, isHydrated } = useAuthStore();
   const { isSidebarOpen, toggleSidebar, openCart } = useUiStore();
   const { isAdmin, isVendor, isAuthenticated } = useRole();
+  const { cart, fetchCart, isHydrated: isCartHydrated } = useCartStore();
   const [profileOpen, setProfileOpen] = useState(false);
   
   // Category dropdown state
@@ -40,6 +43,12 @@ export function Navbar(): React.JSX.Element {
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
   
   const { data: categories } = useCategoriesQuery();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCart();
+    }
+  }, [isAuthenticated, fetchCart]);
 
   // Helper to determine if link is active
   const isActive = (href: string) => {
@@ -222,9 +231,11 @@ export function Navbar(): React.JSX.Element {
             aria-label="Shopping Cart"
           >
             <CartIcon className="h-5 w-5" />
-            <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-slate-950 animate-pulse">
-              3
-            </span>
+            {isCartHydrated && cart && cart.itemCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-slate-950 animate-pulse">
+                {cart.itemCount}
+              </span>
+            )}
           </button>
 
           {/* Profile Dropdown or Auth Button */}

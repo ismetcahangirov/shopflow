@@ -10,6 +10,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Home, Package, ShoppingCart, User, ClipboardList, LayoutDashboard } from 'lucide-react';
 import { useRole } from '@/hooks/useRole';
 import { useUiStore } from '@/store/uiStore';
+import { useCartStore } from '@/store/cartStore';
 
 export function BottomTabs(): React.JSX.Element {
   const t = useTranslations('common');
@@ -17,6 +18,7 @@ export function BottomTabs(): React.JSX.Element {
   const pathname = usePathname();
   const { isAuthenticated, isVendor, isAdmin } = useRole();
   const { openCart } = useUiStore();
+  const { cart, isHydrated: isCartHydrated } = useCartStore();
 
   const isActive = (href: string) => {
     const localizedHref = `/${locale}${href === '/' ? '' : href}`;
@@ -62,9 +64,11 @@ export function BottomTabs(): React.JSX.Element {
         >
           <ShoppingCart className="h-5 w-5" />
           <span className="text-[10px] font-bold">{t('cart')}</span>
-          <span className="absolute top-1.5 right-1.5 h-4 w-4 rounded-full bg-indigo-600 text-[9px] font-bold text-white flex items-center justify-center">
-            3
-          </span>
+          {isCartHydrated && cart && cart.itemCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 h-4 w-4 rounded-full bg-indigo-600 text-[9px] font-bold text-white flex items-center justify-center">
+              {cart.itemCount}
+            </span>
+          )}
         </button>
 
         {/* Conditional Role Action / Auth */}

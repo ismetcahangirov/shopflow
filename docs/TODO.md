@@ -280,13 +280,13 @@
 ### 7.2 Frontend
 **Branch:** `feature/m07-cart-frontend`
 
-- [ ] Zustand `cartStore` yaradıldı (persist — localStorage)
-- [ ] `CartItem.tsx` yaradıldı (+ / - miqdar, sil)
-- [ ] `CartSummary.tsx` yaradıldı (ara cəm, çatdırılma, ümumi)
-- [ ] Səbət səhifəsi yaradıldı (`/cart/page.tsx` — CSR)
-- [ ] Navbar-da səbət sayğacı (real-time)
-- [ ] Boş səbət vəziyyəti
-- [ ] Pulsuz çatdırılma progress barı
+- [x] Zustand `cartStore` yaradıldı (persist — localStorage)
+- [x] `CartItem.tsx` yaradıldı (+ / - miqdar, sil)
+- [x] `CartSummary.tsx` yaradıldı (ara cəm, çatdırılma, ümumi)
+- [x] Səbət səhifəsi yaradıldı (`/cart/page.tsx` — CSR)
+- [x] Navbar-da səbət sayğacı (real-time)
+- [x] Boş səbət vəziyyəti
+- [x] Pulsuz çatdırılma progress barı
 
 ---
 

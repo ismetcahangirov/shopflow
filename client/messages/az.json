@@ -130,6 +130,7 @@
   },
   "cart": {
     "title": "Səbətiniz",
+    "price": "Qiymət",
     "empty": "Səbətiniz boşdur",
     "summary": "Sifariş xülasəsi",
     "subtotal": "Məbləğ",
