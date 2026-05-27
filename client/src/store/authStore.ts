@@ -22,6 +22,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isHydrated: boolean;
   error: string | null;
   
   // Setters
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isHydrated: false,
       error: null,
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
@@ -123,6 +125,9 @@ export const useAuthStore = create<AuthState>()(
       // Persist only the user metadata, token is in-memory for security
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => () => {
+        useAuthStore.setState({ isHydrated: true });
+      },
     }
   )
 );

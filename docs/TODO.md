@@ -152,30 +152,31 @@
 - [x] UI komponentlər yaradıldı (`Input`, `Label`, `FormField`)
 - [x] Unauthorized səhifəsi yaradıldı (`app/[locale]/unauthorized/page.tsx`)
 - [x] `useAuth` hook-ları yazıldı (TanStack Query mutations)
-- [ ] `ProtectedRoute` komponenti yaradıldı
-- [ ] `useRole` hook yazıldı
+- [x] `ProtectedRoute` komponenti yaradıldı
+- [x] `useRole` hook yazıldı
 
 ---
 
 ## Mərhələ 3 — Layout & Naviqasiya
 **Branch:** `feature/m03-layout`
+**Status:** `[x]` Tamamlandı
 
-- [ ] Root layout yaradıldı (`app/layout.tsx` — font, providers)
-- [ ] Shop layout yaradıldı (`app/[locale]/(shop)/layout.tsx`)
-- [ ] Admin layout yaradıldı (`app/[locale]/admin/layout.tsx`)
-- [ ] Vendor layout yaradıldı (`app/[locale]/vendor/layout.tsx`)
-- [ ] `Navbar` komponenti yaradıldı (logo, axtarış, səbət sayğacı, profil dropdown)
-- [ ] `Footer` komponenti yaradıldı
-- [ ] `AdminSidebar` komponenti yaradıldı
-- [ ] `VendorSidebar` komponenti yaradıldı
-- [ ] `BottomTabs` komponenti yaradıldı (mobil)
-- [ ] `Breadcrumb` komponenti yaradıldı (JSON-LD daxil)
-- [ ] `navItems.ts` — rola görə naviqasiya elementləri
-- [ ] Sidebar açma/bağlama funksionallığı (`uiStore`)
-- [ ] Aktiv naviqasiya elementi vurğulandı (`usePathname`)
-- [ ] `LanguageSwitcher` komponenti yaradıldı
-- [ ] Responsive breakpoint-lər tənzimləndi
-- [ ] `next/font` konfiqurasiya edildi (FOUT yoxdur)
+- [x] Root layout yaradıldı (`app/layout.tsx` — font, providers)
+- [x] Shop layout yaradıldı (`app/[locale]/(shop)/layout.tsx`)
+- [x] Admin layout yaradıldı (`app/[locale]/admin/layout.tsx`)
+- [x] Vendor layout yaradıldı (`app/[locale]/vendor/layout.tsx`)
+- [x] `Navbar` komponenti yaradıldı (logo, axtarış, səbət sayğacı, profil dropdown)
+- [x] `Footer` komponenti yaradıldı
+- [x] `AdminSidebar` komponenti yaradıldı
+- [x] `VendorSidebar` komponenti yaradıldı
+- [x] `BottomTabs` komponenti yaradıldı (mobil)
+- [x] `Breadcrumb` komponenti yaradıldı (JSON-LD daxil)
+- [x] `navItems.ts` — rola görə naviqasiya elementləri
+- [x] Sidebar açma/bağlama funksionallığı (`uiStore`)
+- [x] Aktiv naviqasiya elementi vurğulandı (`usePathname`)
+- [x] `LanguageSwitcher` komponenti yaradıldı
+- [x] Responsive breakpoint-lər tənzimləndi
+- [x] `next/font` konfiqurasiya edildi (FOUT yoxdur)
 
 ---
 
@@ -593,8 +594,8 @@
 |---|---|---|
 | 0 — Sənədləşmə | `[x]` tamamlandı | 100% |
 | 1 — Qurulum | `[x]` tamamlandı | 100% |
-| 2 — Auth | `[~]` davam edir | 20% |
-| 3 — Layout | `[ ]` gözləyir | 0% |
+| 2 — Auth | `[x]` tamamlandı | 100% |
+| 3 — Layout | `[x]` tamamlandı | 100% |
 | 4 — Komponentlər | `[ ]` gözləyir | 0% |
 | 5 — Kateqoriyalar | `[ ]` gözləyir | 0% |
 | 6 — Məhsullar | `[ ]` gözləyir | 0% |
