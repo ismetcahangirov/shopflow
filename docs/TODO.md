@@ -209,12 +209,12 @@
 ### 5.1 Backend
 **Branch:** `feature/m05-categories-backend`
 
-- [ ] `GET /api/categories` — ağac strukturu ilə
-- [ ] `GET /api/categories/:slug` — tək kateqoriya
-- [ ] `POST /api/categories` — yarat (Admin)
-- [ ] `PUT /api/categories/:id` — yenilə (Admin)
-- [ ] `DELETE /api/categories/:id` — sil (Admin, məhsul yoxsa)
-- [ ] Kateqoriya şəkli yükləmə (Cloudinary)
+- [x] `GET /api/categories` — ağac strukturu ilə
+- [x] `GET /api/categories/:slug` — tək kateqoriya
+- [x] `POST /api/categories` — yarat (Admin)
+- [x] `PUT /api/categories/:id` — yenilə (Admin)
+- [x] `DELETE /api/categories/:id` — sil (Admin, məhsul yoxsa)
+- [x] Kateqoriya şəkli yükləmə (Cloudinary)
 
 ### 5.2 Frontend
 **Branch:** `feature/m05-categories-frontend`

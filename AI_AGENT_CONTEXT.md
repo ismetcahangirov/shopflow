@@ -4,8 +4,8 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m04-common-components`
-**Cari Mərhələ:** Mərhələ 4 — Common UI Komponentləri (Tamamlandı, PR gözləyir)
+**Aktiv Branch:** `feature/m05-categories-backend`
+**Cari Mərhələ:** Mərhələ 5.1 — Kateqoriyalar Backend (Tamamlandı, PR üçün hazır)
 **Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -72,10 +72,22 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
+### Mərhələ 5.1 — Kateqoriyalar Backend ✅
+- **Ağac Strukturu (Tree Structure):** `GET /api/categories` endpointi ilə parent-child əlaqəli (2 dərəcəyə qədər alt kateqoriyalar daxil) bütün aktiv kateqoriyalar gətirilir.
+- **Dinamik Slug:** `GET /api/categories/:slug` slug vasitəsilə tək kateqoriya, onun ana kateqoriyası və aktiv alt kateqoriyaları gətirilir.
+- **Admin CRUD:** `POST`, `PUT`, `DELETE` endpointləri (protect + authorize middleware ilə qorunur) yaradıldı.
+- **Validasiya:** `express-validator` və Zod tipləri əsasında mükəmməl təhlükəsizlik və yoxlama middleware-ləri quruldu.
+- **Cloudinary İnteqrasiyası:** Multer (yaddaş yaddaşlı storage) + Cloudinary v2 SDK vasitəsilə şəklin növünü və ölçüsünü yoxlayaraq şəkil yükləmə mexanizmi quruldu.
+- **İnteqrasiya Testləri:** Bütün hallar üçün 45/45 Jest testləri uğurla icra olundu.
+
+**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
+**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+
 ## Növbəti Addımlar
 
-1. PR-i review et, `main`-ə merge et.
-2. Növbəti tapşırıq: **Mərhələ 5 — Kateqoriyalar** (Backend CRUD + Frontend kateqoriya səhifəsi)
+1. Bu branch üzrə PR açmaq və merge etmək.
+2. Növbəti tapşırıq: **Mərhələ 5.2 — Kateqoriyalar Frontend** (Navbar kateqoriya siyahısı, `/category/[slug]/page.tsx` dinamik səhifə, Admin kateqoriya CRUD panel interfeysi).
 
 ## Əsas Texniki Qərarlar
 

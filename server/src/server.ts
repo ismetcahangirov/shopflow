@@ -17,6 +17,7 @@ import { errorMiddleware } from './middleware/errorMiddleware';
 
 import healthRoutes from './routes/healthRoutes';
 import authRoutes from './routes/authRoutes';
+import categoryRoutes from './routes/categoryRoutes';
 
 // ── App setup ────────────────────────────────────────────
 const app = express();
@@ -61,6 +62,7 @@ app.use('/api/', apiLimiter);
 // ── Routes ────────────────────────────────────────────────
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {
