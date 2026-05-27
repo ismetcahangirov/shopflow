@@ -3,8 +3,8 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m06-products-backend`  
-**Cari Mərhələ:** Mərhələ 6.1 — Məhsullar Backend (Tamamlandı, PR üçün hazır)  
+**Aktiv Branch:** `feature/m06-products-frontend`  
+**Cari Mərhələ:** Mərhələ 6.2 — Məhsullar Frontend (Tamamlandı, PR üçün hazır)  
 **Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -70,14 +70,20 @@
 - **Validasiya:** `productValidators.ts` — bütün sahələr üçün express-validator qaydaları.
 - **İnteqrasiya Testləri:** 75/75 Jest testləri (product + category + auth) uğurla keçdi.
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 75/75 backend testi ✅  
+### Mərhələ 6.2 — Məhsullar Frontend ✅
+- **Məhsul Detal Səhifəsi (`[slug]/page.tsx`):** SSG + ISR (60s revalidation) ilə dinamik render.
+- **SEO & Metadata:** Dinamik meta teqlər, canonical linklər, OpenGraph/Twitter kartları və JSON-LD `ProductSchema` strukturlaşdırılmış məlumatlar.
+- **İnteraktiv Client Detal View (`ProductDetailClient.tsx`):** Məhsul şəkil qalereyası, dinamik variant (rəng/ölçü) seçimi, miqdar seçici, add-to-cart/buy-now CTA düymələri.
+- **Unit Testlər:** Vitest/RTL ilə model/variant məlumatları, stok limitləri və kəmiyyət tənzimləmə testləri (100% test əhatə dairəsi).
+
+**Test nəticəsi:** 113/113 frontend testi ✅ | 75/75 backend testi ✅  
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
 ## Növbəti Addımlar
 
 1. Bu branch üzrə PR açmaq və merge etmək.
-2. Növbəti tapşırıq: **Mərhələ 6.2 — Məhsullar Frontend** (`ProductCard`, `ProductGrid`, `/products/page.tsx` SSR, `/products/[slug]/page.tsx` SSG+ISR, Admin/Vendor paneli).
+2. Növbəti tapşırıq: **Mərhələ 7 — Səbət (Cart)** (Backend route-lar, Zustand persist `cartStore` inteqrasiyası).
 
 ## Əsas Texniki Qərarlar
 

@@ -24,28 +24,68 @@ export interface Category {
   updatedAt: string;
 }
 
+export interface ProductImage {
+  id: string;
+  url: string;
+  alt: string | null;
+  isMain: boolean;
+  sortOrder: number;
+}
+
+export interface ProductAttribute {
+  id: string;
+  name: string;
+  value: string;
+}
+
+export interface ProductVariant {
+  id: string;
+  name: string;
+  sku: string;
+  price: number;
+  stock: number;
+  image?: string | null;
+}
+
 export interface Product {
   id: string;
   name: string;
   slug: string;
   description: string;
+  shortDesc?: string | null;
   price: number;
-  originalPrice?: number | null;
+  comparePrice?: number | null;
+  costPrice?: number | null;
   sku: string;
+  barcode?: string | null;
   stock: number;
+  lowStockAlert?: number;
+  weight?: number | null;
+  brand?: string | null;
   isActive: boolean;
-  images: string[];
-  vendorId: string;
+  isFeatured: boolean;
+  tags: string[];
+  avgRating: number;
+  reviewCount: number;
+  salesCount: number;
+  metaTitle?: string | null;
+  metaDesc?: string | null;
   categoryId: string;
-  averageRating: number;
-  reviewsCount: number;
+  vendorId: string | null;
   createdAt: string;
   updatedAt: string;
-  vendor?: {
+  category?: {
     id: string;
     name: string;
-    storeName?: string | null;
+    slug: string;
   };
+  vendor?: {
+    id: string;
+    storeName: string | null;
+  };
+  images: ProductImage[];
+  attributes?: ProductAttribute[];
+  variants?: ProductVariant[];
 }
 
 export interface Review {
