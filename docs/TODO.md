@@ -217,13 +217,14 @@
 - [x] Kateqoriya şəkli yükləmə (Cloudinary)
 
 ### 5.2 Frontend
-**Branch:** `feature/m05-categories-frontend`
+**Branch:** `feature/m05-categories-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Kateqoriya siyahısı (navbar dropdown)
-- [ ] Kateqoriya səhifəsi yaradıldı (`/category/[slug]/page.tsx`)
-- [ ] `generateMetadata()` kateqoriya üçün
-- [ ] `generateStaticParams()` kateqoriyalar üçün
-- [ ] Admin: kateqoriya CRUD səhifəsi yaradıldı
+- [x] Kateqoriya siyahısı (navbar dropdown)
+- [x] Kateqoriya səhifəsi yaradıldı (`/category/[slug]/page.tsx`)
+- [x] `generateMetadata()` kateqoriya üçün
+- [x] `generateStaticParams()` kateqoriyalar üçün
+- [x] Admin: kateqoriya CRUD səhifəsi yaradıldı
 
 ---
 

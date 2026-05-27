@@ -1,11 +1,10 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
-
 > Son yenilənmə: 2026-05-27
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m05-categories-backend`
-**Cari Mərhələ:** Mərhələ 5.1 — Kateqoriyalar Backend (Tamamlandı, PR üçün hazır)
+**Aktiv Branch:** `feature/m05-categories-frontend`  
+**Cari Mərhələ:** Mərhələ 5.2 — Kateqoriyalar Frontend (Tamamlandı, PR üçün hazır)  
 **Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -46,8 +45,8 @@
   - `LanguageSwitcher` — `az`, `en`, `ru` dilləri arasında problemsiz keçid
 - **Lint & TypeScript Təmizliyi:** Bütün linter xəbərdarlıqları və unused imports aradan qaldırıldı.
 
-**Test nəticəsi:** 29/29 frontend testi ✅ | 21/21 backend testi ✅
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
+**Test nəticəsi:** 29/29 frontend testi ✅ | 21/21 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
 ### Mərhələ 4 — Common UI Komponentləri ✅
@@ -68,8 +67,8 @@
 - **SearchBar:** 300ms debounce, clear button, focus styling.
 - **PriceRange:** İkili slider, aktiv track highlight, min/max value göstəricisi.
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 21/21 backend testi ✅
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
+**Test nəticəsi:** 94/94 frontend testi ✅ | 21/21 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
 ### Mərhələ 5.1 — Kateqoriyalar Backend ✅
@@ -80,14 +79,37 @@
 - **Cloudinary İnteqrasiyası:** Multer (yaddaş yaddaşlı storage) + Cloudinary v2 SDK vasitəsilə şəklin növünü və ölçüsünü yoxlayaraq şəkil yükləmə mexanizmi quruldu.
 - **İnteqrasiya Testləri:** Bütün hallar üçün 45/45 Jest testləri uğurla icra olundu.
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅
+**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+
+### Mərhələ 5.2 — Kateqoriyalar Frontend ✅
+- **Navbar Dropdown:** `useCategoriesQuery` hook-u ilə dinamik kateqoriya siyahısı, hover flyout panel, alt kateqoriyaların görüntülənməsi.
+- **Dinamik Kateqoriya Səhifəsi** (`/category/[slug]/page.tsx`):
+  - SSG + `generateStaticParams()` bütün kateqoriyalar + locales kombinasiyası üçün.
+  - `generateMetadata()` OpenGraph, hreflang alternates, canonical URL ilə tam SEO dəstəyi.
+  - Premium hero bölümü (kateqoriya şəkli, adı, təsviri, məhsul sayı, breadcrumb).
+  - Alt kateqoriyalar grid görünüşü (hover animasiyaları, şəkil, fallback icon).
+  - Məhsullar bölümü EmptyState ilə placeholder (Mərhələ 6-da dinamikləşdiriləcək).
+- **Admin Kateqoriya CRUD Paneli** (`/admin/categories/page.tsx`):
+  - Axtarış + status filter (aktiv/qeyri-aktiv/hamısı).
+  - Kateqoriya cədvəli — thumbnail, ad, parent/alt bilgisi, məhsul sayı, status toggle.
+  - Modal form — yarat/redaktə et (ad, slug auto-generate, şəkil upload, parent seçimi, SEO accordion).
+  - Cloudinary şəkil yükləmə + preview ilə tam inteqrasiya.
+  - Silmə onayı (`ConfirmDialog`) ilə təhlükəsiz DELETE əməliyyatı.
+- **Test Mühiti İyileştirməsi:**
+  - `src/test/setup.ts`-ə `next/image` mock-u əlavə edildi (React.createElement vasitəsilə).
+  - Avatar testi real `src` URL-i ilə yeniləndi.
+- **Lint & TypeScript Təmizliyi:** Bütün unused imports (`useEffect`, `ChevronRight`, `ArrowRight`, `useTranslations`, `PageHeader`), unused variables (`t`, `isParent`, `isCategoriesLoading`) aradan qaldırıldı. `any` tipləri `Category` və `React.ImgHTMLAttributes<HTMLImageElement>` ilə əvəzləndi.
+
+**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
 ## Növbəti Addımlar
 
 1. Bu branch üzrə PR açmaq və merge etmək.
-2. Növbəti tapşırıq: **Mərhələ 5.2 — Kateqoriyalar Frontend** (Navbar kateqoriya siyahısı, `/category/[slug]/page.tsx` dinamik səhifə, Admin kateqoriya CRUD panel interfeysi).
+2. Növbəti tapşırıq: **Mərhələ 6.1 — Məhsullar Backend** (`GET /api/products`, CRUD, Cloudinary çox şəkil yükləmə, filter/sort/pagination).
 
 ## Əsas Texniki Qərarlar
 

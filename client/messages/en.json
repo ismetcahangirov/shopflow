@@ -37,7 +37,8 @@
     "nav_vendors": "Vendors",
     "cart_title": "Your Cart",
     "search_title": "Search",
-    "unauthorized_title": "Access Denied"
+    "unauthorized_title": "Access Denied",
+    "all_products_in": "All products in:"
   },
   "auth": {
     "welcome_back": "Welcome Back!",

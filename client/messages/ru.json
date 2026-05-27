@@ -37,7 +37,8 @@
     "nav_vendors": "Продавцы",
     "cart_title": "Ваша Корзина",
     "search_title": "Поиск",
-    "unauthorized_title": "Доступ Запрещен"
+    "unauthorized_title": "Доступ Запрещен",
+    "all_products_in": "Все товары в:"
   },
   "auth": {
     "welcome_back": "С возвращением!",

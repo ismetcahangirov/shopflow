@@ -40,3 +40,19 @@ vi.mock('next-intl/navigation', () => ({
     return '';
   },
 }));
+
+// Mock next/image to behave like a standard img tag for easier onLoad/onError testing
+import React from 'react';
+vi.mock('next/image', () => ({
+  __esModule: true,
+  default: function MockImage({ src, alt, onLoad, onError, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+    return React.createElement('img', {
+      src,
+      alt,
+      className,
+      onLoad,
+      onError,
+      ...props
+    });
+  },
+}));

@@ -37,7 +37,8 @@
     "nav_vendors": "Satıcılar",
     "cart_title": "Səbətiniz",
     "search_title": "Axtarış",
-    "unauthorized_title": "Giriş qadağandır"
+    "unauthorized_title": "Giriş qadağandır",
+    "all_products_in": "Bütün məhsullar:"
   },
   "auth": {
     "welcome_back": "Xoş gördük!",
