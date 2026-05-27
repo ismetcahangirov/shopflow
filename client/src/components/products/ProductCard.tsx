@@ -19,7 +19,6 @@ export interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const locale = useLocale();
   const t = useTranslations('product');
-  const commonT = useTranslations('common');
 
   const {
     slug,

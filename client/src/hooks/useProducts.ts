@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 import type { Product, ApiResponse } from '@/types';
 
 // Fetch products with filters, sorting, search, and pagination
-export function useProductsQuery(params: Record<string, any> = {}) {
+export function useProductsQuery(params: Record<string, unknown> = {}) {
   return useQuery<ApiResponse<{ products: Product[] }>>({
     queryKey: ['products', 'list', params],
     queryFn: async () => {

@@ -249,17 +249,17 @@
 ### 6.2 Frontend
 **Branch:** `feature/m06-products-frontend`
 
-- [ ] `ProductCard.tsx` yaradıldı (endirim %, stok overlay, hover)
-- [ ] `ProductGrid.tsx` yaradıldı (responsive grid)
-- [ ] `ProductFilters.tsx` yaradıldı (URL sync)
-- [ ] `ProductImages.tsx` yaradıldı (galereya, zoom, swipe)
-- [ ] `ProductSchema.tsx` yaradıldı (JSON-LD)
-- [ ] `StarRating.tsx` yaradıldı (display + interactive)
-- [ ] Məhsul siyahısı səhifəsi (`/products/page.tsx` — SSR)
-- [ ] Məhsul detalı səhifəsi (`/products/[slug]/page.tsx` — SSG+ISR)
+- [x] `ProductCard.tsx` yaradıldı (endirim %, stok overlay, hover)
+- [x] `ProductGrid.tsx` yaradıldı (responsive grid)
+- [x] `ProductFilters.tsx` yaradıldı (URL sync)
+- [x] `ProductImages.tsx` yaradıldı (galereya, zoom, swipe)
+- [x] `ProductSchema.tsx` yaradıldı (JSON-LD)
+- [x] `StarRating.tsx` yaradıldı (display + interactive)
+- [x] Məhsul siyahısı səhifəsi (`/products/page.tsx` — SSR)
+- [x] Məhsul detalı səhifəsi (`/products/[slug]/page.tsx` — SSG+ISR)
 - [ ] Axtarış səhifəsi (`/search/page.tsx` — SSR)
-- [ ] `generateMetadata()` məhsul detalı üçün
-- [ ] `generateStaticParams()` populyar məhsullar üçün
+- [x] `generateMetadata()` məhsul detalı üçün
+- [x] `generateStaticParams()` populyar məhsullar üçün
 - [ ] Admin: məhsul siyahısı + CRUD panel
 - [ ] Vendor: məhsullarım səhifəsi
 

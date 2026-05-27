@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Filter, RotateCcw, ChevronDown, Check, Star } from 'lucide-react';
+import { Filter, RotateCcw, Check, Star } from 'lucide-react';
 import { useCategoriesQuery } from '@/hooks/useCategories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
