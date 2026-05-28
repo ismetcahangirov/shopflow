@@ -2,8 +2,8 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m13-profile-backend`  
-**Cari Mərhələ:** Mərhələ 13.1 — Profil Backend ✅  
+**Aktiv Branch:** `feature/m13-profile-frontend`  
+**Cari Mərhələ:** Mərhələ 13.2 — Profil Frontend ✅  
 **Status:** TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -187,14 +187,25 @@
 - `useReviews.ts` — TanStack Query hook
 - i18n: review_title, review_body, review_send, review_moderation
 
+### Mərhələ 13.1 — Profil Backend ✅
+- `PUT /api/users/me` — profil yenilə
+- `PUT /api/users/me/password` — şifrə dəyiş (bcrypt, cari şifrə yoxlaması)
+- `POST /api/users/me/avatar` — avatar yüklə (Multer + Cloudinary)
+- `GET /api/users` — bütün istifadəçilər (Admin, filter/search/pagination)
+- `PATCH /api/users/:id/status` — aktiv/deaktiv (Admin, ADMIN bloklanır)
+
+### Mərhələ 13.2 — Profil Frontend ✅
+- `/profile` səhifəsi — avatar, info, redaktə, şifrə dəyişmə
+- Avatar yükləmə (birbaşa Cloudinary)
+- Profile edit (inline form)
+- Password change (current password verification)
+- i18n: `profile` namespace (az/en/ru)
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 13 — Profil & Parametrlər:**
-   - GET/PUT /api/users/me — profil al/yenilə
-   - PUT /api/users/me/password — şifrə dəyiş
-   - POST /api/users/me/avatar — avatar yüklə
-   - GET /api/users — bütün istifadəçilər (Admin)
-   - PATCH /api/users/:id/status — aktiv/deaktiv (Admin)
+1. **Mərhələ 14 — Vendor:**
+   - Vendor müraciət, təsdiq, profil
+   - Vendor Dashboard
 
 | Qərar | Səbəb |
 |---|---|
