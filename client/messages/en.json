@@ -127,7 +127,11 @@
     "attributes": "Attributes",
     "variants": "Variants",
     "quantity": "Quantity",
-    "description": "Description"
+    "description": "Description",
+    "review_title": "Title (optional)",
+    "review_body": "Your review",
+    "review_send": "Submit",
+    "review_moderation": "Your review will appear after moderation"
   },
   "cart": {
     "title": "Your Cart",

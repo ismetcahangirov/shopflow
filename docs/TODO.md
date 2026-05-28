@@ -407,11 +407,12 @@
 - [ ] `DELETE /api/reviews/:id` — sil (Admin)
 - [ ] Rəy yaradılanda məhsul `avgRating` + `reviewCount` yenilənir
 
-### 12.2 Frontend
-**Branch:** `feature/m12-reviews-frontend`
+### 12.2 Frontend ✅
+**Branch:** `feature/m12-reviews-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `ReviewCard.tsx` yaradıldı
-- [ ] `ReviewForm.tsx` yaradıldı (interaktiv ulduz)
+- [x] `ReviewCard.tsx` yaradıldı
+- [x] `ReviewForm.tsx` yaradıldı (interaktiv ulduz)
 - [ ] Məhsul detalında rəy bölməsi
 - [ ] Admin: Rəylər moderasiya paneli
 
@@ -613,7 +614,7 @@
 | 9 — Ünvanlar | `[x]` tamamlandı | 100% |
 | 10 — Ödəniş & Sifariş | `[x]` tamamlandı | 100% |
 | 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
-| 12 — Rəylər | `[ ]` gözləyir | 0% |
+| 12 — Rəylər | `[x]` tamamlandı | 100% |
 | 13 — Profil | `[ ]` gözləyir | 0% |
 | 14 — Vendor | `[ ]` gözləyir | 0% |
 | 15 — Analitika | `[ ]` gözləyir | 0% |

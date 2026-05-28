@@ -127,7 +127,11 @@
     "attributes": "Xüsusiyyətlər",
     "variants": "Variantlar",
     "quantity": "Say",
-    "description": "Təsvir"
+    "description": "Təsvir",
+    "review_title": "Başlıq (istəyə bağlı)",
+    "review_body": "Rəyiniz",
+    "review_send": "Göndər",
+    "review_moderation": "Rəyiniz moderasiyadan sonra görünəcək"
   },
   "cart": {
     "title": "Səbətiniz",
