@@ -431,13 +431,14 @@
 - [x] `GET /api/users` — bütün istifadəçilər (Admin)
 - [x] `PATCH /api/users/:id/status` — aktiv/deaktiv (Admin)
 
-### 13.2 Frontend
-**Branch:** `feature/m13-profile-frontend`
+### 13.2 Frontend ✅
+**Branch:** `feature/m13-profile-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Profil səhifəsi (`/profile/page.tsx`)
-- [ ] Profil redaktə forması
-- [ ] Avatar yükləmə (Cloudinary widget və ya birbaşa)
-- [ ] Şifrə dəyiş forması
+- [x] Profil səhifəsi (`/profile/page.tsx`)
+- [x] Profil redaktə forması
+- [x] Avatar yükləmə (Cloudinary)
+- [x] Şifrə dəyiş forması
 - [ ] Admin: İstifadəçilər paneli (filter, blok/aktiv)
 
 ---
@@ -616,7 +617,7 @@
 | 10 — Ödəniş & Sifariş | `[x]` tamamlandı | 100% |
 | 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
 | 12 — Rəylər | `[x]` tamamlandı | 100% |
-| 13 — Profil | `[~]` davam edir | 50% |
+| 13 — Profil | `[x]` tamamlandı | 100% |
 | 14 — Vendor | `[ ]` gözləyir | 0% |
 | 15 — Analitika | `[ ]` gözləyir | 0% |
 | 16 — SEO & Performans | `[ ]` gözləyir | 0% |
