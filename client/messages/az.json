@@ -208,6 +208,14 @@
     "status_cancelled": "Ləğv edildi",
     "status_refunded": "Geri qaytarıldı"
   },
+  "wishlist": {
+    "title": "İstək Siyahısı",
+    "empty": "İstək siyahınız boşdur",
+    "empty_desc": "Bəyəndiyiniz məhsulları istək siyahısına əlavə edin.",
+    "browse_products": "Məhsullara bax",
+    "add_to_cart": "Səbətə əlavə et",
+    "out_of_stock": "Stokda yoxdur"
+  },
   "addresses": {
     "my_addresses": "Ünvanlarım",
     "addresses_subtitle": "Çatdırılma ünvanlarınızı idarə edin",

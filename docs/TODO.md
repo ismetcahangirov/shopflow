@@ -376,20 +376,22 @@
 
 ## Mərhələ 11 — İstək Siyahısı
 
-### 11.1 Backend
-**Branch:** `feature/m11-wishlist-backend`
+### 11.1 Backend ✅
+**Branch:** `feature/m11-wishlist-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/wishlist` — öz istək siyahısı
-- [ ] `POST /api/wishlist` — məhsul əlavə et
-- [ ] `DELETE /api/wishlist/:productId` — çıxar
+- [x] `GET /api/wishlist` — öz istək siyahısı
+- [x] `POST /api/wishlist` — məhsul əlavə et
+- [x] `DELETE /api/wishlist/:productId` — çıxar
 
-### 11.2 Frontend
-**Branch:** `feature/m11-wishlist-frontend`
+### 11.2 Frontend ✅
+**Branch:** `feature/m11-wishlist-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] İstək siyahısı səhifəsi (`/wishlist/page.tsx`)
-- [ ] Məhsul kartında ❤️ düyməsi
+- [x] İstək siyahısı səhifəsi (`/wishlist/page.tsx`)
+- [x] Məhsul kartında ❤️ düyməsi (Zustand persist)
 - [ ] Navbar-da istək siyahısı sayğacı
-- [ ] Zustand wishlistStore (opsional — API ilə sinxron)
+- [x] Zustand wishlistStore (localStorage persist)
 - [ ] BottomTabs-da ❤️ tab
 
 ---
@@ -610,7 +612,7 @@
 | 8 — Kuponlar | `[x]` tamamlandı | 100% |
 | 9 — Ünvanlar | `[x]` tamamlandı | 100% |
 | 10 — Ödəniş & Sifariş | `[x]` tamamlandı | 100% |
-| 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |
+| 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
 | 12 — Rəylər | `[ ]` gözləyir | 0% |
 | 13 — Profil | `[ ]` gözləyir | 0% |
 | 14 — Vendor | `[ ]` gözləyir | 0% |

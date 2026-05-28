@@ -208,6 +208,14 @@
     "status_cancelled": "Отменен",
     "status_refunded": "Возврат"
   },
+  "wishlist": {
+    "title": "Список желаний",
+    "empty": "Список желаний пуст",
+    "empty_desc": "Добавляйте понравившиеся товары в список желаний.",
+    "browse_products": "Смотреть товары",
+    "add_to_cart": "В корзину",
+    "out_of_stock": "Нет в наличии"
+  },
   "addresses": {
     "my_addresses": "Мои Адреса",
     "addresses_subtitle": "Управляйте адресами доставки",
