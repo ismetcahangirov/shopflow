@@ -457,14 +457,14 @@
 - [x] `GET /api/vendors/me/stats` — vendor statistikaları
 - [x] `requireApprovedVendor` middleware yazıldı
 
-### 14.2 Frontend
-**Branch:** `feature/m14-vendor-frontend`
+### 14.2 Frontend ✅
+**Branch:** `feature/m14-vendor-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Vendor müraciət forması
-- [ ] Vendor Dashboard (`/vendor/page.tsx`)
-- [ ] Vendor məhsulları (`/vendor/products/`)
-- [ ] Vendor sifarişləri (`/vendor/orders/`)
-- [ ] Vendor mağaza profili (`/vendor/store/`)
+- [x] Vendor Dashboard (`/vendor/page.tsx`)
+- [x] Vendor məhsulları (`/vendor/products/`)
+- [x] Vendor sifarişləri (`/vendor/orders/`)
+- [x] Vendor mağaza profili (`/vendor/store/`)
 - [ ] Admin: Vendorlar paneli (təsdiq/rədd)
 
 ---
@@ -619,7 +619,7 @@
 | 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
 | 12 — Rəylər | `[x]` tamamlandı | 100% |
 | 13 — Profil | `[x]` tamamlandı | 100% |
-| 14 — Vendor | `[~]` davam edir | 50% |
+| 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[ ]` gözləyir | 0% |
 | 16 — SEO & Performans | `[ ]` gözləyir | 0% |
 | 17 — Testlər | `[ ]` gözləyir | 0% |
