@@ -2,8 +2,8 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m14-vendor-backend`  
-**Cari Mərhələ:** Mərhələ 14.1 — Vendor Backend ✅  
+**Aktiv Branch:** `feature/m14-vendor-frontend`  
+**Cari Mərhələ:** Mərhələ 14.2 — Vendor Frontend ✅  
 **Status:** TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -209,12 +209,16 @@
 - `GET /api/vendors/me/stats` — statistikalar (məhsul sayı, sifariş, revenue, reytinq)
 - `requireApprovedVendor` middleware — VENDOR rol + APPROVED status yoxlaması
 
+### Mərhələ 14.2 — Vendor Frontend ✅
+- Dashboard (`/vendor`) — real-time stats (məhsul, sifariş, gəlir, reytinq)
+- Məhsullar (`/vendor/products`) — siyahı cədvəli
+- Sifarişlər (`/vendor/orders`) — siyahı
+- Mağaza profili (`/vendor/store`) — store info, status
+- i18n: `vendor` namespace (az/en/ru)
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 14.2 — Vendor Frontend:**
-   - Vendor müraciət forması
-   - Vendor Dashboard
-   - Vendor məhsulları/sifarişləri
+1. **Mərhələ 15 — Dashboard & Analitika:**
 
 | Qərar | Səbəb |
 |---|---|
