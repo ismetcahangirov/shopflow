@@ -335,26 +335,27 @@
 
 ## Mərhələ 10 — Ödəniş & Sifariş
 
-### 10.1 Backend
-**Branch:** `feature/m10-payment-orders-backend`
+### 10.1 Backend ✅
+**Branch:** `feature/m10-payment-orders-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Stripe quraşdırıldı (`npm install stripe`)
-- [ ] `src/config/stripe.ts` yazıldı
-- [ ] `POST /api/payments/create-intent` — PaymentIntent yarat
-- [ ] `POST /api/payments/webhook` — Stripe webhook (RAW body)
-- [ ] `POST /api/payments/refund` — geri ödəniş (Admin)
-- [ ] `handlePaymentSuccess` — Prisma transaction
-- [ ] `handlePaymentFailure` — status yenilə
-- [ ] `handleRefund` — geri ödəniş emal
-- [ ] `POST /api/orders` — sifariş yarat (Customer)
-- [ ] `GET /api/orders` — bütün sifarişlər (Admin)
-- [ ] `GET /api/orders/my` — öz sifarişləri (Customer)
-- [ ] `GET /api/orders/:id` — tək sifariş (Admin/sahib)
-- [ ] `PATCH /api/orders/:id/status` — status dəyiş (Admin)
-- [ ] `POST /api/orders/:id/cancel` — ləğv et
-- [ ] Sifariş təsdiq emaili (Resend)
-- [ ] `generateOrderNumber` utility
-- [ ] Webhook route-u express.json()-dan əvvəl qeyd edildi
+- [x] Stripe quraşdırıldı (`npm install stripe`)
+- [x] `src/config/stripe.ts` yazıldı
+- [x] `POST /api/payments/create-intent` — PaymentIntent yarat
+- [x] `POST /api/payments/webhook` — Stripe webhook (RAW body)
+- [x] `POST /api/payments/refund` — geri ödəniş (Admin)
+- [x] `handlePaymentSuccess` — Prisma transaction
+- [x] `handlePaymentFailure` — status yenilə
+- [x] `handleRefund` — geri ödəniş emal
+- [x] `POST /api/orders` — sifariş yarat (Customer)
+- [x] `GET /api/orders` — bütün sifarişlər (Admin)
+- [x] `GET /api/orders/my` — öz sifarişləri (Customer)
+- [x] `GET /api/orders/:id` — tək sifariş (Admin/sahib)
+- [x] `PATCH /api/orders/:id/status` — status dəyiş (Admin)
+- [x] `POST /api/orders/:id/cancel` — ləğv et
+- [x] Sifariş təsdiq emaili (Resend)
+- [x] `generateOrderNumber` utility
+- [x] Webhook route-u express.json()-dan əvvəl qeyd edildi
 
 ### 10.2 Frontend
 **Branch:** `feature/m10-payment-orders-frontend`
@@ -607,7 +608,7 @@
 | 7 — Səbət | `[x]` tamamlandı | 100% |
 | 8 — Kuponlar | `[x]` tamamlandı | 100% |
 | 9 — Ünvanlar | `[x]` tamamlandı | 100% |
-| 10 — Ödəniş & Sifariş | `[ ]` gözləyir | 0% |
+| 10 — Ödəniş & Sifariş | `[~]` davam edir | 50% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |
 | 12 — Rəylər | `[ ]` gözləyir | 0% |
 | 13 — Profil | `[ ]` gözləyir | 0% |

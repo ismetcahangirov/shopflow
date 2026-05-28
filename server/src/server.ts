@@ -22,6 +22,9 @@ import productRoutes from './routes/productRoutes';
 import cartRoutes from './routes/cartRoutes';
 import couponRoutes from './routes/couponRoutes';
 import addressRoutes from './routes/addressRoutes';
+import paymentRoutes from './routes/paymentRoutes';
+import orderRoutes from './routes/orderRoutes';
+import { stripeWebhook } from './controllers/paymentController';
 
 // ── App setup ────────────────────────────────────────────
 const app = express();
@@ -54,8 +57,8 @@ app.use(
 );
 
 // ── Body parsing ─────────────────────────────────────────
-// NOTE: Stripe webhook route needs raw body — register it BEFORE express.json()
-// (will be added in Milestone 10)
+// Stripe webhook needs raw body — MUST be registered BEFORE express.json()
+app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
@@ -71,6 +74,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/addresses', addressRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/orders', orderRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {
