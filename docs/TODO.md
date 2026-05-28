@@ -313,14 +313,15 @@
 
 ## Mərhələ 9 — Ünvanlar
 
-### 9.1 Backend
-**Branch:** `feature/m09-addresses-backend`
+### 9.1 Backend ✅
+**Branch:** `feature/m09-addresses-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/addresses` — öz ünvanları
-- [ ] `POST /api/addresses` — ünvan əlavə et
-- [ ] `PUT /api/addresses/:id` — yenilə
-- [ ] `DELETE /api/addresses/:id` — sil
-- [ ] `PATCH /api/addresses/:id/default` — default et
+- [x] `GET /api/addresses` — öz ünvanları
+- [x] `POST /api/addresses` — ünvan əlavə et
+- [x] `PUT /api/addresses/:id` — yenilə
+- [x] `DELETE /api/addresses/:id` — sil
+- [x] `PATCH /api/addresses/:id/default` — default et
 
 ### 9.2 Frontend
 **Branch:** `feature/m09-addresses-frontend`
@@ -604,7 +605,7 @@
 | 6 — Məhsullar | `[x]` tamamlandı | 100% |
 | 7 — Səbət | `[x]` tamamlandı | 100% |
 | 8 — Kuponlar | `[x]` tamamlandı | 100% |
-| 9 — Ünvanlar | `[ ]` gözləyir | 0% |
+| 9 — Ünvanlar | `[~]` davam edir | 50% |
 | 10 — Ödəniş & Sifariş | `[ ]` gözləyir | 0% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |
 | 12 — Rəylər | `[ ]` gözləyir | 0% |

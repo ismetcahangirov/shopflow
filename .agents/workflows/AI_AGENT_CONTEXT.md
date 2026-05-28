@@ -1,8 +1,9 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 > Son yenilənmə: 2026-05-28
 
-## Cari Vəziyy�**Aktiv Branch:** `feature/m08-coupons-frontend`  
-**Cari Mərhələ:** Mərhələ 8.2 — Kuponlar Frontend (Tamamlandı) ✅  
+## Cari Vəziyyət
+**Aktiv Branch:** `feature/m09-addresses-backend`  
+**Cari Mərhələ:** Mərhələ 9.1 — Ünvanlar Backend (Tamamlandı) ✅  
 **Status:** Testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -120,27 +121,25 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəta ✅
 
+### Mərhələ 9.1 — Ünvanlar Backend ✅
+- **`GET /api/addresses`** — istifadəçinin öz ünvanları (default ilk sırada, yaradılma tarixinə görə).
+- **`POST /api/addresses`** — yeni ünvan yarat (Customer, isDefault true olarsa əvvəlki default-ları ləğv edir).
+- **`PUT /api/addresses/:id`** — ünvanı yenilə (Customer, yalnız öz ünvanı, digər istifadəçi → 403).
+- **`DELETE /api/addresses/:id`** — ünvanı sil (Customer, sifarişlə əlaqəli ünvan → 409).
+- **`PATCH /api/addresses/:id/default`** — ünvanı default et (Customer, transaction ilə əvvəlki default-ları ləğv edir).
+- **Validasiya:** `addressValidators.ts` — bütün sahələr üçün express-validator qaydaları (Azərbaycan dilində mesajlar).
+- **İnteqrasiya Testləri:** 23/23 Jest testi — 401, 403, 404, 400, 201, 200 bütün ssenariləri əhatə edir.
+
+**Test nəticəsi:** 142/142 frontend testi ✅ | 141/141 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəta ✅
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 9.1 — Ünvanlar Backend:**
-   - `GET /api/addresses` — öz ünvanları.
-   - `POST /api/addresses` — ünvan əlavə et.
-   - `PUT /api/addresses/:id` — yenilə.
-   - `DELETE /api/addresses/:id` — sil.
-   - `PATCH /api/addresses/:id/default` — default et.ya Testləri:** 24/24 Jest testi — 401, 403, 404, 409, 400, 200, 201 bütün ssenariləri əhatə edir.
-
-**Test nəticəsi:** 142/142 frontend testi ✅ | 118/118 backend testi ✅  
-**TypeScript:** px tsc --noEmit — 0 xəta ✅  
-**Lint:** pm run lint — 0 xəta ✅
-
-## Növbəti Addımlar
-
-1. **Mərhələ 9.1 — Ünvanlar Backend:**
-   - GET /api/addresses — öz ünvanları.
-   - POST /api/addresses — ünvan əlavə et.
-   - PUT /api/addresses/:id — yenilə.
-   - DELETE /api/addresses/:id — sil.
-   - PATCH /api/addresses/:id/default — default et.
+1. **Mərhələ 9.2 — Ünvanlar Frontend:**
+   - Ünvanlar səhifəsi yaradıldı (`/profile/addresses`)
+   - Ünvan əlavə etmə forması
+   - Default ünvan seçimi
 
 | Qərar | Səbəb |
 |---|---|
