@@ -2,9 +2,9 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m10-payment-orders-backend`  
-**Cari Mərhələ:** Mərhələ 10.1 — Ödəniş & Sifariş Backend (Tamamlandı) ✅  
-**Status:** Testlər verilənlər bazası problemi | TypeScript ✅ | Lint ✅
+**Aktiv Branch:** `feature/m13-profile-backend`  
+**Cari Mərhələ:** Mərhələ 13.1 — Profil Backend ✅  
+**Status:** TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -157,12 +157,44 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəta ✅
 
+### Mərhələ 10.2 — Ödəniş & Sifariş Frontend ✅
+- **Stripe Elements:** `@stripe/stripe-js` + `@stripe/react-stripe-js`, `stripe.ts` singleton
+- **Checkout:** `/checkout` səhifəsi — ünvan seçimi, Stripe PaymentElement, sifariş yaratma
+- **Sifariş:** `/orders` siyahı, `/orders/[id]` detal (status tarixçəsi, ləğv), `/order/success/[id]`
+- **Hooks:** `useOrders` — TanStack Query ilə CRUD + payment intent
+- **i18n:** `orders` namespace + genişləndirilmiş `checkout` (az/en/ru)
+
+### Mərhələ 11.1 — İstək Siyahısı Backend ✅
+- `GET /api/wishlist` — siyahı
+- `POST /api/wishlist` — əlavə et (409 artıq varsa)
+- `DELETE /api/wishlist/:productId` — çıxar
+
+### Mərhələ 11.2 — İstək Siyahısı Frontend ✅
+- `/wishlist` səhifəsi — məhsul qalereyası
+- Zustand `wishlistStore` (localStorage persist)
+- ProductCard-da ❤️ toggle düyməsi
+- i18n: `wishlist` namespace (az/en/ru)
+
+### Mərhələ 12.1 — Rəylər Backend ✅
+- `GET /api/reviews` — filter + page + rating distribution
+- `POST /api/reviews` — alqı yoxlaması, məhsul reytinqi yeniləmə (transaction)
+- `PATCH /api/reviews/:id/approve` — təsdiq/rədd (Admin)
+- `DELETE /api/reviews/:id` — sil (Admin)
+
+### Mərhələ 12.2 — Rəylər Frontend ✅
+- `ReviewCard.tsx` — rəy kartı komponenti
+- `ReviewForm.tsx` — interaktiv ulduz qiymətləndirmə + Zod validasiya
+- `useReviews.ts` — TanStack Query hook
+- i18n: review_title, review_body, review_send, review_moderation
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 10.2 — Ödəniş & Sifariş Frontend:**
-   - Checkout səhifəsi
-   - Stripe Elements inteqrasiyası
-   - Sifariş siyahısı/detalı
+1. **Mərhələ 13 — Profil & Parametrlər:**
+   - GET/PUT /api/users/me — profil al/yenilə
+   - PUT /api/users/me/password — şifrə dəyiş
+   - POST /api/users/me/avatar — avatar yüklə
+   - GET /api/users — bütün istifadəçilər (Admin)
+   - PATCH /api/users/:id/status — aktiv/deaktiv (Admin)
 
 | Qərar | Səbəb |
 |---|---|

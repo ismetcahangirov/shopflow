@@ -420,15 +420,16 @@
 
 ## Mərhələ 13 — Profil & Parametrlər
 
-### 13.1 Backend
-**Branch:** `feature/m13-profile-backend`
+### 13.1 Backend ✅
+**Branch:** `feature/m13-profile-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/users/me` — profil al
-- [ ] `PUT /api/users/me` — profili yenilə
-- [ ] `PUT /api/users/me/password` — şifrə dəyiş
-- [ ] `POST /api/users/me/avatar` — avatar yüklə (Multer + Cloudinary)
-- [ ] `GET /api/users` — bütün istifadəçilər (Admin)
-- [ ] `PATCH /api/users/:id/status` — aktiv/deaktiv (Admin)
+- [x] `GET /api/users/me` — profil al
+- [x] `PUT /api/users/me` — profili yenilə
+- [x] `PUT /api/users/me/password` — şifrə dəyiş
+- [x] `POST /api/users/me/avatar` — avatar yüklə (Multer + Cloudinary)
+- [x] `GET /api/users` — bütün istifadəçilər (Admin)
+- [x] `PATCH /api/users/:id/status` — aktiv/deaktiv (Admin)
 
 ### 13.2 Frontend
 **Branch:** `feature/m13-profile-frontend`
@@ -615,7 +616,7 @@
 | 10 — Ödəniş & Sifariş | `[x]` tamamlandı | 100% |
 | 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
 | 12 — Rəylər | `[x]` tamamlandı | 100% |
-| 13 — Profil | `[ ]` gözləyir | 0% |
+| 13 — Profil | `[~]` davam edir | 50% |
 | 14 — Vendor | `[ ]` gözləyir | 0% |
 | 15 — Analitika | `[ ]` gözləyir | 0% |
 | 16 — SEO & Performans | `[ ]` gözləyir | 0% |
