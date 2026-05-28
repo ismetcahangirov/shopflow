@@ -471,14 +471,15 @@
 
 ## Mərhələ 15 — Dashboard & Analitika
 
-### 15.1 Backend
-**Branch:** `feature/m15-analytics-backend`
+### 15.1 Backend ✅
+**Branch:** `feature/m15-analytics-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/analytics/dashboard` — KPI statistika (Admin)
-- [ ] `GET /api/analytics/sales` — satış qrafiki (Admin)
-- [ ] `GET /api/settings` — sayt parametrləri (public)
-- [ ] `PUT /api/settings` — parametrləri yenilə (Admin)
-- [ ] Rola görə fərqli statistika (Admin vs Vendor)
+- [x] `GET /api/analytics/dashboard` — KPI statistika (Admin)
+- [x] `GET /api/analytics/sales` — satış qrafiki (Admin)
+- [x] `GET /api/settings` — sayt parametrləri (public)
+- [x] `PUT /api/settings` — parametrləri yenilə (Admin)
+- [x] Rola görə fərqli statistika (Admin vs Vendor)
 
 ### 15.2 Frontend ✅
 **Branch:** `feature/m15-analytics-frontend`  
