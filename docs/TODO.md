@@ -357,17 +357,18 @@
 - [x] `generateOrderNumber` utility
 - [x] Webhook route-u express.json()-dan əvvəl qeyd edildi
 
-### 10.2 Frontend
-**Branch:** `feature/m10-payment-orders-frontend`
+### 10.2 Frontend ✅
+**Branch:** `feature/m10-payment-orders-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `@stripe/stripe-js` + `@stripe/react-stripe-js` quraşdırıldı
-- [ ] `src/lib/stripe.ts` yazıldı (singleton)
-- [ ] `CheckoutForm.tsx` yaradıldı (ünvan seçimi, kupon)
-- [ ] `StripePayment.tsx` yaradıldı (PaymentElement)
-- [ ] Checkout səhifəsi yaradıldı (`/checkout/page.tsx` — CSR)
-- [ ] Sifariş uğur səhifəsi yaradıldı (`/order/success/[id]/page.tsx`)
-- [ ] Sifarişlər siyahısı (`/orders/page.tsx`)
-- [ ] Sifariş detalı (`/orders/[id]/page.tsx`)
+- [x] `@stripe/stripe-js` + `@stripe/react-stripe-js` quraşdırıldı
+- [x] `src/lib/stripe.ts` yazıldı (singleton)
+- [x] `CheckoutForm.tsx` yaradıldı (ünvan seçimi, kupon)
+- [x] `StripePayment.tsx` yaradıldı (PaymentElement)
+- [x] Checkout səhifəsi yaradıldı (`/checkout/page.tsx` — CSR)
+- [x] Sifariş uğur səhifəsi yaradıldı (`/order/success/[id]/page.tsx`)
+- [x] Sifarişlər siyahısı (`/orders/page.tsx`)
+- [x] Sifariş detalı (`/orders/[id]/page.tsx`)
 - [ ] Admin: Sifarişlər paneli (filter, status dəyişmə)
 - [ ] Stripe Webhook Stripe Dashboard-da konfiqurasiya edildi
 
@@ -608,7 +609,7 @@
 | 7 — Səbət | `[x]` tamamlandı | 100% |
 | 8 — Kuponlar | `[x]` tamamlandı | 100% |
 | 9 — Ünvanlar | `[x]` tamamlandı | 100% |
-| 10 — Ödəniş & Sifariş | `[~]` davam edir | 50% |
+| 10 — Ödəniş & Sifariş | `[x]` tamamlandı | 100% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |
 | 12 — Rəylər | `[ ]` gözləyir | 0% |
 | 13 — Profil | `[ ]` gözləyir | 0% |
