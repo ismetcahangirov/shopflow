@@ -20,6 +20,7 @@ import authRoutes from './routes/authRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import productRoutes from './routes/productRoutes';
 import cartRoutes from './routes/cartRoutes';
+import couponRoutes from './routes/couponRoutes';
 
 // ── App setup ────────────────────────────────────────────
 const app = express();
@@ -67,6 +68,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/coupons', couponRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {

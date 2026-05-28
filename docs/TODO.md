@@ -292,14 +292,15 @@
 
 ## Mərhələ 8 — Kuponlar
 
-### 8.1 Backend
-**Branch:** `feature/m08-coupons-backend`
+### 8.1 Backend ✅
+**Branch:** `feature/m08-coupons-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/coupons` — siyahı (Admin)
-- [ ] `POST /api/coupons` — yarat (Admin)
-- [ ] `PUT /api/coupons/:id` — yenilə (Admin)
-- [ ] `DELETE /api/coupons/:id` — sil (Admin)
-- [ ] `POST /api/coupons/validate` — kupon yoxla (Customer)
+- [x] `GET /api/coupons` — siyahı (Admin)
+- [x] `POST /api/coupons` — yarat (Admin)
+- [x] `PUT /api/coupons/:id` — yenilə (Admin)
+- [x] `DELETE /api/coupons/:id` — sil (Admin)
+- [x] `POST /api/coupons/validate` — kupon yoxla (Customer)
 
 ### 8.2 Frontend
 **Branch:** `feature/m08-coupons-frontend`
@@ -598,11 +599,11 @@
 | 1 — Qurulum | `[x]` tamamlandı | 100% |
 | 2 — Auth | `[x]` tamamlandı | 100% |
 | 3 — Layout | `[x]` tamamlandı | 100% |
-| 4 — Komponentlər | `[ ]` gözləyir | 0% |
-| 5 — Kateqoriyalar | `[ ]` gözləyir | 0% |
-| 6 — Məhsullar | `[ ]` gözləyir | 0% |
-| 7 — Səbət | `[ ]` gözləyir | 0% |
-| 8 — Kuponlar | `[ ]` gözləyir | 0% |
+| 4 — Komponentlər | `[x]` tamamlandı | 100% |
+| 5 — Kateqoriyalar | `[x]` tamamlandı | 100% |
+| 6 — Məhsullar | `[x]` tamamlandı | 100% |
+| 7 — Səbət | `[x]` tamamlandı | 100% |
+| 8 — Kuponlar | `[~]` davam edir | 50% |
 | 9 — Ünvanlar | `[ ]` gözləyir | 0% |
 | 10 — Ödəniş & Sifariş | `[ ]` gözləyir | 0% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |

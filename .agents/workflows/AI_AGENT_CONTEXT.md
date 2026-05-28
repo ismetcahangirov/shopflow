@@ -3,9 +3,9 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m08-coupons-backend`  
-**Cari Mərhələ:** Mərhələ 8.1 — Kuponlar Backend (İşlənilir)  
-**Status:** Testlər ⏳ | TypeScript ⏳ | Lint ⏳
+**Aktiv Branch:** `feature/m08-coupons-frontend`  
+**Cari Mərhələ:** Mərhələ 8.2 — Kuponlar Frontend (Başlanılır)  
+**Status:** Testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -102,10 +102,26 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
 
+### Mərhələ 8.1 — Kuponlar Backend ✅
+- **`GET /api/coupons`** — kupon siyahısı (Admin, pagination dəstəyi).
+- **`POST /api/coupons`** — yeni kupon yarat (Admin, `PERCENTAGE` / `FIXED_AMOUNT` tipi, kod unikallığı yoxlaması).
+- **`PUT /api/coupons/:id`** — kuponu yenilə (Admin, 404 yoxlaması).
+- **`DELETE /api/coupons/:id`** — kuponu sil (Admin, 404 yoxlaması).
+- **`POST /api/coupons/validate`** — kuponu yoxla (Customer — aktiv/müddəti/limit/minOrder yoxlamaları, endirim hesablaması).
+- **Validasiya:** `couponValidators.ts` — PERCENTAGE üçün 0-100 diapazon, FIXED_AMOUNT üçün müsbət dəyər.
+- **Discount Hesablaması:** Percentage kuponda `maxDiscount` cap tətbiq olunur.
+- **İnteqrasiya Testləri:** 24/24 Jest testi — 401, 403, 404, 409, 400, 200, 201 bütün ssenariləri əhatə edir.
+
+**Test nəticəsi:** 131/131 frontend testi ✅ | 118/118 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəta (1 xəbərdarlıq düzəldildi) ✅
+
 ## Növbəti Addımlar
 
-1. Mərhələ 8.1 backend route-larının, validator-larının və admin CRUD endpointlərinin tamamlanması.
-2. `couponRoutes` inteqrasiya testlərinin yazılması və yaşıl keçməsinin təmin edilməsi.
+1. **Mərhələ 8.2 — Kuponlar Frontend:**
+   - `CouponInput.tsx` komponenti: boş / uğurlu / xəta 3 vəziyyəti.
+   - `CartSummary`-ə kupon tətbiqi inteqrasiyası.
+   - Admin: Kuponlar CRUD səhifəsi (`/admin/coupons`).
 
 ## Əsas Texniki Qərarlar
 
@@ -116,6 +132,7 @@
 | Zustand hydration tracking (`isHydrated`) | Server və brauzer arasında baş verə bizə HTML uyğunsuzluqlarının (hydration mismatch) qarşısını almaq |
 | Premium Dark/Glassmorphic Stil | Vanilla Tailwind imkanları ilə premium, modern və dinamik interfeyslər |
 | Cart lazy-create pattern | Səbət yalnız ilk məhsul əlavəsində yaradılır — boş cədvəllər olmur |
+| Coupon maxDiscount cap | PERCENTAGE kuponda `maxDiscount` varsa, hesablanmış endirim ondan böyük ola bilməz |
 
 ## Vacib Qeydlər
 
