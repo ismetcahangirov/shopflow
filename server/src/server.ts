@@ -24,6 +24,7 @@ import couponRoutes from './routes/couponRoutes';
 import addressRoutes from './routes/addressRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import orderRoutes from './routes/orderRoutes';
+import wishlistRoutes from './routes/wishlistRoutes';
 import { stripeWebhook } from './controllers/paymentController';
 
 // ── App setup ────────────────────────────────────────────
@@ -76,6 +77,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {
