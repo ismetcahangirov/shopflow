@@ -189,6 +189,21 @@ export interface Coupon {
   updatedAt: string;
 }
 
+export interface Address {
+  id: string;
+  fullName: string;
+  phone: string;
+  city: string;
+  district: string;
+  street: string;
+  building: string | null;
+  apartment: string | null;
+  zip: string | null;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CouponValidateResponse {
   coupon: Coupon;
   discount: number;

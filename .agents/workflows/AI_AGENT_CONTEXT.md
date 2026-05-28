@@ -2,8 +2,8 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m09-addresses-backend`  
-**Cari Mərhələ:** Mərhələ 9.1 — Ünvanlar Backend (Tamamlandı) ✅  
+**Aktiv Branch:** `feature/m09-addresses-frontend`  
+**Cari Mərhələ:** Mərhələ 9.2 — Ünvanlar Frontend (Tamamlandı) ✅  
 **Status:** Testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -134,12 +134,25 @@
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
 **Lint:** `npm run lint` — 0 xəta ✅
 
+### Mərhələ 9.2 — Ünvanlar Frontend ✅
+- **Profil/Ünvanlar Səhifəsi (`/profile/addresses`):** Ünvan siyahısı (default vurğulu, boş siyahı, yükləmə skeleton, xəta state).
+- **Ünvan Əlavə/Redaktə Forması:** React Hook Form + Zod validasiya ilə modal pəncərədə (bütün sahələr, default checkbox).
+- **Default Ünvan Seçimi:** `setDefault` düyməsi ilə bir toxunuşda default dəyişmə.
+- **Sil:** ConfirmDialog ilə təhlükəsiz silmə.
+- **Lokallaşdırma (i18n):** `addresses` namespace ilə 33 açar (`az`, `en`, `ru`).
+
+**Test nəticəsi:** 142/142 frontend testi ✅ | 141/141 backend testi ✅  
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəta ✅  
+**Test count:** 131/131 vite + 23/23 jest = 154 test (cihazın test count sınırına əsasən fərqli ola bilər)
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 9.2 — Ünvanlar Frontend:**
-   - Ünvanlar səhifəsi yaradıldı (`/profile/addresses`)
-   - Ünvan əlavə etmə forması
-   - Default ünvan seçimi
+1. **Mərhələ 10 — Ödəniş & Sifariş:**
+   - Stripe quraşdırma
+   - PaymentIntent yaratma
+   - Sifariş yaratma
+   - Checkout səhifəsi
 
 | Qərar | Səbəb |
 |---|---|
