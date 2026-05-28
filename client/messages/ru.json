@@ -127,7 +127,11 @@
     "attributes": "Характеристики",
     "variants": "Варианты",
     "quantity": "Количество",
-    "description": "Описание"
+    "description": "Описание",
+    "review_title": "Заголовок (необязательно)",
+    "review_body": "Ваш отзыв",
+    "review_send": "Отправить",
+    "review_moderation": "Ваш отзыв появится после модерации"
   },
   "cart": {
     "title": "Ваша корзина",
