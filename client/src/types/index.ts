@@ -170,3 +170,27 @@ export interface ApiResponse<T> {
     limit: number;
   };
 }
+
+export type CouponType = 'PERCENTAGE' | 'FIXED_AMOUNT';
+
+export interface Coupon {
+  id: string;
+  code: string;
+  type: CouponType;
+  value: number;
+  minOrderValue: number | null;
+  maxDiscount: number | null;
+  maxUses: number | null;
+  usedCount: number;
+  isActive: boolean;
+  startsAt: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CouponValidateResponse {
+  coupon: Coupon;
+  discount: number;
+  finalTotal: number;
+}

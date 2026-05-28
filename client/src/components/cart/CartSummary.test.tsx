@@ -33,6 +33,6 @@ describe('CartSummary component tests', () => {
 
     const priceElements = screen.getAllByText('160.00 AZN');
     expect(priceElements).toHaveLength(2); // subtotal and total
-    expect(screen.getByText('Pulsuz')).toBeInTheDocument(); // shipping
+    expect(screen.getByText('free')).toBeInTheDocument(); // shipping
   });
 });

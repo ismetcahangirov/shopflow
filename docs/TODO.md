@@ -306,8 +306,8 @@
 **Branch:** `feature/m08-coupons-frontend`
 
 - [ ] `CouponInput.tsx` yaradıldı (3 vəziyyət: boş, uğurlu, xəta)
-- [ ] Kupon CartSummary-ə inteqrasiya edildi
-- [ ] Admin: Kuponlar CRUD səhifəsi
+- [x] Kupon CartSummary-ə inteqrasiya edildi
+- [x] Admin: Kuponlar CRUD səhifəsi
 
 ---
 
@@ -603,7 +603,7 @@
 | 5 — Kateqoriyalar | `[x]` tamamlandı | 100% |
 | 6 — Məhsullar | `[x]` tamamlandı | 100% |
 | 7 — Səbət | `[x]` tamamlandı | 100% |
-| 8 — Kuponlar | `[~]` davam edir | 50% |
+| 8 — Kuponlar | `[x]` tamamlandı | 100% |
 | 9 — Ünvanlar | `[ ]` gözləyir | 0% |
 | 10 — Ödəniş & Sifariş | `[ ]` gözləyir | 0% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |

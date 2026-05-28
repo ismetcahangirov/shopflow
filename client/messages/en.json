@@ -35,6 +35,7 @@
     "nav_store_settings": "Store Settings",
     "nav_users": "Users",
     "nav_vendors": "Vendors",
+    "nav_coupons": "Coupons",
     "cart_title": "Your Cart",
     "search_title": "Search",
     "unauthorized_title": "Access Denied",
@@ -142,7 +143,10 @@
     "remove": "Remove",
     "coupon_code": "Coupon code",
     "apply_coupon": "Apply",
-    "coupon_applied": "Coupon applied successfully!"
+    "coupon_applied": "Coupon applied successfully!",
+    "free_shipping_congrats": "Congratulations! You've got free shipping.",
+    "free_shipping_remaining": "You need {amount} AZN more for free shipping.",
+    "free": "Free"
   },
   "checkout": {
     "title": "Checkout",
