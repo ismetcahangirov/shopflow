@@ -28,6 +28,8 @@ import wishlistRoutes from './routes/wishlistRoutes';
 import reviewRoutes from './routes/reviewRoutes';
 import userRoutes from './routes/userRoutes';
 import vendorRoutes from './routes/vendorRoutes';
+import analyticsRoutes from './routes/analyticsRoutes';
+import settingsRoutes from './routes/settingsRoutes';
 import { stripeWebhook } from './controllers/paymentController';
 
 // ── App setup ────────────────────────────────────────────
@@ -84,6 +86,8 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/vendors', vendorRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // ── 404 handler ──────────────────────────────────────────
 app.use((_req, res) => {
