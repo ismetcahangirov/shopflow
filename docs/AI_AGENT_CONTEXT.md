@@ -3,9 +3,9 @@
 
 ## Cari Vəziyyət
 
-**Aktiv Branch:** `feature/m07-cart-frontend`  
-**Cari Mərhələ:** Mərhələ 7.2 — Səbət Frontend (Tamamlandı, PR üçün hazır)  
-**Status:** Bütün testlər ✅ | TypeScript ✅ | Lint ✅
+**Aktiv Branch:** `feature/m08-coupons-backend`  
+**Cari Mərhələ:** Mərhələ 8.1 — Kuponlar Backend (İşlənilir)  
+**Status:** Testlər ⏳ | TypeScript ⏳ | Lint ⏳
 
 ## Tamamlanan Mərhələlər
 
@@ -104,8 +104,8 @@
 
 ## Növbəti Addımlar
 
-1. Bu branch üzrə PR açmaq və merge etmək.
-2. Növbəti tapşırıq: **Mərhələ 8 — Kuponlar (Backend & Frontend)** (`couponRoutes` Express, `couponStore` Zustand, CRUD UI).
+1. Mərhələ 8.1 backend route-larının, validator-larının və admin CRUD endpointlərinin tamamlanması.
+2. `couponRoutes` inteqrasiya testlərinin yazılması və yaşıl keçməsinin təmin edilməsi.
 
 ## Əsas Texniki Qərarlar
 
@@ -113,7 +113,7 @@
 |---|---|
 | JSON-LD Breadcrumb | Axtarış motorlarında daha yaxşı SEO nəticələri üçün strukturlaşdırılmış schema inteqrasiyası |
 | Zustand state (`uiStore`) | Responsive mobil sidebar/menyuların və səbət drawer-lərinin vahid nöqtədən idarə olunması |
-| Zustand hydration tracking (`isHydrated`) | Server və brauzer arasında baş verə biləcək HTML uyğunsuzluqlarının (hydration mismatch) qarşısını almaq |
+| Zustand hydration tracking (`isHydrated`) | Server və brauzer arasında baş verə bizə HTML uyğunsuzluqlarının (hydration mismatch) qarşısını almaq |
 | Premium Dark/Glassmorphic Stil | Vanilla Tailwind imkanları ilə premium, modern və dinamik interfeyslər |
 | Cart lazy-create pattern | Səbət yalnız ilk məhsul əlavəsində yaradılır — boş cədvəllər olmur |
 
@@ -124,4 +124,3 @@
 - Vitest testləri: `cd client && npm run test`
 - Jest testləri: `cd server && npm run test`
 - TypeScript yoxlaması: `cd client && npx tsc --noEmit` / `cd server && npx tsc --noEmit`
-
