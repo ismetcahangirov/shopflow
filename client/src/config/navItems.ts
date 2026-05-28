@@ -15,6 +15,7 @@ import {
   Star,
   CreditCard,
   LayoutDashboard,
+  TicketPercent,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -53,6 +54,7 @@ export const adminNavItems: NavItem[] = [
   { label: 'nav_products', href: '/admin/products', icon: Package },
   { label: 'nav_orders', href: '/admin/orders', icon: ClipboardList },
   { label: 'nav_categories', href: '/admin/categories', icon: Tag },
+  { label: 'nav_coupons', href: '/admin/coupons', icon: TicketPercent },
   { label: 'nav_users', href: '/admin/users', icon: Users },
   { label: 'nav_vendors', href: '/admin/vendors', icon: Store },
   { label: 'nav_analytics', href: '/admin/analytics', icon: BarChart2 },

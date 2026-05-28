@@ -1,10 +1,8 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 > Son yenilənmə: 2026-05-28
 
-## Cari Vəziyyət
-
-**Aktiv Branch:** `feature/m08-coupons-frontend`  
-**Cari Mərhələ:** Mərhələ 8.2 — Kuponlar Frontend (Başlanılır)  
+## Cari Vəziyy�**Aktiv Branch:** `feature/m08-coupons-frontend`  
+**Cari Mərhələ:** Mərhələ 8.2 — Kuponlar Frontend (Tamamlandı) ✅  
 **Status:** Testlər ✅ | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -112,18 +110,37 @@
 - **Discount Hesablaması:** Percentage kuponda `maxDiscount` cap tətbiq olunur.
 - **İnteqrasiya Testləri:** 24/24 Jest testi — 401, 403, 404, 409, 400, 200, 201 bütün ssenariləri əhatə edir.
 
-**Test nəticəsi:** 131/131 frontend testi ✅ | 118/118 backend testi ✅  
+### Mərhələ 8.2 — Kuponlar Frontend ✅
+- **`CouponInput.tsx`** — boş / uğurlu / xəta olaraq 3 interaktiv vizual vəziyyət, premium dizayn.
+- **`CartSummary` Kupon İnteqrasiyası** — tətbiq olunmuş kuponun endirimini (`PERCENTAGE` / `FIXED_AMOUNT` olaraq) göstərir, pulsuz çatdırılma progress barını və ara cəmi/ümumi məbləği endirimli qiymətə uyğun dinamik olaraq yeniləyir.
+- **Admin Kupon CRUD Paneli** — `/admin/coupons` səhifəsində kuponların idarə edilməsi, yaradılması, redaktəsi və silinməsi tam şəkildə dəstəklənir.
+- **Lokallaşdırma (i18n):** next-intl `t()` və `t.rich()` istifadəsi ilə çoxdilli dəstək (`az`, `en`, `ru`).
+
+**Test nəticəsi:** 142/142 frontend testi ✅ | 118/118 backend testi ✅  
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta (1 xəbərdarlıq düzəldildi) ✅
+**Lint:** `npm run lint` — 0 xəta ✅
 
 ## Növbəti Addımlar
 
-1. **Mərhələ 8.2 — Kuponlar Frontend:**
-   - `CouponInput.tsx` komponenti: boş / uğurlu / xəta 3 vəziyyəti.
-   - `CartSummary`-ə kupon tətbiqi inteqrasiyası.
-   - Admin: Kuponlar CRUD səhifəsi (`/admin/coupons`).
+1. **Mərhələ 9.1 — Ünvanlar Backend:**
+   - `GET /api/addresses` — öz ünvanları.
+   - `POST /api/addresses` — ünvan əlavə et.
+   - `PUT /api/addresses/:id` — yenilə.
+   - `DELETE /api/addresses/:id` — sil.
+   - `PATCH /api/addresses/:id/default` — default et.ya Testləri:** 24/24 Jest testi — 401, 403, 404, 409, 400, 200, 201 bütün ssenariləri əhatə edir.
 
-## Əsas Texniki Qərarlar
+**Test nəticəsi:** 142/142 frontend testi ✅ | 118/118 backend testi ✅  
+**TypeScript:** px tsc --noEmit — 0 xəta ✅  
+**Lint:** pm run lint — 0 xəta ✅
+
+## Növbəti Addımlar
+
+1. **Mərhələ 9.1 — Ünvanlar Backend:**
+   - GET /api/addresses — öz ünvanları.
+   - POST /api/addresses — ünvan əlavə et.
+   - PUT /api/addresses/:id — yenilə.
+   - DELETE /api/addresses/:id — sil.
+   - PATCH /api/addresses/:id/default — default et.
 
 | Qərar | Səbəb |
 |---|---|

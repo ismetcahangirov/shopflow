@@ -1,49 +1,57 @@
 // src/components/cart/CartSummary.tsx
-// Order Summary Card with shipping calculations and progress bar towards Free Shipping
+// Order Summary Card with coupon input, shipping calculations and free-shipping progress bar
 
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 import type { Cart } from '@/types';
+import { CouponInput } from './CouponInput';
+import { useCouponStore } from '@/store/couponStore';
+
+const FREE_SHIPPING_THRESHOLD = 150;
+const SHIPPING_COST = 5.0;
 
 interface CartSummaryProps {
   cart: Cart;
 }
 
 export function CartSummary({ cart }: CartSummaryProps): React.JSX.Element {
-  const t = useTranslations('cart');
   const locale = useLocale();
+  const t = useTranslations('cart');
+  const { applied } = useCouponStore();
 
   const subtotal = cart.subtotal;
-  
-  // Free shipping threshold at 150 AZN
-  const FREE_SHIPPING_THRESHOLD = 150;
-  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 5.00;
-  const total = subtotal + shippingCost;
+  const discount = applied?.discount ?? 0;
+  const discountedSubtotal = Math.max(subtotal - discount, 0);
+  const shippingCost = discountedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const total = discountedSubtotal + shippingCost;
 
-  // Free shipping progress percentage
-  const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
-  const remainingForFreeShipping = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
+  // Free shipping progress (based on discounted subtotal)
+  const progressPercent = Math.min(
+    (discountedSubtotal / FREE_SHIPPING_THRESHOLD) * 100,
+    100
+  );
+  const remainingForFreeShipping = Math.max(FREE_SHIPPING_THRESHOLD - discountedSubtotal, 0);
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white p-6 shadow-sm dark:bg-slate-900 space-y-6">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white p-6 shadow-sm dark:bg-slate-900 space-y-5">
       <h2 className="text-lg font-bold text-slate-900 dark:text-white">
         {t('summary')}
       </h2>
 
-      {/* Free Shipping Progress Alert */}
+      {/* Free Shipping Progress */}
       <div className="space-y-2">
         <div className="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-350">
           {shippingCost === 0 ? (
             <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-              Təbrik edirik! Pulsuz çatdırılma qazandınız.
+              {t('free_shipping_congrats')}
             </span>
           ) : (
             <span>
-              Pulsuz çatdırılma üçün daha <span className="font-bold text-indigo-600 dark:text-indigo-400">{remainingForFreeShipping.toFixed(2)} AZN</span> lazımdır.
+              {t('free_shipping_remaining', { amount: remainingForFreeShipping.toFixed(2) })}
             </span>
           )}
         </div>
@@ -55,9 +63,13 @@ export function CartSummary({ cart }: CartSummaryProps): React.JSX.Element {
         </div>
       </div>
 
+      {/* Coupon Input */}
+      <CouponInput subtotal={subtotal} />
+
       {/* Pricing Lines */}
       <div className="divide-y divide-slate-100 dark:divide-slate-850 space-y-4">
         <div className="space-y-3 pb-4">
+          {/* Subtotal */}
           <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
             <span>{t('subtotal')}</span>
             <span className="font-semibold text-slate-850 dark:text-slate-200">
@@ -65,15 +77,24 @@ export function CartSummary({ cart }: CartSummaryProps): React.JSX.Element {
             </span>
           </div>
 
+          {/* Discount row — only shown when coupon applied */}
+          {discount > 0 && (
+            <div className="flex justify-between text-sm text-emerald-700 dark:text-emerald-400">
+              <span className="font-semibold">{t('discount')} ({applied?.code})</span>
+              <span className="font-bold">−{discount.toFixed(2)} AZN</span>
+            </div>
+          )}
+
+          {/* Shipping */}
           <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
             <span>{t('shipping')}</span>
             <span className="font-semibold text-slate-850 dark:text-slate-200">
-              {shippingCost === 0 ? 'Pulsuz' : `${shippingCost.toFixed(2)} AZN`}
+              {shippingCost === 0 ? t('free') : `${shippingCost.toFixed(2)} AZN`}
             </span>
           </div>
         </div>
 
-        {/* Total Price */}
+        {/* Total */}
         <div className="flex justify-between items-center pt-4">
           <span className="text-base font-bold text-slate-900 dark:text-white">
             {t('total')}
@@ -84,8 +105,8 @@ export function CartSummary({ cart }: CartSummaryProps): React.JSX.Element {
         </div>
       </div>
 
-      {/* Action Button */}
-      <div className="pt-2">
+      {/* Checkout CTA */}
+      <div className="pt-1">
         <Link
           href={`/${locale}/checkout`}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-indigo-600/10 hover:bg-indigo-700 hover:shadow-indigo-600/20 active:scale-[0.98] transition-all duration-200"
