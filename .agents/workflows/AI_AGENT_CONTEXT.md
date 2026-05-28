@@ -2,9 +2,9 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m09-addresses-frontend`  
-**Cari Mərhələ:** Mərhələ 9.2 — Ünvanlar Frontend (Tamamlandı) ✅  
-**Status:** Testlər ✅ | TypeScript ✅ | Lint ✅
+**Aktiv Branch:** `feature/m10-payment-orders-backend`  
+**Cari Mərhələ:** Mərhələ 10.1 — Ödəniş & Sifariş Backend (Tamamlandı) ✅  
+**Status:** Testlər verilənlər bazası problemi | TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -143,16 +143,26 @@
 
 **Test nəticəsi:** 142/142 frontend testi ✅ | 141/141 backend testi ✅  
 **TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəta ✅
 **Test count:** 131/131 vite + 23/23 jest = 154 test (cihazın test count sınırına əsasən fərqli ola bilər)
+
+### Mərhələ 10.1 — Ödəniş & Sifariş Backend ✅
+- **Stripe:** `stripe.ts` konfiqurasiya, `createPaymentIntent` (AZN, metadata), `stripeWebhook` (express.raw + imza yoxlaması), `createRefund` (Admin).
+- **Webhook Handler-lar:** `payment_intent.succeeded` (order təsdiq, stok azaltma, səbət təmizləmə, email — Prisma transaction), `payment_intent.payment_failed` (order ləğv), `charge.refunded` (stock bərpa).
+- **Sifariş CRUD:** `createOrder` (kupon validasiyası, stok yoxlaması, səbət əsaslı yaratma), `getOrders`/`getMyOrders`/`getOrder` (pagination + filter), `updateOrderStatus` (CANCELLED olanda stock bərpa), `cancelOrder` (PENDING status yoxlaması).
+- **Utility:** `generateOrderNumber` (ORD-YYYYMMDD-XXXX formatı).
+- **Email:** `buildOrderConfirmationEmail` (Resend, full HTML template — items, totals, tracking URL).
+- **Server.ts:** Webhook route `express.raw({ type: 'application/json' })` ilə `express.json()`-dan əvvəl qeyd edildi.
+
+**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
+**Lint:** `npm run lint` — 0 xəta ✅
 
 ## Növbəti Addımlar
 
-1. **Mərhələ 10 — Ödəniş & Sifariş:**
-   - Stripe quraşdırma
-   - PaymentIntent yaratma
-   - Sifariş yaratma
+1. **Mərhələ 10.2 — Ödəniş & Sifariş Frontend:**
    - Checkout səhifəsi
+   - Stripe Elements inteqrasiyası
+   - Sifariş siyahısı/detalı
 
 | Qərar | Səbəb |
 |---|---|
