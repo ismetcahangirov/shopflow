@@ -9,6 +9,7 @@ import { Product } from '@/types';
 import { StarRating } from './StarRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { cn } from '@/lib/utils';
 
 export interface ProductCardProps {
@@ -19,6 +20,8 @@ export interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const locale = useLocale();
   const t = useTranslations('product');
+  const { toggleWishlist, isLiked } = useWishlistStore();
+  const liked = isLiked(product.id);
 
   const {
     slug,
@@ -87,10 +90,16 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         <div className="absolute right-3 top-3 z-10 flex flex-col gap-2 translate-x-12 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-600 shadow-md transition-colors hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-            aria-label="Add to wishlist"
+            onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
+            className={cn(
+              'flex h-9 w-9 items-center justify-center rounded-full shadow-md transition-colors',
+              liked
+                ? 'bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400'
+                : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white',
+            )}
+            aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
           >
-            <Heart className="h-4.5 w-4.5" />
+            <Heart className={cn('h-4.5 w-4.5', liked && 'fill-current')} />
           </button>
           <Link
             href={`/${locale}/products/${slug}`}

@@ -208,6 +208,14 @@
     "status_cancelled": "Cancelled",
     "status_refunded": "Refunded"
   },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Your wishlist is empty",
+    "empty_desc": "Add products you like to your wishlist.",
+    "browse_products": "Browse products",
+    "add_to_cart": "Add to cart",
+    "out_of_stock": "Out of stock"
+  },
   "addresses": {
     "my_addresses": "My Addresses",
     "addresses_subtitle": "Manage your delivery addresses",
