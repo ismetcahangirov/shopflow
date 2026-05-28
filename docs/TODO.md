@@ -323,12 +323,13 @@
 - [x] `DELETE /api/addresses/:id` — sil
 - [x] `PATCH /api/addresses/:id/default` — default et
 
-### 9.2 Frontend
-**Branch:** `feature/m09-addresses-frontend`
+### 9.2 Frontend ✅
+**Branch:** `feature/m09-addresses-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Ünvanlar səhifəsi yaradıldı (`/profile/addresses`)
-- [ ] Ünvan əlavə etmə forması
-- [ ] Default ünvan seçimi
+- [x] Ünvanlar səhifəsi yaradıldı (`/profile/addresses`)
+- [x] Ünvan əlavə etmə forması (React Hook Form + Zod)
+- [x] Default ünvan seçimi
 
 ---
 
@@ -605,7 +606,7 @@
 | 6 — Məhsullar | `[x]` tamamlandı | 100% |
 | 7 — Səbət | `[x]` tamamlandı | 100% |
 | 8 — Kuponlar | `[x]` tamamlandı | 100% |
-| 9 — Ünvanlar | `[~]` davam edir | 50% |
+| 9 — Ünvanlar | `[x]` tamamlandı | 100% |
 | 10 — Ödəniş & Sifariş | `[ ]` gözləyir | 0% |
 | 11 — İstək Siyahısı | `[ ]` gözləyir | 0% |
 | 12 — Rəylər | `[ ]` gözləyir | 0% |
