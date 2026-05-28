@@ -445,16 +445,17 @@
 
 ## Mərhələ 14 — Vendor
 
-### 14.1 Backend
-**Branch:** `feature/m14-vendor-backend`
+### 14.1 Backend ✅
+**Branch:** `feature/m14-vendor-backend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] `POST /api/vendors/apply` — vendor müraciəti
-- [ ] `GET /api/vendors` — bütün vendorlar (Admin)
-- [ ] `PATCH /api/vendors/:id/status` — təsdiq/rədd (Admin)
-- [ ] `GET /api/vendors/me` — öz vendor profili
-- [ ] `PUT /api/vendors/me` — vendor profilini yenilə
-- [ ] `GET /api/vendors/me/stats` — vendor statistikaları
-- [ ] `requireApprovedVendor` middleware yazıldı
+- [x] `POST /api/vendors/apply` — vendor müraciəti
+- [x] `GET /api/vendors` — bütün vendorlar (Admin)
+- [x] `PATCH /api/vendors/:id/status` — təsdiq/rədd (Admin)
+- [x] `GET /api/vendors/me` — öz vendor profili
+- [x] `PUT /api/vendors/me` — vendor profilini yenilə
+- [x] `GET /api/vendors/me/stats` — vendor statistikaları
+- [x] `requireApprovedVendor` middleware yazıldı
 
 ### 14.2 Frontend
 **Branch:** `feature/m14-vendor-frontend`
@@ -618,7 +619,7 @@
 | 11 — İstək Siyahısı | `[x]` tamamlandı | 100% |
 | 12 — Rəylər | `[x]` tamamlandı | 100% |
 | 13 — Profil | `[x]` tamamlandı | 100% |
-| 14 — Vendor | `[ ]` gözləyir | 0% |
+| 14 — Vendor | `[~]` davam edir | 50% |
 | 15 — Analitika | `[ ]` gözləyir | 0% |
 | 16 — SEO & Performans | `[ ]` gözləyir | 0% |
 | 17 — Testlər | `[ ]` gözləyir | 0% |

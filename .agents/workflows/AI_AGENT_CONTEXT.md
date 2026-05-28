@@ -2,8 +2,8 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m13-profile-frontend`  
-**Cari Mərhələ:** Mərhələ 13.2 — Profil Frontend ✅  
+**Aktiv Branch:** `feature/m14-vendor-backend`  
+**Cari Mərhələ:** Mərhələ 14.1 — Vendor Backend ✅  
 **Status:** TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -201,11 +201,20 @@
 - Password change (current password verification)
 - i18n: `profile` namespace (az/en/ru)
 
+### Mərhələ 14.1 — Vendor Backend ✅
+- `POST /api/vendors/apply` — vendor müraciəti (avtomatik rol dəyişikliyi)
+- `GET /api/vendors` — bütün vendorlar (Admin, filter/pagination)
+- `PATCH /api/vendors/:id/status` — təsdiq/rədd (REJECTED olanda rol geri qaytarılır)
+- `GET /api/vendors/me` — öz profil, `PUT /api/vendors/me` — yenilə
+- `GET /api/vendors/me/stats` — statistikalar (məhsul sayı, sifariş, revenue, reytinq)
+- `requireApprovedVendor` middleware — VENDOR rol + APPROVED status yoxlaması
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 14 — Vendor:**
-   - Vendor müraciət, təsdiq, profil
+1. **Mərhələ 14.2 — Vendor Frontend:**
+   - Vendor müraciət forması
    - Vendor Dashboard
+   - Vendor məhsulları/sifarişləri
 
 | Qərar | Səbəb |
 |---|---|
