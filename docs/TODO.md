@@ -480,14 +480,15 @@
 - [ ] `PUT /api/settings` — parametrləri yenilə (Admin)
 - [ ] Rola görə fərqli statistika (Admin vs Vendor)
 
-### 15.2 Frontend
-**Branch:** `feature/m15-analytics-frontend`
+### 15.2 Frontend ✅
+**Branch:** `feature/m15-analytics-frontend`  
+**Status:** `[x]` Tamamlandı
 
-- [ ] Admin Dashboard (`/admin/page.tsx`) — StatCard-lar, satış qrafiki, son sifarişlər
-- [ ] Vendor Dashboard (`/vendor/page.tsx`) — öz statistikası
-- [ ] Customer Dashboard → ana səhifəyə yönləndirir
-- [ ] Satış qrafiki (Recharts və ya Chart.js)
-- [ ] Son sifarişlər cədvəli
+- [x] Admin Dashboard (`/admin/page.tsx`) — StatCard-lar, satış qrafiki, son sifarişlər
+- [x] Vendor Dashboard — öz statistikası (M14-də)
+- [x] Customer Dashboard → ana səhifəyə yönləndirir
+- [x] Satış qrafiki (bar chart)
+- [x] Son sifarişlər cədvəli
 
 ---
 
@@ -620,7 +621,7 @@
 | 12 — Rəylər | `[x]` tamamlandı | 100% |
 | 13 — Profil | `[x]` tamamlandı | 100% |
 | 14 — Vendor | `[x]` tamamlandı | 100% |
-| 15 — Analitika | `[ ]` gözləyir | 0% |
+| 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[ ]` gözləyir | 0% |
 | 17 — Testlər | `[ ]` gözləyir | 0% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
