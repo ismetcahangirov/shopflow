@@ -186,7 +186,7 @@ export const createOrder = asyncHandler(
       await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
 
       return newOrder;
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Order ${order.orderNumber} created for user ${userId}`);
 
@@ -424,7 +424,7 @@ export const updateOrderStatus = asyncHandler(
         data: updateData,
         include: ORDER_INCLUDES,
       });
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Order ${order.orderNumber} status updated to ${status}`);
 
@@ -491,7 +491,7 @@ export const cancelOrder = asyncHandler(
         },
         include: ORDER_INCLUDES,
       });
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Order ${order.orderNumber} cancelled by user ${userId}`);
 

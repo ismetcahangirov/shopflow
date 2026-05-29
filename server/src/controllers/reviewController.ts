@@ -125,7 +125,7 @@ export const createReview = asyncHandler(
       });
 
       return r;
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Review created for product ${productId} by user ${userId}`);
 
@@ -164,7 +164,7 @@ export const approveReview = asyncHandler(
           reviewCount: stats._count.rating,
         },
       });
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Review ${reviewId} ${isApproved ? 'approved' : 'rejected'}`);
 
@@ -195,7 +195,7 @@ export const deleteReview = asyncHandler(
           reviewCount: stats._count.rating,
         },
       });
-    });
+    }, { maxWait: 10000, timeout: 20000 });
 
     logger.info(`Review ${reviewId} deleted`);
 

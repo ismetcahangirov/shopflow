@@ -1,10 +1,10 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
-> Son yenilənmə: 2026-05-28
+> Son yenilənmə: 2026-05-29
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m16-seo-performance`  
-**Cari Mərhələ:** Mərhələ 16 — SEO & Performans ✅  
-**Status:** TypeScript ✅ | Lint ✅
+**Aktiv Branch:** `test/m17-backend-tests`
+**Cari Mərhələ:** Mərhələ 17.1 — Backend Testlər `[~]`
+**Status:** Backend TypeScript ✅ | Backend Lint ✅ | Backend Test 207/207 ✅ | Frontend TypeScript ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -231,10 +231,23 @@
 - Root layihədə Organization & WebSite JSON-LD sxemləri script ilə əlavə edildi
 - `next-sitemap` postbuild hook əlavə olundu, canonical URL, alternates/hreflang dəstəkləndi
 
+### Mərhələ 17.1 — Backend Testlər `[~]`
+- `server/src/tests/order.test.ts` əlavə edildi: `POST /api/orders`, `GET /api/orders/my`, Admin `GET /api/orders`, `GET /api/orders/:id`, status yeniləmə və ləğv axınları üzrə 30 integration test.
+- Order testləri auth (401), rol (403), validasiya (400), tapılmadı (404), stok/product edge case-ləri, kupon endirimi, cart clear, stock restore və status history ssenarilərini əhatə edir.
+- `orderController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
+- `cart.test.ts` statik email konfliktləri aradan qaldırıldı: hər run üçün unikal email-lər və yarımçıq setup halında təhlükəsiz cleanup.
+- `server/src/tests/review.test.ts` əlavə edildi: public review list, review yaratma, verified purchase yoxlaması, duplicate guard, approve/reject və delete axınları üzrə 18 integration test.
+- Review testləri auth (401), rol (403), validasiya (400), tapılmadı (404), inactive product, pending/unverified review, DELIVERED order ilə verified review və məhsul `avgRating` / `reviewCount` recalculation ssenarilərini əhatə edir.
+- `reviewController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
+- `server/src/tests/payment.test.ts` əlavə edildi: `POST /api/payments/create-intent`, `POST /api/payments/webhook` və `POST /api/payments/refund` üzrə 18 integration test.
+- Payment testləri Stripe mock-u ilə auth (401), rol (403), validasiya (400), tapılmadı (404), artıq ödənilib (409), PaymentIntent metadata persist, webhook signature, success/failure/refund event-ləri, stock/cart/coupon/history mutation-ları və admin refund axınlarını əhatə edir.
+- `paymentController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
+- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run test` — 9 suite / 207 test ✅, `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅.
+
 ## Növbəti Addımlar
 
 1. **Mərhələ 17 — Testlər:**
-   - 17.1 Backend Testlər (Unit, Integration və E2E testləri)
+   - 17.1 Backend Testlər: coverage 80%+, test DB guard (`setup.ts` / `globalSetup.ts`) və auth Google/refresh boşluqlarının tamamlanması
    - 17.2 Frontend Testlər (Vitest, React Testing Library əhatə dairəsinin artırılması)
 
 | Qərar | Səbəb |
