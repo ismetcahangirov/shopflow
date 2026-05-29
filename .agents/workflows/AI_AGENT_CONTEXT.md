@@ -2,9 +2,9 @@
 > Son yenilənmə: 2026-05-29
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `test/m17-backend-test-guard`
+**Aktiv Branch:** `test/m17-auth-coverage`
 **Cari Mərhələ:** Mərhələ 17.1 — Backend Testlər `[~]`
-**Status:** Backend TypeScript ✅ | Backend Build ✅ | Backend Lint ✅ | Backend Test 211/211 ✅ | Frontend TypeScript ✅ | Frontend Build ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
+**Status:** Backend TypeScript ✅ | Backend Build ✅ | Backend Lint ✅ | Backend Test 220/220 ✅ | Frontend TypeScript ✅ | Frontend Build ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -251,11 +251,16 @@
 - Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npx.cmd jest src/tests/helpers/testDatabase.test.ts --runInBand` — 4/4 ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 21/21 ✅, `server npm.cmd run test` — 10 suite / 211 test ✅.
 - Frontend regresiya yoxlamaları: `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅ (mövcud `ProfilePageClient.tsx` `<img>` warning-i qalır).
 - Build yoxlamaları: `server npm.cmd run build` ✅, `client npm.cmd run build` ✅. Frontend build üçün `border-border` / `outline-ring/50` CSS problemi düzəldildi, shadcn CSS variable-ları Tailwind config-ə map olundu, `typedRoutes` next-intl locale routing ilə uyğunsuz olduğu üçün söndürüldü və generated `next-sitemap` çıxışları `.gitignore`-a əlavə edildi.
+- Branch `test/m17-backend-test-guard` PR #32 merge edildikdən sonra `main` fast-forward edildi və `test/m17-auth-coverage` branch-i açıldı.
+- `server/src/tests/auth.test.ts` genişləndirildi: refresh token uğurlu rotasiya, malformed token, stale token və deaktiv hesab ssenariləri əlavə edildi.
+- Google auth testləri əlavə edildi: missing token validasiyası, invalid Google payload, yeni Google user yaratma, mövcud email user-ə Google hesabı linkləmə və deaktiv hesab bloklaması.
+- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run build` ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 30/30 ✅, `server npm.cmd run test` — 10 suite / 220 test ✅.
+- Frontend regresiya yoxlamaları: `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅ (mövcud `ProfilePageClient.tsx` `<img>` warning-i qalır), `client npm.cmd run build` ✅.
 
 ## Növbəti Addımlar
 
 1. **Mərhələ 17 — Testlər:**
-   - 17.1 Backend Testlər: `setup.ts` üçün global beforeEach təmizliyinə uyğun suite refactor-u, ayrıca test DB-nin təsdiqi, coverage 80%+ və auth Google/refresh boşluqlarının tamamlanması
+   - 17.1 Backend Testlər: `setup.ts` üçün global beforeEach təmizliyinə uyğun suite refactor-u, ayrıca test DB-nin təsdiqi və coverage 80%+ yoxlaması
    - 17.2 Frontend Testlər (Vitest, React Testing Library əhatə dairəsinin artırılması)
 
 | Qərar | Səbəb |

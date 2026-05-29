@@ -528,7 +528,7 @@
 - [ ] Test PostgreSQL DB yaradıldı
 - [~] `setup.ts` — test mühiti guard + reset helper əlavə edildi; global beforeEach təmizliyi üçün suite-lər refactor edilməlidir
 - [x] `globalSetup.ts` — production DB qoruması
-- [~] Auth testlər yazıldı (register, login, google, refresh, logout)
+- [x] Auth testlər yazıldı (register, login, google, refresh, logout)
 - [x] Məhsul testlər yazıldı (CRUD, filter, rol yoxlaması)
 - [x] Kateqoriya testlər yazıldı
 - [x] Sifariş testlər yazıldı (yarat, stok yoxlaması, ləğv et)
@@ -625,7 +625,7 @@
 | 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
-| 17 — Testlər | `[~]` davam edir | 60% |
+| 17 — Testlər | `[~]` davam edir | 63% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
 

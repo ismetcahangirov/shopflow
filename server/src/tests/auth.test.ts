@@ -2,11 +2,24 @@
 // Integration tests for all auth endpoints
 
 import request from 'supertest';
+import crypto from 'crypto';
 import { app } from '../server';
 import { prisma } from '../config/db';
 import { createTestUser, getBearerToken, cleanupUsers } from './helpers/testHelpers';
+import { generateRefreshToken } from '../utils/generateToken';
+
+var mockVerifyIdToken: jest.Mock;
 
 // ── Mocks ────────────────────────────────────────────────
+jest.mock('google-auth-library', () => ({
+  OAuth2Client: jest.fn().mockImplementation(() => {
+    mockVerifyIdToken = jest.fn();
+    return {
+      verifyIdToken: mockVerifyIdToken,
+    };
+  }),
+}));
+
 jest.mock('../utils/sendEmail', () => ({
   sendEmail: jest.fn().mockResolvedValue(undefined),
   buildVerifyEmailHtml: jest.fn().mockReturnValue('<html></html>'),
@@ -14,16 +27,41 @@ jest.mock('../utils/sendEmail', () => ({
 }));
 
 const TEST_EMAIL = 'auth-test@shopflow.dev';
+const GOOGLE_NEW_EMAIL = 'google-new-auth-test@shopflow.dev';
+const GOOGLE_LINK_EMAIL = 'google-link-auth-test@shopflow.dev';
+const GOOGLE_DISABLED_EMAIL = 'google-disabled-auth-test@shopflow.dev';
 const TEST_PASSWORD = 'SecurePass123!';
 
 beforeEach(async () => {
-  await cleanupUsers(TEST_EMAIL);
+  mockVerifyIdToken.mockReset();
+  await cleanupUsers(TEST_EMAIL, GOOGLE_NEW_EMAIL, GOOGLE_LINK_EMAIL, GOOGLE_DISABLED_EMAIL);
 });
 
 afterAll(async () => {
-  await cleanupUsers(TEST_EMAIL);
+  await cleanupUsers(TEST_EMAIL, GOOGLE_NEW_EMAIL, GOOGLE_LINK_EMAIL, GOOGLE_DISABLED_EMAIL);
   await prisma.$disconnect();
 });
+
+function hashRefreshToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function cookieFromResponse(res: request.Response): string {
+  const setCookie = res.headers['set-cookie'];
+  expect(setCookie).toBeDefined();
+  return Array.isArray(setCookie) ? setCookie[0] : setCookie;
+}
+
+function mockGooglePayload(payload: {
+  email?: string;
+  sub?: string;
+  name?: string;
+  picture?: string;
+}): void {
+  mockVerifyIdToken.mockResolvedValue({
+    getPayload: () => payload,
+  });
+}
 
 // ── POST /api/auth/register ───────────────────────────────
 describe('POST /api/auth/register', () => {
@@ -167,6 +205,182 @@ describe('POST /api/auth/refresh-token', () => {
 
     expect(res.status).toBe(401);
     expect(res.body.error).toBe('UNAUTHORIZED');
+  });
+});
+
+// ── POST /api/auth/refresh-token extended coverage ───────
+describe('POST /api/auth/refresh-token success and edge cases', () => {
+  it('200 - rotates refresh token and returns a new access token', async () => {
+    await createTestUser({ email: TEST_EMAIL, password: TEST_PASSWORD });
+
+    const loginRes = await request(app).post('/api/auth/login').send({
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD,
+    });
+    const oldCookie = cookieFromResponse(loginRes);
+    const oldUser = await prisma.user.findUniqueOrThrow({
+      where: { email: TEST_EMAIL },
+      select: { refreshToken: true },
+    });
+
+    const res = await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', oldCookie);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.accessToken).toBeDefined();
+    expect(res.headers['set-cookie']).toBeDefined();
+
+    const updatedUser = await prisma.user.findUniqueOrThrow({
+      where: { email: TEST_EMAIL },
+      select: { refreshToken: true },
+    });
+    expect(updatedUser.refreshToken).toBeDefined();
+    expect(updatedUser.refreshToken).not.toBe(oldUser.refreshToken);
+  });
+
+  it('401 - rejects malformed refresh token cookie', async () => {
+    const res = await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', 'refreshToken=not-a-jwt');
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('INVALID_TOKEN');
+  });
+
+  it('401 - rejects stale refresh token after rotation', async () => {
+    await createTestUser({ email: TEST_EMAIL, password: TEST_PASSWORD });
+
+    const loginRes = await request(app).post('/api/auth/login').send({
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD,
+    });
+    const oldCookie = cookieFromResponse(loginRes);
+
+    await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', oldCookie)
+      .expect(200);
+
+    const res = await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', oldCookie);
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('INVALID_TOKEN');
+  });
+
+  it('403 - rejects refresh token for deactivated account', async () => {
+    const user = await createTestUser({ email: TEST_EMAIL, isActive: false });
+    const refreshToken = generateRefreshToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken: hashRefreshToken(refreshToken) },
+    });
+
+    const res = await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', `refreshToken=${refreshToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBe('ACCOUNT_DISABLED');
+  });
+});
+
+// ── POST /api/auth/google ────────────────────────────────
+describe('POST /api/auth/google', () => {
+  it('400 - returns validation error when idToken is missing', async () => {
+    const res = await request(app).post('/api/auth/google').send({});
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('VALIDATION_ERROR');
+  });
+
+  it('401 - rejects Google payload without required fields', async () => {
+    mockGooglePayload({ email: GOOGLE_NEW_EMAIL });
+
+    const res = await request(app)
+      .post('/api/auth/google')
+      .send({ idToken: 'google-token-without-sub' });
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('INVALID_TOKEN');
+  });
+
+  it('200 - creates a new verified customer from Google payload', async () => {
+    mockGooglePayload({
+      email: GOOGLE_NEW_EMAIL,
+      sub: 'google-new-sub',
+      name: 'Google New User',
+      picture: 'https://example.com/avatar.png',
+    });
+
+    const res = await request(app)
+      .post('/api/auth/google')
+      .send({ idToken: 'google-new-token' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.accessToken).toBeDefined();
+    expect(res.body.data.user.email).toBe(GOOGLE_NEW_EMAIL);
+    expect(res.body.data.user.role).toBe('CUSTOMER');
+    expect(res.headers['set-cookie']).toBeDefined();
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { email: GOOGLE_NEW_EMAIL },
+      select: { googleId: true, isVerified: true, refreshToken: true, avatar: true },
+    });
+    expect(user.googleId).toBe('google-new-sub');
+    expect(user.isVerified).toBe(true);
+    expect(user.refreshToken).toBeDefined();
+    expect(user.avatar).toBe('https://example.com/avatar.png');
+  });
+
+  it('200 - links Google account to an existing email user', async () => {
+    await createTestUser({ email: GOOGLE_LINK_EMAIL, isVerified: false });
+    mockGooglePayload({
+      email: GOOGLE_LINK_EMAIL,
+      sub: 'google-link-sub',
+      name: 'Linked Google User',
+      picture: 'https://example.com/linked.png',
+    });
+
+    const res = await request(app)
+      .post('/api/auth/google')
+      .send({ idToken: 'google-link-token' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.user.email).toBe(GOOGLE_LINK_EMAIL);
+    expect(res.body.data.user.isVerified).toBe(true);
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { email: GOOGLE_LINK_EMAIL },
+      select: { googleId: true, isVerified: true, refreshToken: true },
+    });
+    expect(user.googleId).toBe('google-link-sub');
+    expect(user.isVerified).toBe(true);
+    expect(user.refreshToken).toBeDefined();
+  });
+
+  it('403 - rejects Google login for deactivated account', async () => {
+    await createTestUser({ email: GOOGLE_DISABLED_EMAIL, isActive: false });
+    mockGooglePayload({
+      email: GOOGLE_DISABLED_EMAIL,
+      sub: 'google-disabled-sub',
+      name: 'Disabled Google User',
+    });
+
+    const res = await request(app)
+      .post('/api/auth/google')
+      .send({ idToken: 'google-disabled-token' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBe('ACCOUNT_DISABLED');
   });
 });
 
