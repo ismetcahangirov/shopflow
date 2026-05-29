@@ -24,13 +24,31 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | ShopFlow',
-    default: 'ShopFlow — E-Ticarət Platforması',
-  },
-  description: 'Azərbaycanın ən böyük e-ticarət platforması. Ən yeni məhsullar, sürətli çatdırılma və təhlükəsiz ödəniş.',
-};
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const baseUrl = 'https://shopflow.az';
+
+  return {
+    title: {
+      template: '%s | ShopFlow',
+      default: 'ShopFlow — E-Ticarət Platforması',
+    },
+    description: 'Azərbaycanın ən böyük e-ticarət platforması. Ən yeni məhsullar, sürətli çatdırılma və təhlükəsiz ödəniş.',
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        az: `${baseUrl}/az`,
+        en: `${baseUrl}/en`,
+        ru: `${baseUrl}/ru`,
+        'x-default': baseUrl,
+      },
+    },
+    openGraph: {
+      siteName: 'ShopFlow',
+      locale: locale === 'az' ? 'az_AZ' : locale === 'ru' ? 'ru_RU' : 'en_US',
+      alternateLocale: ['az_AZ', 'en_US', 'ru_RU'],
+    },
+  };
+}
 
 export default function LocaleLayout({ children, params: { locale } }: LocaleLayoutProps) {
   // Validate that the incoming locale is supported

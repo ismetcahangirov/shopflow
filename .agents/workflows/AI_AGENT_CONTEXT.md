@@ -2,8 +2,8 @@
 > Son yenilənmə: 2026-05-28
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `feature/m14-vendor-frontend`  
-**Cari Mərhələ:** Mərhələ 14.2 — Vendor Frontend ✅  
+**Aktiv Branch:** `feature/m16-seo-performance`  
+**Cari Mərhələ:** Mərhələ 16 — SEO & Performans ✅  
 **Status:** TypeScript ✅ | Lint ✅
 
 ## Tamamlanan Mərhələlər
@@ -216,9 +216,26 @@
 - Mağaza profili (`/vendor/store`) — store info, status
 - i18n: `vendor` namespace (az/en/ru)
 
+### Mərhələ 15.1 — Analitika & Dashboard Backend ✅
+- `GET /api/analytics/dashboard` — KPI-lər, gəlir, sifarişlər, ən çox satılanlar
+- `GET /api/analytics/sales` — gün/ay/il üzrə satış qrafiki API-si
+- `GET /api/settings` və `PUT /api/settings` (Admin) — ümumi sayt parametrləri
+
+### Mərhələ 15.2 — Analitika & Dashboard Frontend ✅
+- Real-time KPI stat kartları, gəlir sütunlu qrafiki (son 30 gün)
+- Ən çox satılan məhsullar və son sifarişlər cədvəli integration-ı
+
+### Mərhələ 16 — SEO & Performans ✅
+- Dinamik `sitemap.ts` (API-dən məhsul/kateqoriya slug-larını çəkib dildə sitemap yaradır)
+- `robots.ts` və custom `next-sitemap.config.js` qurulumu
+- Root layihədə Organization & WebSite JSON-LD sxemləri script ilə əlavə edildi
+- `next-sitemap` postbuild hook əlavə olundu, canonical URL, alternates/hreflang dəstəkləndi
+
 ## Növbəti Addımlar
 
-1. **Mərhələ 15 — Dashboard & Analitika:**
+1. **Mərhələ 17 — Testlər:**
+   - 17.1 Backend Testlər (Unit, Integration və E2E testləri)
+   - 17.2 Frontend Testlər (Vitest, React Testing Library əhatə dairəsinin artırılması)
 
 | Qərar | Səbəb |
 |---|---|
