@@ -9,7 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
+        },
         primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
           50:  'hsl(220, 100%, 97%)',
           100: 'hsl(220, 100%, 94%)',
           200: 'hsl(220, 97%, 85%)',
@@ -23,6 +38,8 @@ const config: Config = {
           950: 'hsl(220, 70%, 12%)',
         },
         accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
           50:  'hsl(35, 100%, 97%)',
           100: 'hsl(35, 100%, 92%)',
           200: 'hsl(35, 97%, 82%)',
@@ -33,6 +50,17 @@ const config: Config = {
           700: 'hsl(35, 80%, 33%)',
           800: 'hsl(35, 75%, 26%)',
           900: 'hsl(35, 70%, 20%)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
         },
         success: {
           50:  'hsl(142, 76%, 97%)',
@@ -48,6 +76,16 @@ const config: Config = {
           50:  'hsl(0, 86%, 97%)',
           500: 'hsl(0, 84%, 60%)',
           700: 'hsl(0, 76%, 42%)',
+        },
+        sidebar: {
+          DEFAULT: 'var(--sidebar)',
+          foreground: 'var(--sidebar-foreground)',
+          primary: 'var(--sidebar-primary)',
+          'primary-foreground': 'var(--sidebar-primary-foreground)',
+          accent: 'var(--sidebar-accent)',
+          'accent-foreground': 'var(--sidebar-accent-foreground)',
+          border: 'var(--sidebar-border)',
+          ring: 'var(--sidebar-ring)',
         },
       },
       fontFamily: {

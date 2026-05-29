@@ -29,9 +29,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    typedRoutes: true,
-  },
 };
 
 export default withNextIntl(nextConfig);
