@@ -26,7 +26,8 @@ const config: Config = {
       statements: 80,
     },
   },
-  setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
+  globalSetup: '<rootDir>/src/tests/globalSetup.ts',
   clearMocks: true,
   restoreMocks: true,
 };

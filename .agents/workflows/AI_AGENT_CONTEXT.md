@@ -2,9 +2,9 @@
 > Son yenilənmə: 2026-05-29
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `test/m17-backend-tests`
+**Aktiv Branch:** `test/m17-backend-test-guard`
 **Cari Mərhələ:** Mərhələ 17.1 — Backend Testlər `[~]`
-**Status:** Backend TypeScript ✅ | Backend Lint ✅ | Backend Test 207/207 ✅ | Frontend TypeScript ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
+**Status:** Backend TypeScript ✅ | Backend Build ✅ | Backend Lint ✅ | Backend Test 211/211 ✅ | Frontend TypeScript ✅ | Frontend Build ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -232,6 +232,7 @@
 - `next-sitemap` postbuild hook əlavə olundu, canonical URL, alternates/hreflang dəstəkləndi
 
 ### Mərhələ 17.1 — Backend Testlər `[~]`
+- Branch `test/m17-backend-tests` PR #31 merge edildikdən sonra `main` fast-forward edildi və `test/m17-backend-test-guard` branch-i açıldı.
 - `server/src/tests/order.test.ts` əlavə edildi: `POST /api/orders`, `GET /api/orders/my`, Admin `GET /api/orders`, `GET /api/orders/:id`, status yeniləmə və ləğv axınları üzrə 30 integration test.
 - Order testləri auth (401), rol (403), validasiya (400), tapılmadı (404), stok/product edge case-ləri, kupon endirimi, cart clear, stock restore və status history ssenarilərini əhatə edir.
 - `orderController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
@@ -243,11 +244,18 @@
 - Payment testləri Stripe mock-u ilə auth (401), rol (403), validasiya (400), tapılmadı (404), artıq ödənilib (409), PaymentIntent metadata persist, webhook signature, success/failure/refund event-ləri, stock/cart/coupon/history mutation-ları və admin refund axınlarını əhatə edir.
 - `paymentController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
 - Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run test` — 9 suite / 207 test ✅, `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅.
+- `server/src/tests/helpers/testDatabase.ts` əlavə edildi: `assertSafeTestEnvironment()` NODE_ENV=test tələb edir, DATABASE_URL yoxlayır və production-a bənzər DB URL-lərini bloklayır; `resetTestDatabase()` FK sırası ilə test cədvəllərini təmizləyən mərkəzi helper kimi hazırlandı.
+- `server/src/tests/globalSetup.ts` Jest başlamadan production DB qorumasını işə salır.
+- `server/src/tests/setup.ts` hər test suite üçün test mühiti guard-unu qeyd edir və suite sonunda Prisma bağlantısını bağlayır.
+- `server/src/tests/helpers/testDatabase.test.ts` əlavə edildi: guard helper üçün 4 unit test.
+- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npx.cmd jest src/tests/helpers/testDatabase.test.ts --runInBand` — 4/4 ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 21/21 ✅, `server npm.cmd run test` — 10 suite / 211 test ✅.
+- Frontend regresiya yoxlamaları: `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅ (mövcud `ProfilePageClient.tsx` `<img>` warning-i qalır).
+- Build yoxlamaları: `server npm.cmd run build` ✅, `client npm.cmd run build` ✅. Frontend build üçün `border-border` / `outline-ring/50` CSS problemi düzəldildi, shadcn CSS variable-ları Tailwind config-ə map olundu, `typedRoutes` next-intl locale routing ilə uyğunsuz olduğu üçün söndürüldü və generated `next-sitemap` çıxışları `.gitignore`-a əlavə edildi.
 
 ## Növbəti Addımlar
 
 1. **Mərhələ 17 — Testlər:**
-   - 17.1 Backend Testlər: coverage 80%+, test DB guard (`setup.ts` / `globalSetup.ts`) və auth Google/refresh boşluqlarının tamamlanması
+   - 17.1 Backend Testlər: `setup.ts` üçün global beforeEach təmizliyinə uyğun suite refactor-u, ayrıca test DB-nin təsdiqi, coverage 80%+ və auth Google/refresh boşluqlarının tamamlanması
    - 17.2 Frontend Testlər (Vitest, React Testing Library əhatə dairəsinin artırılması)
 
 | Qərar | Səbəb |
