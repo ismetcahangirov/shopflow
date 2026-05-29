@@ -182,6 +182,9 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent): Promis
     }
 
     logger.info(`Order ${order.orderNumber} payment confirmed`);
+  }, {
+    maxWait: 10000,
+    timeout: 20000,
   });
 }
 
@@ -202,6 +205,9 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent): Promis
         note: 'Ödəniş uğursuz',
       },
     });
+  }, {
+    maxWait: 10000,
+    timeout: 20000,
   });
 
   logger.info(`Order ${orderId} cancelled due to payment failure`);
@@ -241,6 +247,9 @@ async function handleRefund(charge: Stripe.Charge): Promise<void> {
         });
       }
     }
+  }, {
+    maxWait: 10000,
+    timeout: 20000,
   });
 
   logger.info(`Order ${order.orderNumber} refunded`);

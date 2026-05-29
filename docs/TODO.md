@@ -523,18 +523,18 @@
 ### 17.1 Backend Testlər
 **Branch:** `test/m17-backend-tests`
 
-- [ ] Jest + Supertest + ts-jest quraşdırıldı
-- [ ] `testHelpers.ts` yazıldı
+- [x] Jest + Supertest + ts-jest quraşdırıldı
+- [x] `testHelpers.ts` yazıldı
 - [ ] Test PostgreSQL DB yaradıldı
 - [ ] `setup.ts` — beforeEach cədvəl təmizlənməsi
 - [ ] `globalSetup.ts` — production DB qoruması
-- [ ] Auth testlər yazıldı (register, login, google, refresh, logout)
-- [ ] Məhsul testlər yazıldı (CRUD, filter, rol yoxlaması)
-- [ ] Kateqoriya testlər yazıldı
-- [ ] Sifariş testlər yazıldı (yarat, stok yoxlaması, ləğv et)
-- [ ] Kupon testlər yazıldı
-- [ ] Rəy testlər yazıldı (alqı yoxlaması, moderasiya)
-- [ ] Ödəniş testlər yazıldı (PaymentIntent, webhook)
+- [~] Auth testlər yazıldı (register, login, google, refresh, logout)
+- [x] Məhsul testlər yazıldı (CRUD, filter, rol yoxlaması)
+- [x] Kateqoriya testlər yazıldı
+- [x] Sifariş testlər yazıldı (yarat, stok yoxlaması, ləğv et)
+- [x] Kupon testlər yazıldı
+- [x] Rəy testlər yazıldı (alqı yoxlaması, moderasiya)
+- [x] Ödəniş testlər yazıldı (PaymentIntent, webhook)
 - [ ] Coverage 80%+ çatdı
 
 ### 17.2 Frontend Testlər
@@ -624,7 +624,7 @@
 | 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
-| 17 — Testlər | `[ ]` gözləyir | 0% |
+| 17 — Testlər | `[~]` davam edir | 55% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
 

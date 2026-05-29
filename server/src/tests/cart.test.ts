@@ -16,7 +16,11 @@ let testCategoryId: string;
 let testProductId: string;
 let outOfStockProductId: string;
 
-const CUSTOMER_EMAILS = ['customer-cart-test@test.com', 'other-customer-cart-test@test.com'];
+const RUN_ID = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const CUSTOMER_EMAILS = [
+  `customer-cart-test-${RUN_ID}@test.com`,
+  `other-customer-cart-test-${RUN_ID}@test.com`,
+];
 
 async function createTestCategory(): Promise<string> {
   const slug = `test-cat-cart-${Date.now()}`;
@@ -73,25 +77,36 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  const productIds = [testProductId, outOfStockProductId].filter(Boolean);
+  const userIds = [customerUser?.id, otherCustomerUser?.id].filter(Boolean);
+
   // Delete all items & carts created in tests
-  await prisma.cartItem.deleteMany({
-    where: {
-      productId: { in: [testProductId, outOfStockProductId] },
-    },
-  });
-  await prisma.cart.deleteMany({
-    where: {
-      userId: { in: [customerUser.id, otherCustomerUser.id] },
-    },
-  });
-  await prisma.product.deleteMany({
-    where: {
-      id: { in: [testProductId, outOfStockProductId] },
-    },
-  });
-  await prisma.category.delete({
-    where: { id: testCategoryId },
-  });
+  if (productIds.length > 0) {
+    await prisma.cartItem.deleteMany({
+      where: {
+        productId: { in: productIds },
+      },
+    });
+  }
+  if (userIds.length > 0) {
+    await prisma.cart.deleteMany({
+      where: {
+        userId: { in: userIds },
+      },
+    });
+  }
+  if (productIds.length > 0) {
+    await prisma.product.deleteMany({
+      where: {
+        id: { in: productIds },
+      },
+    });
+  }
+  if (testCategoryId) {
+    await prisma.category.delete({
+      where: { id: testCategoryId },
+    });
+  }
   await cleanupUsers(...CUSTOMER_EMAILS);
 });
 
