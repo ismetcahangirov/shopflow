@@ -493,28 +493,28 @@
 
 ---
 
-## Mərhələ 16 — SEO & Performans
+## Mərhələ 16 — SEO & Performans ✅
 
 **Branch:** `feature/m16-seo-performance`
 
-- [ ] `generateMetadata()` bütün public səhifələrdə
-- [ ] `generateStaticParams()` məhsullar + kateqoriyalar üçün
-- [ ] Product JSON-LD schema (`ProductSchema.tsx`)
-- [ ] BreadcrumbList JSON-LD (`Breadcrumb.tsx`)
-- [ ] Organization + WebSite schema (ana səhifə)
-- [ ] `src/app/robots.ts` yazıldı
-- [ ] `src/app/sitemap.ts` yazıldı (statik)
-- [ ] `server-sitemap.xml/route.ts` yazıldı (dinamik)
-- [ ] `next-sitemap` quraşdırıldı
-- [ ] `next-sitemap.config.js` konfigurasiya edildi
-- [ ] `postbuild` hook əlavə edildi
-- [ ] hreflang bütün səhifələrdə (az/en/ru/x-default)
-- [ ] Canonical URL hər səhifədə
-- [ ] `next/image` `priority={true}` LCP şəkilləri üçün
-- [ ] `sizes` prop bütün `next/image`-lərdə
-- [ ] Blur placeholder (aspect-ratio container)
-- [ ] Lighthouse Performance 90+ yoxlandı
-- [ ] Lighthouse SEO 100 yoxlandı
+- [x] `generateMetadata()` bütün public səhifələrdə
+- [x] `generateStaticParams()` məhsullar + kateqoriyalar üçün
+- [x] Product JSON-LD schema (`ProductSchema.tsx`)
+- [x] BreadcrumbList JSON-LD (`Breadcrumb.tsx`)
+- [x] Organization + WebSite schema (ana səhifə)
+- [x] `src/app/robots.ts` yazıldı
+- [x] `src/app/sitemap.ts` yazıldı (statik + dinamik)
+- [x] `server-sitemap.xml/route.ts` yazıldı (dinamik birləşdirildi)
+- [x] `next-sitemap` quraşdırıldı
+- [x] `next-sitemap.config.js` konfigurasiya edildi
+- [x] `postbuild` hook əlavə edildi
+- [x] hreflang bütün səhifələrdə (az/en/ru/x-default)
+- [x] Canonical URL hər səhifədə
+- [x] `next/image` `priority={true}` LCP şəkilləri üçün
+- [x] `sizes` prop bütün `next/image`-lərdə
+- [x] Blur placeholder (aspect-ratio container)
+- [x] Lighthouse Performance 90+ yoxlandı
+- [x] Lighthouse SEO 100 yoxlandı
 
 ---
 
@@ -623,7 +623,7 @@
 | 13 — Profil | `[x]` tamamlandı | 100% |
 | 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[x]` tamamlandı | 100% |
-| 16 — SEO & Performans | `[ ]` gözləyir | 0% |
+| 16 — SEO & Performans | `[x]` tamamlandı | 100% |
 | 17 — Testlər | `[ ]` gözləyir | 0% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
