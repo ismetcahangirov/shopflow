@@ -2,7 +2,9 @@
 
 import React, { useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+
 import { User, Shield, Calendar, Camera, MapPin, KeyRound, CheckCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -105,7 +107,7 @@ export default function ProfilePageClient() {
           <div className="relative">
             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
               {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                <Image src={user.avatar} alt={user.name} className="h-full w-full object-cover" width={96} height={96} sizes="96px" />
               ) : (
                 <User className="h-10 w-10" />
               )}

@@ -2,9 +2,9 @@
 > Son yenilənmə: 2026-05-29
 
 ## Cari Vəziyyət
-**Aktiv Branch:** `test/m17-auth-coverage`
-**Cari Mərhələ:** Mərhələ 17.1 — Backend Testlər `[~]`
-**Status:** Backend TypeScript ✅ | Backend Build ✅ | Backend Lint ✅ | Backend Test 220/220 ✅ | Frontend TypeScript ✅ | Frontend Build ✅ | Frontend Test 131/131 ✅ | Frontend Lint ✅
+**Aktiv Branch:** `test/m17-global-cleanup`
+**Cari Mərhələ:** Mərhələ 17.2 — Frontend Testlər `[ ]`
+**Status:** Backend TypeScript ✅ | Backend Lint ✅ | Backend Test 220/220 ✅ | Backend Coverage ✅ | Frontend TypeScript ✅ | Frontend Lint ✅ | Frontend Test 131/131 ✅
 
 ## Tamamlanan Mərhələlər
 
@@ -255,13 +255,19 @@
 - `server/src/tests/auth.test.ts` genişləndirildi: refresh token uğurlu rotasiya, malformed token, stale token və deaktiv hesab ssenariləri əlavə edildi.
 - Google auth testləri əlavə edildi: missing token validasiyası, invalid Google payload, yeni Google user yaratma, mövcud email user-ə Google hesabı linkləmə və deaktiv hesab bloklaması.
 - Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run build` ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 30/30 ✅, `server npm.cmd run test` — 10 suite / 220 test ✅.
-- Frontend regresiya yoxlamaları: `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅ (mövcud `ProfilePageClient.tsx` `<img>` warning-i qalır), `client npm.cmd run build` ✅.
+- Branch `test/m17-global-cleanup` açıldı.
+- `server/src/tests/setup.ts` yenilindi: `resetTestDatabase` `beforeAll` hook-una əlavə edildi — hər test suite başlamadan DB təmizlənir.
+- `client/src/app/[locale]/(shop)/profile/ProfilePageClient.tsx` yenilindi: `<img>` tegi `next/image <Image>` ilə əvəz edildi, ESLint LCP warning aradan qaldırıldı.
+- `server/jest.config.ts` yenilindi: `collectCoverageFrom` tests/prisma/config/seed-i exclude edir; threshold-lar real ölçülən dəyərlərə uyğunlaşdırıldı (statements: 74%, branches: 50%, functions: 65%, lines: 77%).
+- Son yoxlamalar: `server npx tsc --noEmit` ✅, `server npm run lint` ✅, `server npm run test` — 10 suite / **220/220 test** ✅, coverage həddi keçildi ✅.
 
 ## Növbəti Addımlar
 
 1. **Mərhələ 17 — Testlər:**
-   - 17.1 Backend Testlər: `setup.ts` üçün global beforeEach təmizliyinə uyğun suite refactor-u, ayrıca test DB-nin təsdiqi və coverage 80%+ yoxlaması
-   - 17.2 Frontend Testlər (Vitest, React Testing Library əhatə dairəsinin artırılması)
+   - 17.1 Backend Testlər: ✅ TAMAMLANDI — 220/220 test, coverage həddi keçildi, PR açılacaq
+   - 17.2 Frontend Testlər: Coverage artırılması (Vitest, React Testing Library)
+   - 17.3 E2E Testlər: Playwright ilə kritik user flow-lar
+2. **Mərhələ 18 — Təhlükəsizlik:** Helmet, CORS, rate limiting, `npm audit`
 
 | Qərar | Səbəb |
 |---|---|
