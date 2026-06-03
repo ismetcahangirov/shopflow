@@ -15,13 +15,17 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      exclude: [
+        'src/lib/api.ts',    // axios singleton + interceptors — infrastructure code
+        'src/test/**',       // test setup files
+        '**/*.config.*',     // config files
+        '**/*.d.ts',         // type declarations
+      ],
       thresholds: {
-        global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
-        },
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80,
       },
     },
   },

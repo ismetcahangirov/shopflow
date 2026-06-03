@@ -542,14 +542,17 @@
 ### 17.2 Frontend Testlər
 **Branch:** `test/m17-frontend-tests`
 
-- [ ] Vitest + React Testing Library quraşdırıldı
-- [ ] `vitest.config.ts` konfigurasiya edildi
-- [ ] Test setup (next/navigation, next/image, next-intl mock-ları)
-- [ ] `Button`, `Input`, `Badge`, `Modal` komponent testlər
-- [ ] `StarRating`, `CartItem`, `ProductCard` testlər
-- [ ] Zustand `cartStore` unit testlər
-- [ ] `useRole` hook testi
-- [ ] Coverage 80%+ çatdı
+- [x] Vitest + React Testing Library quraşdırıldı
+- [x] `vitest.config.ts` konfigurasiya edildi (threshold sintaksisi düzəldildi, `lib/api.ts` exclude)
+- [x] Test setup (next/navigation, next/image, next-intl mock-ları)
+- [x] `Button`, `Input`, `Badge`, `Modal` komponent testlər
+- [x] `StarRating`, `CartItem`, `ProductCard` testlər
+- [x] Zustand `cartStore`, `couponStore`, `wishlistStore` unit testlər
+- [x] `useRole` hook testi
+- [x] `CouponInput` komponent testlər (3 state: idle, success, error)
+- [x] `ProductImages` testlər (empty, nav, wrap-around, mouseMove)
+- [x] Coverage 80%+ çatdı — stmts 92.59% | branches 86.39% | funcs 89.67% | lines 93.07%
+- [x] 181/181 test keçdi
 
 ### 17.3 E2E Testlər
 **Branch:** `test/m17-e2e-tests`
@@ -626,7 +629,7 @@
 | 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
-| 17 — Testlər | `[~]` davam edir | 75% |
+| 17 — Testlər | `[~]` davam edir | 85% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
 
