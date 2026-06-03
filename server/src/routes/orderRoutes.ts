@@ -10,6 +10,8 @@ import {
   orderIdParamValidator,
   updateOrderStatusValidators,
   cancelOrderValidators,
+  getOrdersQueryValidators,
+  getMyOrdersQueryValidators,
 } from '../validators/orderValidators';
 import {
   createOrder,
@@ -26,11 +28,11 @@ router.use(protect);
 
 router.post('/', createOrderValidators, validateRequest, createOrder);
 
-router.get('/my', getMyOrders);
+router.get('/my', getMyOrdersQueryValidators, validateRequest, getMyOrders);
 
 router.get('/:id', orderIdParamValidator, validateRequest, getOrder);
 
-router.get('/', authorize('ADMIN'), getOrders);
+router.get('/', authorize('ADMIN'), getOrdersQueryValidators, validateRequest, getOrders);
 
 router.patch('/:id/status', authorize('ADMIN'), updateOrderStatusValidators, validateRequest, updateOrderStatus);
 

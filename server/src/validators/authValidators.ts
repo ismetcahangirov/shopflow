@@ -1,7 +1,7 @@
 // src/validators/authValidators.ts
 // express-validator chains for all auth endpoints
 
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 export const registerValidators = [
   body('name')
@@ -55,6 +55,7 @@ export const forgotPasswordValidators = [
 ];
 
 export const resetPasswordValidators = [
+  param('token').notEmpty().withMessage('Token tələb olunur'),
   body('password')
     .notEmpty().withMessage('Şifrə tələb olunur')
     .isLength({ min: 8 }).withMessage('Şifrə minimum 8 simvol olmalıdır')
@@ -64,4 +65,8 @@ export const resetPasswordValidators = [
 export const googleAuthValidators = [
   body('idToken')
     .notEmpty().withMessage('Google ID token tələb olunur'),
+];
+
+export const verifyEmailValidators = [
+  param('token').notEmpty().withMessage('Token tələb olunur'),
 ];

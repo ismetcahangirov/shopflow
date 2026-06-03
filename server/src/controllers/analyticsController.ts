@@ -73,19 +73,40 @@ export const getSalesChart = asyncHandler(async (req: Request, res: Response): P
   const start = startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 86400000);
   const end = endDate ? new Date(endDate as string) : new Date();
   const interval = groupBy === 'month' ? 'month' : groupBy === 'year' ? 'year' : 'day';
-  const dateTrunc = interval === 'day' ? `DATE(created_at)` : interval === 'month' ? `DATE_TRUNC('month', created_at)` : `DATE_TRUNC('year', created_at)`;
 
-  const sales = await prisma.$queryRawUnsafe<{ period: string; revenue: number; orders: bigint }[]>(
-    `SELECT ${dateTrunc} as period,
-            SUM(total) as revenue,
-            COUNT(*)::int as orders
-     FROM orders
-     WHERE payment_status = 'PAID' AND created_at >= $1 AND created_at <= $2
-     GROUP BY period
-     ORDER BY period ASC`,
-    start,
-    end,
-  );
+  let sales: { period: string; revenue: number; orders: bigint }[];
+
+  if (interval === 'month') {
+    sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
+      SELECT DATE_TRUNC('month', created_at) as period,
+             SUM(total) as revenue,
+             COUNT(*)::int as orders
+      FROM orders
+      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      GROUP BY period
+      ORDER BY period ASC
+    `;
+  } else if (interval === 'year') {
+    sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
+      SELECT DATE_TRUNC('year', created_at) as period,
+             SUM(total) as revenue,
+             COUNT(*)::int as orders
+      FROM orders
+      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      GROUP BY period
+      ORDER BY period ASC
+    `;
+  } else {
+    sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
+      SELECT DATE(created_at) as period,
+             SUM(total) as revenue,
+             COUNT(*)::int as orders
+      FROM orders
+      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      GROUP BY period
+      ORDER BY period ASC
+    `;
+  }
 
   successResponse(res, {
     message: 'Satış məlumatları',

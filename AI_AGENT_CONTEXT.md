@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
 > Son yenilənmə: 2026-06-03  
-> Cari mərhələ: **Mərhələ 17 tamamlandı → Mərhələ 18 (Təhlükəsizlik) növbəti**
+> Cari mərhələ: **Mərhələ 18 tamamlandı → Mərhələ 19 (Deploy & CI/CD) növbəti**
 
 ---
 
@@ -15,54 +15,42 @@
 
 ---
 
-## Son Tamamlanan Mərhələ: 17.3 — E2E Testlər
+## Son Tamamlanan Mərhələ: 18 — Təhlükəsizlik
 
-**Branch:** `test/m17-e2e-tests`  
-**PR:** Açılacaq
+**Branch:** `chore/m18-security`  
+**PR:** Birləşdiriləcək
 
 ### Edilən işlər:
 
-1. **`client/e2e/auth.spec.ts`** — Mövcud idi; qeydiyyat → login → logout axını
-2. **`client/e2e/shopping.spec.ts`** — YENİ YARADILDI:
-   - Unikal email ilə qeydiyyat + login
-   - `/az/products/iphone-15-pro-256gb` məhsul detal səhifəsi
-   - `[data-testid="add-to-cart-btn"]` ilə səbətə əlavə etmə
-   - CartDrawer açılmasının yoxlanılması
-   - `Sifarişi rəsmiləşdir` linki → `/az/checkout` yönlənməsi
-   - SEO meta tag + hreflang yoxlaması
-3. **`client/src/components/products/ProductCard.tsx`**:
-   - `useAuthStore`, `useCartStore`, `useUiStore` hook-ları əlavə edildi
-   - `handleAddToCart` funksiyası implementasiya edildi (auth yoxlaması ilə)
-   - `data-testid="add-to-cart-btn-card"` əlavə edildi
-4. **`client/src/app/[locale]/(shop)/products/[slug]/ProductDetailClient.tsx`**:
-   - `handleAddToCart`, `handleBuyNow` funksiyaları implementasiya edildi
-   - `showSuccess` / `error` state-ləri və UI feedback əlavə edildi
-   - `data-testid="add-to-cart-btn"` əlavə edildi
-5. **`client/src/components/layout/Navbar.tsx`**:
-   - Səbət ikonası düyməsinə `data-testid="cart-icon"` əlavə edildi
-6. **`client/vitest.config.ts`**:
-   - `exclude: ['e2e/**']` əlavə edildi — Playwright spec-ləri Vitest tərəfindən çalışdırılmırdı
+1. **Helmet & Security Headers:** Hər bir HTTP cavabı üçün təhlükəsizlik başlıqları (`CSP`, `HSTS`, `X-Content-Type-Options` və s.) konfiqurasiya edilib. CSP daxilində Stripe və Google inteqrasiyaları üçün qaydalar əlavə olunub.
+2. **CORS Siyasəti:** Yalnız whitelist-də olan origin-lərdən (`config.CLIENT_URL`, `shopflow.az` və `www.shopflow.az`) gələn sorğulara icazə verilib.
+3. **Rate Limiting:** Auth endpointləri (`/register`, `/login`, `/google` — 15 dəqiqədə 10 sorğu) və şifrə sıfırlama routes (`/forgot-password`, `/reset-password` — saatda 5 sorğu) üçün rate limiter tətbiq edilib.
+4. **İnput Sanitization və Validasiya:** Bütün routes daxilində `express-validator` vasitəsilə input formatları, uzunluqları və verilənlər tipləri yoxlanılır. SQL injection-a qarşı Prisma parametrized query quruluşu təmin edilib.
+5. **Əlavə Təhlükəsizlik:**
+   - Bcrypt ilə şifrə hash-ləmə üçün `SALT_ROUNDS = 12` tətbiq edilib.
+   - JWT secret açarları minimum 64 simvoldan ibarət olmaqla validate edilir.
+   - Hər iki tərəfdə `.env` faylları `.gitignore` daxilindədir.
+   - Client və server üzərində `noindex` meta tagləri gizli səhifələrə (`/admin`, `/vendor`, `/cart`, `/checkout`, `/profile`, `/orders`) şamil edilib.
+   - Backend tərəfdə `npm audit --audit-level=high` uğurla keçdi (0 yüksək və kritik zəiflik tapıldı).
 
 ### Test nəticələri:
 - Backend: **220/220 PASS** ✅
 - Frontend: **181/181 PASS** ✅
-- Backend lint: ✅ Təmiz
-- Frontend lint: ✅ Təmiz
-- Backend TypeScript: ✅ 0 xəta
-- Frontend TypeScript: ✅ 0 xəta
+- E2E (Playwright): Bütün testlər keçdi ✅
+- Backend lint & TS yoxlama: Uğurlu ✅
+- Frontend lint & TS yoxlama: Uğurlu ✅
 
 ---
 
-## Növbəti Mərhələ: 18 — Təhlükəsizlik
+## Növbəti Mərhələ: 19 — Deploy & CI/CD
 
-**Branch açılacaq:** `chore/m18-security`
+**Branch açılacaq:** `chore/m19-deployment`
 
 ### Tapşırıqlar:
-- Helmet middleware (CSP, HSTS)
-- CORS yalnız shopflow.az üçün
-- Rate limiting auth endpointlərindədir
-- Input sanitization
-- `npm audit` keçməlidir
+- Supabase, Cloudinary, Resend, Stripe production hesablarının qurulması və inteqrasiyası.
+- Render (backend) və Vercel (frontend) deploy sənədlərinin (`render.yaml`, `vercel.json`) hazırlanması və deploy edilməsi.
+- GitHub Actions pipeline konfiqurasiyası (`.github/workflows/ci.yml`).
+- Deploy sonrası production verify yoxlanışları.
 
 ---
 

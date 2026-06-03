@@ -29,21 +29,23 @@ export function assertSafeTestEnvironment(databaseUrl = process.env.DATABASE_URL
 export async function resetTestDatabase(): Promise<void> {
   assertSafeTestEnvironment();
 
-  await prisma.orderStatusHistory.deleteMany();
-  await prisma.orderItem.deleteMany();
-  await prisma.order.deleteMany();
-  await prisma.cartItem.deleteMany();
-  await prisma.cart.deleteMany();
-  await prisma.wishlistItem.deleteMany();
-  await prisma.review.deleteMany();
-  await prisma.productImage.deleteMany();
-  await prisma.productAttribute.deleteMany();
-  await prisma.productVariant.deleteMany();
-  await prisma.product.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.coupon.deleteMany();
-  await prisma.address.deleteMany();
-  await prisma.vendor.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.setting.deleteMany();
+  await prisma.$transaction([
+    prisma.orderStatusHistory.deleteMany(),
+    prisma.orderItem.deleteMany(),
+    prisma.order.deleteMany(),
+    prisma.cartItem.deleteMany(),
+    prisma.cart.deleteMany(),
+    prisma.wishlistItem.deleteMany(),
+    prisma.review.deleteMany(),
+    prisma.productImage.deleteMany(),
+    prisma.productAttribute.deleteMany(),
+    prisma.productVariant.deleteMany(),
+    prisma.product.deleteMany(),
+    prisma.category.deleteMany(),
+    prisma.coupon.deleteMany(),
+    prisma.address.deleteMany(),
+    prisma.vendor.deleteMany(),
+    prisma.user.deleteMany(),
+    prisma.setting.deleteMany(),
+  ]);
 }

@@ -59,3 +59,17 @@ export const getOrdersQueryValidators = [
     .optional()
     .isInt({ min: 1, max: 100 }).withMessage('Limit 1-100 arasında olmalıdır'),
 ];
+
+export const getMyOrdersQueryValidators = [
+  query('page')
+    .optional()
+    .isInt({ min: 1 }).withMessage('Səhifə ən azı 1 olmalıdır'),
+
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 }).withMessage('Limit 1-100 arasında olmalıdır'),
+
+  query('status')
+    .optional()
+    .trim(),
+];

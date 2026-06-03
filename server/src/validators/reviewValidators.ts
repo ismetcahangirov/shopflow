@@ -1,5 +1,5 @@
 // src/validators/reviewValidators.ts
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 export const createReviewValidators = [
   body('productId').trim().notEmpty().withMessage('Məhsul ID-si tələb olunur'),
@@ -13,3 +13,10 @@ export const createReviewValidators = [
 export const reviewIdParamValidator = [
   param('id').notEmpty().withMessage('Rəy ID-si tələb olunur'),
 ];
+
+export const getReviewsValidators = [
+  query('productId').optional().trim(),
+  query('page').optional().isInt({ min: 1 }).withMessage('Səhifə nömrəsi müsbət ədəd olmalıdır'),
+  query('limit').optional().isInt({ min: 1, max: 50 }).withMessage('Limit 1-50 arasında olmalıdır'),
+];
+

@@ -3,12 +3,12 @@ import { Router } from 'express';
 import { protect } from '../middleware/authMiddleware';
 import { authorize } from '../middleware/roleMiddleware';
 import { validateRequest } from '../middleware/validateRequest';
-import { createReviewValidators, reviewIdParamValidator } from '../validators/reviewValidators';
+import { createReviewValidators, reviewIdParamValidator, getReviewsValidators } from '../validators/reviewValidators';
 import { getReviews, createReview, approveReview, deleteReview } from '../controllers/reviewController';
 
 const router = Router();
 
-router.get('/', getReviews);
+router.get('/', getReviewsValidators, validateRequest, getReviews);
 
 router.use(protect);
 router.post('/', createReviewValidators, validateRequest, createReview);
