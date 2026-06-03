@@ -4,12 +4,16 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { ShoppingBag, Eye, Heart } from 'lucide-react';
 import { Product } from '@/types';
 import { StarRating } from './StarRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useCartStore } from '@/store/cartStore';
+import { useUiStore } from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
 
 export interface ProductCardProps {
@@ -20,8 +24,28 @@ export interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const locale = useLocale();
   const t = useTranslations('product');
+  const router = useRouter();
   const { toggleWishlist, isLiked } = useWishlistStore();
   const liked = isLiked(product.id);
+
+  const { isAuthenticated } = useAuthStore();
+  const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUiStore((s) => s.openCart);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      router.push(`/${locale}/login`);
+      return;
+    }
+    try {
+      await addItem(product.id, 1);
+      openCart();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const {
     slug,
@@ -160,6 +184,8 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           <Button
             size="sm"
             disabled={isOutOfStock}
+            onClick={handleAddToCart}
+            data-testid="add-to-cart-btn-card"
             className={cn(
               'h-9 rounded-xl px-3 font-semibold shadow-sm transition-all duration-350',
               isOutOfStock
