@@ -1,5 +1,5 @@
 // src/validators/userValidators.ts
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 export const updateProfileValidators = [
   body('name').optional().trim().isLength({ min: 2, max: 100 }).withMessage('Ad 2-100 simvol olmalıdır'),
@@ -15,4 +15,23 @@ export const updatePasswordValidators = [
 export const toggleStatusValidators = [
   param('id').notEmpty().withMessage('İstifadəçi ID-si tələb olunur'),
   body('isActive').isBoolean().withMessage('isActive boolean olmalıdır'),
+];
+
+export const getUsersValidators = [
+  query('page')
+    .optional()
+    .isInt({ min: 1 }).withMessage('Səhifə nömrəsi müsbət ədəd olmalıdır'),
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 }).withMessage('Limit 1-100 arasında olmalıdır'),
+  query('role')
+    .optional()
+    .isIn(['ADMIN', 'VENDOR', 'CUSTOMER']).withMessage('Rol yanlışdır'),
+  query('search')
+    .optional()
+    .trim()
+    .isString().withMessage('Axtarış mətni string olmalıdır'),
+  query('isActive')
+    .optional()
+    .isBoolean().withMessage('isActive boolean olmalıdır'),
 ];

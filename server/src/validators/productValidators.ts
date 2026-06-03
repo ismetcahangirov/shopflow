@@ -202,3 +202,12 @@ export const imageIdParamValidator = [
   param('id').notEmpty().withMessage('Məhsul ID-si tələb olunur'),
   param('imageId').notEmpty().withMessage('Şəkil ID-si tələb olunur'),
 ];
+
+export const searchProductsValidators = [
+  query('q')
+    .optional()
+    .trim()
+    .isString().withMessage('Axtarış mətni düzgün olmalıdır')
+    .isLength({ max: 100 }).withMessage('Axtarış mətni 100 simvoldan çox ola bilməz'),
+];
+

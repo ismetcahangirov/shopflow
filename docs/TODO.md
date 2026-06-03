@@ -573,18 +573,18 @@
 
 **Branch:** `chore/m18-security`
 
-- [ ] Helmet middleware konfigurasiya edildi (CSP, HSTS, Stripe + Google)
-- [ ] CORS yalnız shopflow.az üçün açıqdır
-- [ ] Rate limiting bütün auth endpointlərindədir
-- [ ] Input sanitization (express-validator bütün route-larda)
-- [ ] Prisma parametrized queries — SQL injection yoxdur
-- [ ] Stripe webhook imzası yoxlanır
-- [ ] JWT secret minimum 64 simvoldur
-- [ ] Şifrə salt rounds 12-dir
-- [ ] `.env` faylları `.gitignore`-dadır
-- [ ] `npm audit --audit-level=high` keçib
-- [ ] Next.js `middleware.ts` admin/vendor route-larını qoruyur
-- [ ] `noindex` admin/vendor/checkout/cart səhifələrindədir
+- [x] Helmet middleware konfigurasiya edildi (CSP, HSTS, Stripe + Google)
+- [x] CORS yalnız shopflow.az üçün açıqdır
+- [x] Rate limiting bütün auth endpointlərindədir
+- [x] Input sanitization (express-validator bütün route-larda)
+- [x] Prisma parametrized queries — SQL injection yoxdur
+- [x] Stripe webhook imzası yoxlanır
+- [x] JWT secret minimum 64 simvoldur
+- [x] Şifrə salt rounds 12-dir
+- [x] `.env` faylları `.gitignore`-dadır
+- [x] `npm audit --audit-level=high` keçib
+- [x] Next.js `middleware.ts` admin/vendor route-larını qoruyur
+- [x] `noindex` admin/vendor/checkout/cart səhifələrindədir
 
 ---
 
@@ -615,7 +615,7 @@
 
 | Mərhələ | Status | Tamamlanma |
 |---|---|---|
-| 0 — Sənədləşmə | `[x]` tamamlandı | 100% |
+| 0 — Sənədzləşmə | `[x]` tamamlandı | 100% |
 | 1 — Qurulum | `[x]` tamamlandı | 100% |
 | 2 — Auth | `[x]` tamamlandı | 100% |
 | 3 — Layout | `[x]` tamamlandı | 100% |
@@ -633,7 +633,7 @@
 | 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
 | 17 — Testlər | `[x]` tamamlandı | 100% |
-| 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
+| 18 — Təhlükəsizlik | `[x]` tamamlandı | 100% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
 
 ---

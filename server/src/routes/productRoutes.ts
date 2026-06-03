@@ -24,6 +24,7 @@ import {
   productIdParamValidator,
   productSlugParamValidator,
   imageIdParamValidator,
+  searchProductsValidators,
 } from '../validators/productValidators';
 
 const router = Router();
@@ -31,7 +32,7 @@ const router = Router();
 // ── Public routes ──────────────────────────────────────────
 router.get('/',           listProductsValidators, validateRequest, getProducts);
 router.get('/featured',   getFeaturedProducts);
-router.get('/search',     searchProducts);
+router.get('/search',     searchProductsValidators, validateRequest, searchProducts);
 router.get('/:slug',      productSlugParamValidator, validateRequest, getProductBySlug);
 
 // ── Protected routes (Admin or Vendor) ────────────────────

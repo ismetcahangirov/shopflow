@@ -3,11 +3,12 @@ import { Router } from 'express';
 import { protect } from '../middleware/authMiddleware';
 import { authorize } from '../middleware/roleMiddleware';
 import { validateRequest } from '../middleware/validateRequest';
+import { updateSettingsValidators } from '../validators/settingsValidators';
 import { getSettings, updateSettings } from '../controllers/settingsController';
 
 const router = Router();
 
 router.get('/', getSettings);
-router.put('/', protect, authorize('ADMIN'), validateRequest, updateSettings);
+router.put('/', protect, authorize('ADMIN'), updateSettingsValidators, validateRequest, updateSettings);
 
 export default router;

@@ -21,8 +21,9 @@ import {
   forgotPasswordValidators,
   resetPasswordValidators,
   googleAuthValidators,
+  verifyEmailValidators,
 } from '../validators/authValidators';
-import { authLimiter } from '../middleware/rateLimiter';
+import { authLimiter, passwordResetLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -32,9 +33,9 @@ router.post('/login', authLimiter, loginValidators, validateRequest, login);
 router.post('/logout', logout);
 router.post('/refresh-token', refreshToken);
 router.post('/google', authLimiter, googleAuthValidators, validateRequest, googleAuth);
-router.post('/forgot-password', authLimiter, forgotPasswordValidators, validateRequest, forgotPassword);
-router.post('/reset-password/:token', authLimiter, resetPasswordValidators, validateRequest, resetPassword);
-router.get('/verify-email/:token', verifyEmail);
+router.post('/forgot-password', passwordResetLimiter, forgotPasswordValidators, validateRequest, forgotPassword);
+router.post('/reset-password/:token', passwordResetLimiter, resetPasswordValidators, validateRequest, resetPassword);
+router.get('/verify-email/:token', verifyEmailValidators, validateRequest, verifyEmail);
 
 // Protected routes
 router.get('/me', protect, getMe);
