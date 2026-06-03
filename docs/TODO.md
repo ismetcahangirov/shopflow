@@ -557,12 +557,15 @@
 ### 17.3 E2E Testlər
 **Branch:** `test/m17-e2e-tests`
 
-- [ ] Playwright quraşdırıldı
-- [ ] `playwright.config.ts` konfigurasiya edildi
-- [ ] Qeydiyyat → giriş → çıxış axını
-- [ ] Axtarış → məhsul detalı → səbət axını
-- [ ] Checkout axını (test kartı ilə)
-- [ ] SEO meta tag + hreflang yoxlaması
+- [x] Playwright quraşdırıldı
+- [x] `playwright.config.ts` konfiqurasiya edildi
+- [x] `vitest.config.ts` — `e2e/**` exclude edildi (Playwright/Vitest konflikti aradan qaldırıldı)
+- [x] Qeydiyyat → giriş → çıxış axını (`e2e/auth.spec.ts`)
+- [x] Məhsul detalı → səbətə əlavə → CartDrawer → checkout axını (`e2e/shopping.spec.ts`)
+- [x] SEO meta tag + hreflang yoxlaması (`e2e/shopping.spec.ts`)
+- [x] `ProductCard.tsx` — `handleAddToCart` + `data-testid="add-to-cart-btn-card"` əlavə edildi
+- [x] `ProductDetailClient.tsx` — `handleAddToCart`, `handleBuyNow`, success/error UI əlavə edildi
+- [x] `Navbar.tsx` — `data-testid="cart-icon"` əlavə edildi
 
 ---
 
@@ -629,7 +632,7 @@
 | 14 — Vendor | `[x]` tamamlandı | 100% |
 | 15 — Analitika | `[x]` tamamlandı | 100% |
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
-| 17 — Testlər | `[~]` davam edir | 85% |
+| 17 — Testlər | `[x]` tamamlandı | 100% |
 | 18 — Təhlükəsizlik | `[ ]` gözləyir | 0% |
 | 19 — Deploy | `[ ]` gözləyir | 0% |
 

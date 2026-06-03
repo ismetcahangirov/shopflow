@@ -227,6 +227,7 @@ export function Navbar(): React.JSX.Element {
           <button
             type="button"
             onClick={openCart}
+            data-testid="cart-icon"
             className="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-900 transition-all duration-200 focus:outline-none"
             aria-label="Shopping Cart"
           >

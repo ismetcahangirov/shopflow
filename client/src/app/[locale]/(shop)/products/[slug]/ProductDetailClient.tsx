@@ -5,12 +5,16 @@
 
 import * as React from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { ShoppingCart, Zap, Star, Package, Tag, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ProductImages } from '@/components/products/ProductImages';
 import { StarRating } from '@/components/products/StarRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/authStore';
+import { useCartStore } from '@/store/cartStore';
+import { useUiStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
 
@@ -27,10 +31,18 @@ function formatPrice(price: number): string {
 
 export function ProductDetailClient({ product, locale }: ProductDetailClientProps) {
   const t = useTranslations('product');
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+  const addItem = useCartStore((s) => s.addItem);
+  const openCart = useUiStore((s) => s.openCart);
+
   const [quantity, setQuantity] = React.useState(1);
   const [selectedVariantId, setSelectedVariantId] = React.useState<string | null>(
     product.variants?.[0]?.id ?? null
   );
+  const [isAdding, setIsAdding] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
   const selectedVariant = product.variants?.find((v) => v.id === selectedVariantId) ?? null;
   const effectivePrice = selectedVariant?.price ?? product.price;
@@ -43,6 +55,43 @@ export function ProductDetailClient({ product, locale }: ProductDetailClientProp
 
   const handleDecrease = () => setQuantity((q) => Math.max(1, q - 1));
   const handleIncrease = () => setQuantity((q) => Math.min(effectiveStock, q + 1));
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      router.push(`/${locale}/login`);
+      return;
+    }
+    setIsAdding(true);
+    setErrorMsg(null);
+    try {
+      await addItem(product.id, quantity);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+      openCart();
+    } catch (err) {
+      console.error(err);
+      setErrorMsg('Səbətə əlavə edilərkən xəta baş verdi.');
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) {
+      router.push(`/${locale}/login`);
+      return;
+    }
+    setIsAdding(true);
+    setErrorMsg(null);
+    try {
+      await addItem(product.id, quantity);
+      router.push(`/${locale}/checkout`);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg('Səbətə əlavə edilərkən xəta baş verdi.');
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16">
@@ -198,17 +247,20 @@ export function ProductDetailClient({ product, locale }: ProductDetailClientProp
 
           {/* Add to Cart */}
           <Button
-            disabled={!inStock}
+            disabled={!inStock || isAdding}
+            onClick={handleAddToCart}
+            data-testid="add-to-cart-btn"
             size="lg"
             className="flex-1 gap-2 font-bold text-sm h-11 bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20"
           >
             <ShoppingCart className="h-4 w-4" />
-            {t('add_to_cart')}
+            {isAdding ? 'Səbətə əlavə edilir...' : t('add_to_cart')}
           </Button>
 
           {/* Buy Now */}
           <Button
-            disabled={!inStock}
+            disabled={!inStock || isAdding}
+            onClick={handleBuyNow}
             variant="outline"
             size="lg"
             className="flex-1 gap-2 font-bold text-sm h-11 border-indigo-200 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-400 dark:hover:bg-indigo-950/30"
@@ -217,6 +269,21 @@ export function ProductDetailClient({ product, locale }: ProductDetailClientProp
             {t('buy_now')}
           </Button>
         </div>
+
+        {/* Success/Error Alerts */}
+        {showSuccess && (
+          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-2 dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-300 animate-in fade-in slide-in-from-top-2 duration-200">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            {t('added_to_cart')}
+          </div>
+        )}
+
+        {errorMsg && (
+          <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-semibold flex items-center gap-2 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-300">
+            <span className="flex h-2 w-2 rounded-full bg-red-500" />
+            {errorMsg}
+          </div>
+        )}
 
         {/* SKU + Tags */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs text-slate-500">
