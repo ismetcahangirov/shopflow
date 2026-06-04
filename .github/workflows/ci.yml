@@ -71,8 +71,8 @@ jobs:
           NODE_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/shopflow_test
           DIRECT_URL: postgresql://postgres:postgres@localhost:5432/shopflow_test
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'github_actions_test_jwt_secret_must_be_at_least_64_characters_long_placeholder' }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET || 'github_actions_test_jwt_refresh_secret_must_be_at_least_64_characters_long_placeholder' }}
           JWT_EXPIRES_IN: 15m
           JWT_REFRESH_EXPIRES_IN: 7d
           PORT: '5000'

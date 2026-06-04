@@ -1,6 +1,6 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-04  
+> Son yenilənmə: 2026-06-04 (CI test JWT fallback əlavə edildi)  
 > Cari mərhələ: **Mərhələ 19 (Deploy & CI/CD) davam edir**
 
 ---

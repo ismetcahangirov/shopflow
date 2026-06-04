@@ -634,5 +634,5 @@
 
 ---
 
-> **Qeyd:** Hər tapşırığı tamamladıqdan sonra bu faylı yenilə.  
+> **Qeyd:** Hər tapşırığı tamamladıqdan sonra bu faylı yenilə. (Son yenilənmə: CI testlərində JWT fallback konfiqurasiya olundu)  
 > Local AI ilə işləyərkən: "TODO.md-ə bax, hansı tapşırıq növbəti?" deyə soruşa bilərsən.
