@@ -73,15 +73,8 @@ jobs:
 
       - name: Verify database connection
         run: |
-          cd server
-          node -e "
-            const { Client } = require('pg');
-            const client = new Client({ connectionString: 'postgresql://postgres:postgres@localhost:5432/shopflow_test' });
-            client.connect()
-              .then(() => client.query('SELECT count(*) FROM information_schema.tables WHERE table_schema = \\"public\\";'))
-              .then(res => { console.log('DB tables found:', res.rows[0].count); return client.end(); })
-              .catch(err => { console.error('DB check failed:', err.message); process.exit(1); });
-          "
+          PGPASSWORD=postgres psql -h localhost -U postgres -d shopflow_test \
+            -c "SELECT COUNT(*) AS table_count FROM information_schema.tables WHERE table_schema='public';"
 
       - name: Run tests
         run: cd server && npm run test:ci
