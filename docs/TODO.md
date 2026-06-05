@@ -588,26 +588,22 @@
 
 ---
 
-## Mərhələ 19 — Deploy & CI/CD
+## Mərhələ 19 — Deploy & CI/CD (Vercel)
 
 **Branch:** `chore/m19-deployment`
 
-- [ ] Supabase PostgreSQL yaradıldı
-- [ ] Cloudinary hesabı yaradıldı, upload preset konfigurasiya edildi
-- [ ] Resend hesabı yaradıldı, domain doğrulandı
-- [ ] Stripe production hesabı, webhook konfigurasiya edildi
-- [ ] `render.yaml` yazıldı
-- [ ] Render-də backend deploy edildi
-- [ ] Custom domain `api.shopflow.az` Render-ə bağlandı
-- [ ] `vercel.json` yazıldı
-- [ ] Vercel-də frontend deploy edildi
-- [ ] Custom domain `shopflow.az` Vercel-ə bağlandı
-- [ ] `.github/workflows/ci.yml` yazıldı
-- [ ] GitHub Secrets konfigurasiya edildi (6 secret)
-- [ ] CI/CD pipeline test edildi (lint → test → security → build → deploy)
-- [ ] `POST /api/health` → `{ status: "ok", db: "connected" }`
-- [ ] HTTPS hər iki domain üçün aktiv
-- [ ] Deploy sonrası yoxlama siyahısı keçildi
+- [x] `client/vercel.json` yazıldı (headers, regions)
+- [x] `server/vercel.json` yazıldı (serverless Express routing)
+- [x] `server/api/index.ts` Vercel entry point yaradıldı
+- [x] Vercel-də frontend deploy edildi → https://shopflow-theta.vercel.app
+- [x] Vercel-də backend deploy edildi → https://api-shopflow.vercel.app
+- [x] `.github/workflows/ci.yml` yazıldı (lint → test → audit → build → notify)
+- [x] `server/package.json`-a `test:ci` skripti əlavə edildi
+- [ ] GitHub Secrets konfiqurasiya edildi (`JWT_SECRET`, `JWT_REFRESH_SECRET`, `NEXT_PUBLIC_API_URL` və s.)
+- [ ] Stripe production webhook quruldu → `https://api-shopflow.vercel.app/api/payments/webhook`
+- [ ] `GET /api/health` → `{ status: "ok", db: "connected" }` (production)
+- [ ] HTTPS aktiv (Vercel avtomatik — hər iki URL)
+- [ ] Deploy sonrası yoxlama siyahısı keçildi (DEPLOYMENT.md §12)
 
 ---
 
@@ -634,9 +630,9 @@
 | 16 — SEO & Performans | `[x]` tamamlandı | 100% |
 | 17 — Testlər | `[x]` tamamlandı | 100% |
 | 18 — Təhlükəsizlik | `[x]` tamamlandı | 100% |
-| 19 — Deploy | `[ ]` gözləyir | 0% |
+| 19 — Deploy | `[~]` davam edir | 55% |
 
 ---
 
-> **Qeyd:** Hər tapşırığı tamamladıqdan sonra bu faylı yenilə.  
+> **Qeyd:** Hər tapşırığı tamamladıqdan sonra bu faylı yenilə. (Son yenilənmə: CI testlərində JWT fallback konfiqurasiya olundu)  
 > Local AI ilə işləyərkən: "TODO.md-ə bax, hansı tapşırıq növbəti?" deyə soruşa bilərsən.

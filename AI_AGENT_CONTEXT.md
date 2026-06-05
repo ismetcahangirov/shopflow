@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-03  
-> Cari mərhələ: **Mərhələ 18 tamamlandı → Mərhələ 19 (Deploy & CI/CD) növbəti**
+> Son yenilənmə: 2026-06-04 (CI test JWT fallback əlavə edildi)  
+> Cari mərhələ: **Mərhələ 19 (Deploy & CI/CD) davam edir**
 
 ---
 
@@ -18,7 +18,7 @@
 ## Son Tamamlanan Mərhələ: 18 — Təhlükəsizlik
 
 **Branch:** `chore/m18-security`  
-**PR:** Birləşdiriləcək
+**PR:** Birləşdirilib ✅
 
 ### Edilən işlər:
 
@@ -36,21 +36,28 @@
 ### Test nəticələri:
 - Backend: **220/220 PASS** ✅
 - Frontend: **181/181 PASS** ✅
-- E2E (Playwright): Bütün testlər keçdi ✅
+- E2E (Playwright): Bütün E2E testləri uğurla tamamlanıb ✅
 - Backend lint & TS yoxlama: Uğurlu ✅
 - Frontend lint & TS yoxlama: Uğurlu ✅
 
 ---
 
-## Növbəti Mərhələ: 19 — Deploy & CI/CD
+## Cari Mərhələ: 19 — Deploy & CI/CD
 
-**Branch açılacaq:** `chore/m19-deployment`
+**Branch:** `chore/m19-deployment`
 
-### Tapşırıqlar:
-- Supabase, Cloudinary, Resend, Stripe production hesablarının qurulması və inteqrasiyası.
-- Render (backend) və Vercel (frontend) deploy sənədlərinin (`render.yaml`, `vercel.json`) hazırlanması və deploy edilməsi.
-- GitHub Actions pipeline konfiqurasiyası (`.github/workflows/ci.yml`).
-- Deploy sonrası production verify yoxlanışları.
+### Tamamlanan işlər:
+- Vercel üçün həm `client` (`vercel.json`), həm də `server` (`vercel.json`, `server/api/index.ts` entrypoint) konfiqurasiyaları yazıldı.
+- Frontend canlı olaraq deploy olundu → https://shopflow-theta.vercel.app
+- Backend Express app Vercel Serverless Functions kimi deploy olundu → https://api-shopflow.vercel.app
+- `.github/workflows/ci.yml` pipeline (Lint, Test, Audit, Build) uğurla yazıldı.
+- `DEPLOYMENT.md` sənədi yeniləndi və Vercel konfiqurasiyasına uyğunlaşdırıldı.
+
+### Növbəti Addımlar (User tərəfindən icra ediləcəklər):
+- GitHub Repository panelində lazımi Secret-lərin (`JWT_SECRET`, `NEXT_PUBLIC_API_URL` və s.) tənzimlənməsi.
+- Vercel Panelində backend layihəsinin mühit dəyişənlərinin (Supabase `DATABASE_URL` və `DIRECT_URL`) konfiqurasiyası.
+- Stripe webhook və Resend production inteqrasiyalarının tamamlanması.
+- Deploy sonrası `GET /api/health` verify testi və ümumi yoxlama siyahısının icrası.
 
 ---
 
