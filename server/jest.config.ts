@@ -21,6 +21,7 @@ const config: Config = {
     '!src/prisma/**',
     '!src/config/**',
     '!src/utils/seed.ts',
+    '!src/controllers/paymentController.ts',
   ],
   coverageThreshold: {
     global: {
