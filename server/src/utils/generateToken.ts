@@ -2,6 +2,7 @@
 // JWT access and refresh token generation
 
 import jwt, { SignOptions } from 'jsonwebtoken';
+import crypto from 'crypto';
 import { config } from '../config/env';
 
 export interface TokenPayload {
@@ -16,7 +17,10 @@ export function generateAccessToken(payload: TokenPayload): string {
 }
 
 export function generateRefreshToken(payload: TokenPayload): string {
-  const options: SignOptions = { expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'] };
+  const options: SignOptions = {
+    expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'],
+    jwtid: crypto.randomUUID(),
+  };
   return jwt.sign(payload, config.JWT_REFRESH_SECRET, options);
 }
 
