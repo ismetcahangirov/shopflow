@@ -257,7 +257,7 @@
 - [x] `StarRating.tsx` yaradıldı (display + interactive)
 - [x] Məhsul siyahısı səhifəsi (`/products/page.tsx` — SSR)
 - [x] Məhsul detalı səhifəsi (`/products/[slug]/page.tsx` — SSG+ISR)
-- [ ] Axtarış səhifəsi (`/search/page.tsx` — SSR)
+- [x] Axtarış səhifəsi (`/search/page.tsx` — SSR)
 - [x] `generateMetadata()` məhsul detalı üçün
 - [x] `generateStaticParams()` populyar məhsullar üçün
 - [ ] Admin: məhsul siyahısı + CRUD panel

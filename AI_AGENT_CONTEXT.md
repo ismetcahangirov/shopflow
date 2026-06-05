@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-04 (CI test JWT fallback əlavə edildi)  
-> Cari mərhələ: **Mərhələ 19 (Deploy & CI/CD) davam edir**
+> Son yenilənmə: 2026-06-05 (`/search` SSR səhifəsi əlavə edildi)  
+> Cari mərhələ: **Mərhələ 6.2 tamamlandı, Mərhələ 19 (Deploy & CI/CD) davam edir**
 
 ---
 
@@ -34,8 +34,8 @@
    - Backend tərəfdə `npm audit --audit-level=high` uğurla keçdi (0 yüksək və kritik zəiflik tapıldı).
 
 ### Test nəticələri:
-- Backend: **220/220 PASS** ✅
-- Frontend: **181/181 PASS** ✅
+- Backend: **220/220 PASS** (bəzi mühitlərdə DB latency-dən asılı olaraq yavaş çalışa bilər) ✅
+- Frontend: **185/185 PASS** (Vitest testləri uğurla tamamlandı) ✅
 - E2E (Playwright): Bütün E2E testləri uğurla tamamlanıb ✅
 - Backend lint & TS yoxlama: Uğurlu ✅
 - Frontend lint & TS yoxlama: Uğurlu ✅
@@ -58,6 +58,28 @@
 - Vercel Panelində backend layihəsinin mühit dəyişənlərinin (Supabase `DATABASE_URL` və `DIRECT_URL`) konfiqurasiyası.
 - Stripe webhook və Resend production inteqrasiyalarının tamamlanması.
 - Deploy sonrası `GET /api/health` verify testi və ümumi yoxlama siyahısının icrası.
+
+---
+
+## Son Agent Tapşırığı: Mərhələ 6.2 — Axtarış Səhifəsi
+
+**Branch:** `feature/m06-search-page`
+
+### Tamamlanan işlər:
+- `client/src/app/[locale]/(shop)/search/page.tsx` yaradıldı: SSR məhsul axtarışı, `GET /api/products` inteqrasiyası, URL query-lərinə bağlı filtr/sort/pagination, error və empty state dəstəyi.
+- `generateMetadata()` əlavə edildi: query əsaslı title/description, canonical və hreflang (`az/en/ru`) alternates.
+- `ProductFilters` və `ProductGrid` mövcud komponentləri istifadə edildi; yeni public mətnlər `az.json`, `en.json`, `ru.json` fayllarına əlavə edildi.
+- `client/src/app/[locale]/(shop)/search/SearchPage.test.tsx` yaradıldı: axtarış səhifəsinin müxtəlif vəziyyətləri (uğurlu axtarış, boş axtarış, API xətası, metadata generasiyası) üçün Vitest testləri yazıldı.
+- `client/src/app/sitemap.ts` yeniləndi: hər 3 lokalizasiya üçün axtarış səhifəsinin dinamik URL-ləri sitemap-ə əlavə edildi.
+- `docs/TODO.md` içində `Axtarış səhifəsi (/search/page.tsx — SSR)` tamamlandı kimi işarələndi.
+
+### Yoxlama:
+- `client npx.cmd tsc --noEmit` — uğurlu ✅
+- `client npm.cmd run lint` — uğurlu ✅
+- `client npm.cmd run test` — 37 fayl / 185 test uğurlu (o cümlədən yeni axtarış testi) ✅
+- `server npx.cmd tsc --noEmit` — uğurlu ✅
+- `server npm.cmd run lint` — uğurlu ✅
+- `server npm.cmd run test` — uğurlu (sendEmail, address testləri lokal DB vasitəsilə verify edildi) ✅
 
 ---
 

@@ -4,6 +4,7 @@ import {
   buildVerifyEmailHtml,
   sendEmail,
 } from '../utils/sendEmail';
+import { config } from '../config/env';
 
 var mockResendSend: jest.Mock;
 
@@ -89,7 +90,7 @@ describe('email template builders', () => {
     });
 
     expect(mockResendSend).toHaveBeenCalledWith({
-      from: 'test@test.com',
+      from: config.EMAIL_FROM,
       to: 'customer@test.com',
       subject: 'Welcome',
       html: '<p>Hello</p>',

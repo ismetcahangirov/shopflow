@@ -1,304 +1,130 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
-> Son yenilənmə: 2026-05-29
 
-## Cari Vəziyyət
-**Aktiv Branch:** `test/m17-frontend-tests`
-**Cari Mərhələ:** Mərhələ 17.2 — Frontend Testlər ✅
-**Status:** Backend TypeScript ✅ | Backend Lint ✅ | Backend Test 220/220 ✅ | Backend Coverage ✅ | Frontend TypeScript ✅ | Frontend Lint ✅ | Frontend Test 181/181 (Coverage 86%+) ✅
+> Son yenilənmə: 2026-06-05 (`/search` SSR səhifəsi əlavə edildi)  
+> Cari mərhələ: **Mərhələ 6.2 tamamlandı, Mərhələ 19 (Deploy & CI/CD) davam edir**
 
-## Tamamlanan Mərhələlər
+---
 
-### Mərhələ 0 — Sənədləşmə ✅
-- Bütün sənədlər (`README.md`, `ARCHITECTURE.md`, `DATABASE.md`, `API.md` və s.) hazırlandı.
+## Layihə Haqqında
 
-### Mərhələ 1.1 — Backend Setup ✅
-- Express, TypeScript, Prisma, Winston, Rate limiting və s. təməl qurulumlar bitib.
+**ShopFlow** — Next.js 14 + Express.js + PostgreSQL (Prisma) əsaslı tam funksional e-ticarət platforması.
 
-### Mərhələ 1.2 — Frontend Setup ✅
-- Next.js 14 layihəsi `client/` qovluğunda quruldu.
-- **Dizayn Sistemi & Stil:** Tailwind CSS xüsusi rəng palitrası, Shadcn/ui, `cn()` utility.
-- **İnfrastruktur:** TanStack Query v5, auto-refresh interceptors daxil Axios `api.ts`.
-- **i18n:** `next-intl` ilə `az`, `en`, `ru` dəstəyi, `middleware.ts` marşrut qoruması.
-- **Validasiya & Tiplər:** `shared/schemas/auth.ts` Zod sxemləri, `src/types/index.ts`.
-- **State:** Zustand `authStore.ts` — in-memory access token + cookie userRole.
-- **Test:** Vitest + React Testing Library + jsdom konfiqurasiya.
+- **Frontend:** `client/` — Next.js 14, TypeScript, Tailwind, Zustand, TanStack Query, next-intl (az/en/ru)
+- **Backend:** `server/` — Express.js, TypeScript, Prisma ORM, PostgreSQL, Stripe, Resend
+- **Testlər:** Jest + Supertest (backend), Vitest + RTL (frontend), Playwright (E2E)
 
-### Mərhələ 2 — Autentifikasiya ✅
-- **Backend Auth:** Bütün auth endpointləri, middleware-lər, validasiyalar tamamlandı. 21/21 test 100% yaşıl.
-- **Frontend Auth Forms:** Split-screen premium login, register, şifrəni unutdum/sıfırlama, email verify səhifələri.
-- **ProtectedRoute & useRole:** Rol əsaslı qoruma middleware və hook qurularaq frontend unit testləri (Vitest) ilə əhatə olundu.
+---
 
-### Mərhələ 3 — Layout & Naviqasiya ✅
-- Premium Navbar, Footer, AdminSidebar, VendorSidebar, BottomTabs, Breadcrumb, LanguageSwitcher.
+## Son Tamamlanan Mərhələ: 18 — Təhlükəsizlik
 
-**Test nəticəsi:** 29/29 frontend testi ✅ | 21/21 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+**Branch:** `chore/m18-security`  
+**PR:** Birləşdirilib ✅
 
-### Mərhələ 4 — Common UI Komponentləri ✅
-- Button, Modal, Badge, Avatar, Spinner, Skeleton, EmptyState, ErrorState, ErrorBoundary, Pagination, ConfirmDialog, Table, DataTable, StatCard, PageHeader, SearchBar, PriceRange.
+### Edilən işlər:
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 21/21 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+1. **Helmet & Security Headers:** Hər bir HTTP cavabı üçün təhlükəsizlik başlıqları (`CSP`, `HSTS`, `X-Content-Type-Options` və s.) konfiqurasiya edilib. CSP daxilində Stripe və Google inteqrasiyaları üçün qaydalar əlavə olunub.
+2. **CORS Siyasəti:** Yalnız whitelist-də olan origin-lərdən (`config.CLIENT_URL`, `shopflow.az` və `www.shopflow.az`) gələn sorğulara icazə verilib.
+3. **Rate Limiting:** Auth endpointləri (`/register`, `/login`, `/google` — 15 dəqiqədə 10 sorğu) və şifrə sıfırlama routes (`/forgot-password`, `/reset-password` — saatda 5 sorğu) üçün rate limiter tətbiq edilib.
+4. **İnput Sanitization və Validasiya:** Bütün routes daxilində `express-validator` vasitəsilə input formatları, uzunluqları və verilənlər tipləri yoxlanılır. SQL injection-a qarşı Prisma parametrized query quruluşu təmin edilib.
+5. **Əlavə Təhlükəsizlik:**
+   - Bcrypt ilə şifrə hash-ləmə üçün `SALT_ROUNDS = 12` tətbiq edilib.
+   - JWT secret açarları minimum 64 simvoldan ibarət olmaqla validate edilir.
+   - Hər iki tərəfdə `.env` faylları `.gitignore` daxilindədir.
+   - Client və server üzərində `noindex` meta tagləri gizli səhifələrə (`/admin`, `/vendor`, `/cart`, `/checkout`, `/profile`, `/orders`) şamil edilib.
+   - Backend tərəfdə `npm audit --audit-level=high` uğurla keçdi (0 yüksək və kritik zəiflik tapıldı).
 
-### Mərhələ 5.1 — Kateqoriyalar Backend ✅
-- Ağac strukturlu GET, slug GET, Admin CRUD, Cloudinary upload, 45/45 test.
+### Test nəticələri:
+- Backend: **220/220 PASS** (bəzi mühitlərdə DB latency-dən asılı olaraq yavaş çalışa bilər) ✅
+- Frontend: **185/185 PASS** (Vitest testləri uğurla tamamlandı) ✅
+- E2E (Playwright): Bütün E2E testləri uğurla tamamlanıb ✅
+- Backend lint & TS yoxlama: Uğurlu ✅
+- Frontend lint & TS yoxlama: Uğurlu ✅
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+---
 
-### Mərhələ 5.2 — Kateqoriyalar Frontend ✅
-- Navbar dropdown, `/category/[slug]/page.tsx` (SSG+SEO), Admin CRUD paneli, Cloudinary upload, `next/image` mock, bütün unused imports/variables silindi.
+## Cari Mərhələ: 19 — Deploy & CI/CD
 
-**Test nəticəsi:** 94/94 frontend testi ✅ | 45/45 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+**Branch:** `chore/m19-deployment`
 
-### Mərhələ 6.1 — Məhsullar Backend ✅
-- **`GET /api/products`** — filter (search, categoryId, categorySlug, brand, minPrice, maxPrice, featured, inStock), sort (price_asc/desc, newest, popular, rating), pagination.
-- **`GET /api/products/featured`** — top 12 isFeatured məhsul.
-- **`GET /api/products/search`** — 2+ simvol üçün autocomplete (ad, brend, SKU).
-- **`GET /api/products/:slug`** — tam detallar (şəkillər, atributlar, variantlar).
-- **`POST /api/products`** — Admin/Vendor yaradır, slug auto-generate, SKU/slug uniqueness, categoryId yoxlama, vendorId yoxlama.
-- **`PUT /api/products/:id`** — Admin/Vendor yeniləyir, Vendor yalnız öz məhsulunu.
-- **`DELETE /api/products/:id`** — sifariş varsa bloklayır (409).
-- **`POST /api/products/:id/images`** — Cloudinary upload, ilk şəkil avtomatik main.
-- **`DELETE /api/products/:id/images/:imageId`** — silindikdə növbəti şəkil main olur.
-- **Validasiya:** `productValidators.ts` — bütün sahələr üçün express-validator qaydaları.
-- **İnteqrasiya Testləri:** 75/75 Jest testləri (product + category + auth) uğurla keçdi.
+### Tamamlanan işlər:
+- Vercel üçün həm `client` (`vercel.json`), həm də `server` (`vercel.json`, `server/api/index.ts` entrypoint) konfiqurasiyaları yazıldı.
+- Frontend canlı olaraq deploy olundu → https://shopflow-theta.vercel.app
+- Backend Express app Vercel Serverless Functions kimi deploy olundu → https://api-shopflow.vercel.app
+- `.github/workflows/ci.yml` pipeline (Lint, Test, Audit, Build) uğurla yazıldı.
+- `DEPLOYMENT.md` sənədi yeniləndi və Vercel konfiqurasiyasına uyğunlaşdırıldı.
 
-### Mərhələ 6.2 — Məhsullar Frontend ✅
-- **Məhsul Detal Səhifəsi (`[slug]/page.tsx`):** SSG + ISR (60s revalidation) ilə dinamik render.
-- **SEO & Metadata:** Dinamik meta teqlər, canonical linklər, OpenGraph/Twitter kartları və JSON-LD `ProductSchema` strukturlaşdırılmış məlumatlar.
-- **İnteraktiv Client Detal View (`ProductDetailClient.tsx`):** Məhsul şəkil qalereyası, dinamik variant (rəng/ölçü) seçimi, miqdar seçici, add-to-cart/buy-now CTA düymələri.
-- **Unit Testlər:** Vitest/RTL ilə model/variant məlumatları, stok limitləri və kəmiyyət tənzimləmə testləri (100% test əhatə dairəsi).
+### Növbəti Addımlar (User tərəfindən icra ediləcəklər):
+- GitHub Repository panelində lazımi Secret-lərin (`JWT_SECRET`, `NEXT_PUBLIC_API_URL` və s.) tənzimlənməsi.
+- Vercel Panelində backend layihəsinin mühit dəyişənlərinin (Supabase `DATABASE_URL` və `DIRECT_URL`) konfiqurasiyası.
+- Stripe webhook və Resend production inteqrasiyalarının tamamlanması.
+- Deploy sonrası `GET /api/health` verify testi və ümumi yoxlama siyahısının icrası.
 
-**Test nəticəsi:** 113/113 frontend testi ✅ | 75/75 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+---
 
-### Mərhələ 7.1 — Səbət Backend ✅
-- **`GET /api/cart`** — istifadəçi səbətini al (boş olduqda avtomatik yaradılır).
-- **`POST /api/cart/items`** — səbətə məhsul əlavə et (eyni məhsul olduqda miqdar toplanır).
-- **`PATCH /api/cart/items/:productId`** — məhsulun miqdarını yenilə (stok yoxlaması ilə).
-- **`DELETE /api/cart/items/:productId`** — məhsulu səbətdən sil.
-- **`DELETE /api/cart`** — bütün səbəti təmizlə.
-- **Validasiya:** `cartValidators.ts` — `express-validator` qaydaları.
-- **Cavab Formatı:** `API.md`-ə uyğun `id`, `itemCount`, `subtotal`, `items[]` strukturu.
-- **İnteqrasiya Testləri:** 19/19 Jest testi (CRUD, stok yoxlaması, auth, validasiya) uğurla keçdi.
+## Son Agent Tapşırığı: Mərhələ 6.2 — Axtarış Səhifəsi
 
-### Mərhələ 7.2 — Səbət Frontend ✅
-- **`cartStore` (Zustand)** — Optimistic updates + Rollback mexanizmi, LocalStorage persist rehydration tracking ilə.
-- **`CartItem`** — Məhsul miqdarı idarəetməsi, silmə düyməsi, responsive premium visual UI card.
-- **`CartSummary`** — Ara cəm, çatdırılma, pulsuz çatdırılma progress bar (150 AZN threshold).
-- **Səbət Səhifəsi (`/cart`):** CSR + Hydration qoruması, boş səbət vəziyyəti, login tələbi.
-- **Real-Time Synchronizations:** Navbar + BottomTabs ilə birbaşa əlaqə.
-- **Unit & Integration Tests:** 100% test əhatə dairəsi (Store & Components) ilə 131 frontend testi.
+**Branch:** `feature/m06-search-page`
 
-**Test nəticəsi:** 131/131 frontend testi ✅ | 94/94 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəbərdarlıq/xəta ✅
+### Tamamlanan işlər:
+- `client/src/app/[locale]/(shop)/search/page.tsx` yaradıldı: SSR məhsul axtarışı, `GET /api/products` inteqrasiyası, URL query-lərinə bağlı filtr/sort/pagination, error və empty state dəstəyi.
+- `generateMetadata()` əlavə edildi: query əsaslı title/description, canonical və hreflang (`az/en/ru`) alternates.
+- `ProductFilters` və `ProductGrid` mövcud komponentləri istifadə edildi; yeni public mətnlər `az.json`, `en.json`, `ru.json` fayllarına əlavə edildi.
+- `client/src/app/[locale]/(shop)/search/SearchPage.test.tsx` yaradıldı: axtarış səhifəsinin müxtəlif vəziyyətləri (uğurlu axtarış, boş axtarış, API xətası, metadata generasiyası) üçün Vitest testləri yazıldı.
+- `client/src/app/sitemap.ts` yeniləndi: hər 3 lokalizasiya üçün axtarış səhifəsinin dinamik URL-ləri sitemap-ə əlavə edildi.
+- `docs/TODO.md` içində `Axtarış səhifəsi (/search/page.tsx — SSR)` tamamlandı kimi işarələndi.
 
-### Mərhələ 8.1 — Kuponlar Backend ✅
-- **`GET /api/coupons`** — kupon siyahısı (Admin, pagination dəstəyi).
-- **`POST /api/coupons`** — yeni kupon yarat (Admin, `PERCENTAGE` / `FIXED_AMOUNT` tipi, kod unikallığı yoxlaması).
-- **`PUT /api/coupons/:id`** — kuponu yenilə (Admin, 404 yoxlaması).
-- **`DELETE /api/coupons/:id`** — kuponu sil (Admin, 404 yoxlaması).
-- **`POST /api/coupons/validate`** — kuponu yoxla (Customer — aktiv/müddəti/limit/minOrder yoxlamaları, endirim hesablaması).
-- **Validasiya:** `couponValidators.ts` — PERCENTAGE üçün 0-100 diapazon, FIXED_AMOUNT üçün müsbət dəyər.
-- **Discount Hesablaması:** Percentage kuponda `maxDiscount` cap tətbiq olunur.
-- **İnteqrasiya Testləri:** 24/24 Jest testi — 401, 403, 404, 409, 400, 200, 201 bütün ssenariləri əhatə edir.
+### Yoxlama:
+- `client npx.cmd tsc --noEmit` — uğurlu ✅
+- `client npm.cmd run lint` — uğurlu ✅
+- `client npm.cmd run test` — 37 fayl / 185 test uğurlu (o cümlədən yeni axtarış testi) ✅
+- `server npx.cmd tsc --noEmit` — uğurlu ✅
+- `server npm.cmd run lint` — uğurlu ✅
+- `server npm.cmd run test` — uğurlu (sendEmail, address testləri lokal DB vasitəsilə verify edildi) ✅
 
-### Mərhələ 8.2 — Kuponlar Frontend ✅
-- **`CouponInput.tsx`** — boş / uğurlu / xəta olaraq 3 interaktiv vizual vəziyyət, premium dizayn.
-- **`CartSummary` Kupon İnteqrasiyası** — tətbiq olunmuş kuponun endirimini (`PERCENTAGE` / `FIXED_AMOUNT` olaraq) göstərir, pulsuz çatdırılma progress barını və ara cəmi/ümumi məbləği endirimli qiymətə uyğun dinamik olaraq yeniləyir.
-- **Admin Kupon CRUD Paneli** — `/admin/coupons` səhifəsində kuponların idarə edilməsi, yaradılması, redaktəsi və silinməsi tam şəkildə dəstəklənir.
-- **Lokallaşdırma (i18n):** next-intl `t()` və `t.rich()` istifadəsi ilə çoxdilli dəstək (`az`, `en`, `ru`).
+---
 
-**Test nəticəsi:** 142/142 frontend testi ✅ | 118/118 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta ✅
+## Texniki Arxitektura
 
-### Mərhələ 9.1 — Ünvanlar Backend ✅
-- **`GET /api/addresses`** — istifadəçinin öz ünvanları (default ilk sırada, yaradılma tarixinə görə).
-- **`POST /api/addresses`** — yeni ünvan yarat (Customer, isDefault true olarsa əvvəlki default-ları ləğv edir).
-- **`PUT /api/addresses/:id`** — ünvanı yenilə (Customer, yalnız öz ünvanı, digər istifadəçi → 403).
-- **`DELETE /api/addresses/:id`** — ünvanı sil (Customer, sifarişlə əlaqəli ünvan → 409).
-- **`PATCH /api/addresses/:id/default`** — ünvanı default et (Customer, transaction ilə əvvəlki default-ları ləğv edir).
-- **Validasiya:** `addressValidators.ts` — bütün sahələr üçün express-validator qaydaları (Azərbaycan dilində mesajlar).
-- **İnteqrasiya Testləri:** 23/23 Jest testi — 401, 403, 404, 400, 201, 200 bütün ssenariləri əhatə edir.
+### Backend Əsas Fayllar
+```
+server/src/
+  controllers/   — asyncHandler ilə sarılmış controller-lər
+  routes/        — protect → authorize → validate → controller sırası
+  middleware/    — auth, error, validate
+  utils/         — AppError, successResponse, generateToken, logger
+  config/        — db.ts (Prisma), env.ts
+  tests/         — Jest integration testlər
+```
 
-**Test nəticəsi:** 142/142 frontend testi ✅ | 141/141 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta ✅
+### Frontend Əsas Fayllar
+```
+client/src/
+  app/[locale]/  — Next.js 14 App Router, next-intl
+  components/    — UI + layout + feature komponentlər
+  store/         — Zustand: authStore, cartStore, uiStore, wishlistStore, couponStore
+  hooks/         — useProducts, useOrders, useRole, useAuth
+  lib/           — api.ts (axios + interceptors)
+  types/         — index.ts (bütün TypeScript tipləri)
+e2e/             — Playwright E2E testlər
+```
 
-### Mərhələ 9.2 — Ünvanlar Frontend ✅
-- **Profil/Ünvanlar Səhifəsi (`/profile/addresses`):** Ünvan siyahısı (default vurğulu, boş siyahı, yükləmə skeleton, xəta state).
-- **Ünvan Əlavə/Redaktə Forması:** React Hook Form + Zod validasiya ilə modal pəncərədə (bütün sahələr, default checkbox).
-- **Default Ünvan Seçimi:** `setDefault` düyməsi ilə bir toxunuşda default dəyişmə.
-- **Sil:** ConfirmDialog ilə təhlükəsiz silmə.
-- **Lokallaşdırma (i18n):** `addresses` namespace ilə 33 açar (`az`, `en`, `ru`).
+### Vacib Qaydalar
+- Backend: `asyncHandler` + `AppError` + `successResponse` — istisnasız
+- Frontend: `useCartStore` addItem → `useUiStore` openCart → CartDrawer açılır
+- Cart API: `protect` middleware — autentifikasiya mütləqdir
+- i18n: az.json → en.json → ru.json (eyni anda 3 dildə)
+- `console.log` yoxdur — `logger` istifadə et
 
-**Test nəticəsi:** 142/142 frontend testi ✅ | 141/141 backend testi ✅  
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta ✅
-**Test count:** 131/131 vite + 23/23 jest = 154 test (cihazın test count sınırına əsasən fərqli ola bilər)
+---
 
-### Mərhələ 10.1 — Ödəniş & Sifariş Backend ✅
-- **Stripe:** `stripe.ts` konfiqurasiya, `createPaymentIntent` (AZN, metadata), `stripeWebhook` (express.raw + imza yoxlaması), `createRefund` (Admin).
-- **Webhook Handler-lar:** `payment_intent.succeeded` (order təsdiq, stok azaltma, səbət təmizləmə, email — Prisma transaction), `payment_intent.payment_failed` (order ləğv), `charge.refunded` (stock bərpa).
-- **Sifariş CRUD:** `createOrder` (kupon validasiyası, stok yoxlaması, səbət əsaslı yaratma), `getOrders`/`getMyOrders`/`getOrder` (pagination + filter), `updateOrderStatus` (CANCELLED olanda stock bərpa), `cancelOrder` (PENDING status yoxlaması).
-- **Utility:** `generateOrderNumber` (ORD-YYYYMMDD-XXXX formatı).
-- **Email:** `buildOrderConfirmationEmail` (Resend, full HTML template — items, totals, tracking URL).
-- **Server.ts:** Webhook route `express.raw({ type: 'application/json' })` ilə `express.json()`-dan əvvəl qeyd edildi.
+## Seeded Test Məlumatları
 
-**TypeScript:** `npx tsc --noEmit` — 0 xəta ✅  
-**Lint:** `npm run lint` — 0 xəta ✅
+| Rol | Email | Şifrə |
+|-----|-------|-------|
+| Admin | admin@shopflow.az | Admin@1234 |
+| Customer | customer@test.az | Customer@1234 |
+| Vendor | vendor@test.az | Vendor@1234 |
 
-### Mərhələ 10.2 — Ödəniş & Sifariş Frontend ✅
-- **Stripe Elements:** `@stripe/stripe-js` + `@stripe/react-stripe-js`, `stripe.ts` singleton
-- **Checkout:** `/checkout` səhifəsi — ünvan seçimi, Stripe PaymentElement, sifariş yaratma
-- **Sifariş:** `/orders` siyahı, `/orders/[id]` detal (status tarixçəsi, ləğv), `/order/success/[id]`
-- **Hooks:** `useOrders` — TanStack Query ilə CRUD + payment intent
-- **i18n:** `orders` namespace + genişləndirilmiş `checkout` (az/en/ru)
-
-### Mərhələ 11.1 — İstək Siyahısı Backend ✅
-- `GET /api/wishlist` — siyahı
-- `POST /api/wishlist` — əlavə et (409 artıq varsa)
-- `DELETE /api/wishlist/:productId` — çıxar
-
-### Mərhələ 11.2 — İstək Siyahısı Frontend ✅
-- `/wishlist` səhifəsi — məhsul qalereyası
-- Zustand `wishlistStore` (localStorage persist)
-- ProductCard-da ❤️ toggle düyməsi
-- i18n: `wishlist` namespace (az/en/ru)
-
-### Mərhələ 12.1 — Rəylər Backend ✅
-- `GET /api/reviews` — filter + page + rating distribution
-- `POST /api/reviews` — alqı yoxlaması, məhsul reytinqi yeniləmə (transaction)
-- `PATCH /api/reviews/:id/approve` — təsdiq/rədd (Admin)
-- `DELETE /api/reviews/:id` — sil (Admin)
-
-### Mərhələ 12.2 — Rəylər Frontend ✅
-- `ReviewCard.tsx` — rəy kartı komponenti
-- `ReviewForm.tsx` — interaktiv ulduz qiymətləndirmə + Zod validasiya
-- `useReviews.ts` — TanStack Query hook
-- i18n: review_title, review_body, review_send, review_moderation
-
-### Mərhələ 13.1 — Profil Backend ✅
-- `PUT /api/users/me` — profil yenilə
-- `PUT /api/users/me/password` — şifrə dəyiş (bcrypt, cari şifrə yoxlaması)
-- `POST /api/users/me/avatar` — avatar yüklə (Multer + Cloudinary)
-- `GET /api/users` — bütün istifadəçilər (Admin, filter/search/pagination)
-- `PATCH /api/users/:id/status` — aktiv/deaktiv (Admin, ADMIN bloklanır)
-
-### Mərhələ 13.2 — Profil Frontend ✅
-- `/profile` səhifəsi — avatar, info, redaktə, şifrə dəyişmə
-- Avatar yükləmə (birbaşa Cloudinary)
-- Profile edit (inline form)
-- Password change (current password verification)
-- i18n: `profile` namespace (az/en/ru)
-
-### Mərhələ 14.1 — Vendor Backend ✅
-- `POST /api/vendors/apply` — vendor müraciəti (avtomatik rol dəyişikliyi)
-- `GET /api/vendors` — bütün vendorlar (Admin, filter/pagination)
-- `PATCH /api/vendors/:id/status` — təsdiq/rədd (REJECTED olanda rol geri qaytarılır)
-- `GET /api/vendors/me` — öz profil, `PUT /api/vendors/me` — yenilə
-- `GET /api/vendors/me/stats` — statistikalar (məhsul sayı, sifariş, revenue, reytinq)
-- `requireApprovedVendor` middleware — VENDOR rol + APPROVED status yoxlaması
-
-### Mərhələ 14.2 — Vendor Frontend ✅
-- Dashboard (`/vendor`) — real-time stats (məhsul, sifariş, gəlir, reytinq)
-- Məhsullar (`/vendor/products`) — siyahı cədvəli
-- Sifarişlər (`/vendor/orders`) — siyahı
-- Mağaza profili (`/vendor/store`) — store info, status
-- i18n: `vendor` namespace (az/en/ru)
-
-### Mərhələ 15.1 — Analitika & Dashboard Backend ✅
-- `GET /api/analytics/dashboard` — KPI-lər, gəlir, sifarişlər, ən çox satılanlar
-- `GET /api/analytics/sales` — gün/ay/il üzrə satış qrafiki API-si
-- `GET /api/settings` və `PUT /api/settings` (Admin) — ümumi sayt parametrləri
-
-### Mərhələ 15.2 — Analitika & Dashboard Frontend ✅
-- Real-time KPI stat kartları, gəlir sütunlu qrafiki (son 30 gün)
-- Ən çox satılan məhsullar və son sifarişlər cədvəli integration-ı
-
-### Mərhələ 16 — SEO & Performans ✅
-- Dinamik `sitemap.ts` (API-dən məhsul/kateqoriya slug-larını çəkib dildə sitemap yaradır)
-- `robots.ts` və custom `next-sitemap.config.js` qurulumu
-- Root layihədə Organization & WebSite JSON-LD sxemləri script ilə əlavə edildi
-- `next-sitemap` postbuild hook əlavə olundu, canonical URL, alternates/hreflang dəstəkləndi
-
-### Mərhələ 17.1 — Backend Testlər `[~]`
-- Branch `test/m17-backend-tests` PR #31 merge edildikdən sonra `main` fast-forward edildi və `test/m17-backend-test-guard` branch-i açıldı.
-- `server/src/tests/order.test.ts` əlavə edildi: `POST /api/orders`, `GET /api/orders/my`, Admin `GET /api/orders`, `GET /api/orders/:id`, status yeniləmə və ləğv axınları üzrə 30 integration test.
-- Order testləri auth (401), rol (403), validasiya (400), tapılmadı (404), stok/product edge case-ləri, kupon endirimi, cart clear, stock restore və status history ssenarilərini əhatə edir.
-- `orderController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
-- `cart.test.ts` statik email konfliktləri aradan qaldırıldı: hər run üçün unikal email-lər və yarımçıq setup halında təhlükəsiz cleanup.
-- `server/src/tests/review.test.ts` əlavə edildi: public review list, review yaratma, verified purchase yoxlaması, duplicate guard, approve/reject və delete axınları üzrə 18 integration test.
-- Review testləri auth (401), rol (403), validasiya (400), tapılmadı (404), inactive product, pending/unverified review, DELIVERED order ilə verified review və məhsul `avgRating` / `reviewCount` recalculation ssenarilərini əhatə edir.
-- `reviewController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
-- `server/src/tests/payment.test.ts` əlavə edildi: `POST /api/payments/create-intent`, `POST /api/payments/webhook` və `POST /api/payments/refund` üzrə 18 integration test.
-- Payment testləri Stripe mock-u ilə auth (401), rol (403), validasiya (400), tapılmadı (404), artıq ödənilib (409), PaymentIntent metadata persist, webhook signature, success/failure/refund event-ləri, stock/cart/coupon/history mutation-ları və admin refund axınlarını əhatə edir.
-- `paymentController` Prisma interactive transaction timeout-u uzaq DB-lərdə P2028 almamaq üçün `maxWait: 10000`, `timeout: 20000` ilə genişləndirildi.
-- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run test` — 9 suite / 207 test ✅, `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅.
-- `server/src/tests/helpers/testDatabase.ts` əlavə edildi: `assertSafeTestEnvironment()` NODE_ENV=test tələb edir, DATABASE_URL yoxlayır və production-a bənzər DB URL-lərini bloklayır; `resetTestDatabase()` FK sırası ilə test cədvəllərini təmizləyən mərkəzi helper kimi hazırlandı.
-- `server/src/tests/globalSetup.ts` Jest başlamadan production DB qorumasını işə salır.
-- `server/src/tests/setup.ts` hər test suite üçün test mühiti guard-unu qeyd edir və suite sonunda Prisma bağlantısını bağlayır.
-- `server/src/tests/helpers/testDatabase.test.ts` əlavə edildi: guard helper üçün 4 unit test.
-- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npx.cmd jest src/tests/helpers/testDatabase.test.ts --runInBand` — 4/4 ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 21/21 ✅, `server npm.cmd run test` — 10 suite / 211 test ✅.
-- Frontend regresiya yoxlamaları: `client npx.cmd tsc --noEmit` ✅, `client npm.cmd run test` — 33 fayl / 131 test ✅, `client npm.cmd run lint` ✅ (mövcud `ProfilePageClient.tsx` `<img>` warning-i qalır).
-- Build yoxlamaları: `server npm.cmd run build` ✅, `client npm.cmd run build` ✅. Frontend build üçün `border-border` / `outline-ring/50` CSS problemi düzəldildi, shadcn CSS variable-ları Tailwind config-ə map olundu, `typedRoutes` next-intl locale routing ilə uyğunsuz olduğu üçün söndürüldü və generated `next-sitemap` çıxışları `.gitignore`-a əlavə edildi.
-- Branch `test/m17-backend-test-guard` PR #32 merge edildikdən sonra `main` fast-forward edildi və `test/m17-auth-coverage` branch-i açıldı.
-- `server/src/tests/auth.test.ts` genişləndirildi: refresh token uğurlu rotasiya, malformed token, stale token və deaktiv hesab ssenariləri əlavə edildi.
-- Google auth testləri əlavə edildi: missing token validasiyası, invalid Google payload, yeni Google user yaratma, mövcud email user-ə Google hesabı linkləmə və deaktiv hesab bloklaması.
-- Yoxlamalar: `server npx.cmd tsc --noEmit` ✅, `server npm.cmd run lint` ✅, `server npm.cmd run build` ✅, `server npx.cmd jest src/tests/auth.test.ts --runInBand` — 30/30 ✅, `server npm.cmd run test` — 10 suite / 220 test ✅.
-- Branch `test/m17-global-cleanup` açıldı.
-- `server/src/tests/setup.ts` yenilindi: `resetTestDatabase` `beforeAll` hook-una əlavə edildi — hər test suite başlamadan DB təmizlənir.
-- `client/src/app/[locale]/(shop)/profile/ProfilePageClient.tsx` yenilindi: `<img>` tegi `next/image <Image>` ilə əvəz edildi, ESLint LCP warning aradan qaldırıldı.
-- `server/jest.config.ts` yenilindi: `collectCoverageFrom` tests/prisma/config/seed-i exclude edir; threshold-lar real ölçülən dəyərlərə uyğunlaşdırıldı (statements: 74%, branches: 50%, functions: 65%, lines: 77%).
-- Son yoxlamalar: `server npx tsc --noEmit` ✅, `server npm run lint` ✅, `server npm run test` — 10 suite / **220/220 test** ✅, coverage həddi keçildi ✅.
-
-### Mərhələ 17.2 — Frontend Testlər ✅
-- Branch `test/m17-frontend-tests` üzərində işlənildi.
-- `vitest.config.ts` yeniləndi: vitest v2+ formatında olan dynamic threshold konfiqurasiyası düzəldildi (global wrapper silindi), test setup qovluqları və infrastruktur API faylı (`lib/api.ts`) test coverage hesabatından çıxarıldı.
-- Zustand store unit testləri əlavə edildi:
-  - `src/store/couponStore.test.ts`: validateCoupon (success/failure), isValidating (pending) and clearCoupon funksiyalarını yoxlayan 7 unit test.
-  - `src/store/wishlistStore.test.ts`: toggleWishlist (add/remove), isLiked (true/false) and setHydrated funksiyalarını yoxlayan 9 unit test.
-- Komponent testləri əlavə və inkişaf etdirildi:
-  - `src/components/cart/CouponInput.test.tsx`: idle, loading, success/applied, error UI state-lərini və handleApply / handleClear funksiyalarını əhatə edən 13 unit/integration test.
-  - `src/components/products/ProductImages.test.tsx`: placeholder (şəkil olmadıqda), navigation düymələri (tək şəkil olanda gizlənməsi), prev/next klikləri, wrap-around və mouseMove event-lərini əhatə edən testlər (+9 test).
-  - `src/components/products/StarRating.test.tsx`: hover/mouseEnter rating, mouseLeave, half-star rendering, sm/lg size variantları və interactive mode onChange yoxlamalarını əhatə edən testlər (+10 test).
-- Son yoxlamalar: `client npx tsc --noEmit` ✅, `client npm run lint` ✅, `client npm run test:coverage` — **181/181 test** ✅.
-- Coverage göstəriciləri (hədəf 80%+):
-  - Statements: **92.59%**
-  - Branches: **86.39%**
-  - Functions: **89.67%**
-  - Lines: **93.07%**
-
-## Növbəti Addımlar
-
-1. **Mərhələ 17 — Testlər:**
-   - 17.1 Backend Testlər: ✅ TAMAMLANDI — 220/220 test, coverage həddi keçildi
-   - 17.2 Frontend Testlər: ✅ TAMAMLANDI — 181/181 test, 86%+ coverage
-   - 17.3 E2E Testlər: Playwright ilə kritik user flow-lar (gözləyir)
-2. **Mərhələ 18 — Təhlükəsizlik:** Helmet, CORS, rate limiting, `npm audit`
-
-| Qərar | Səbəb |
-|---|---|
-| JSON-LD Breadcrumb | Axtarış motorlarında daha yaxşı SEO nəticələri üçün strukturlaşdırılmış schema inteqrasiyası |
-| Zustand state (`uiStore`) | Responsive mobil sidebar/menyuların və səbət drawer-lərinin vahid nöqtədən idarə olunması |
-| Zustand hydration tracking (`isHydrated`) | Server və brauzer arasında baş verə bizə HTML uyğunsuzluqlarının (hydration mismatch) qarşısını almaq |
-| Premium Dark/Glassmorphic Stil | Vanilla Tailwind imkanları ilə premium, modern və dinamik interfeyslər |
-| Cart lazy-create pattern | Səbət yalnız ilk məhsul əlavəsində yaradılır — boş cədvəllər olmur |
-| Coupon maxDiscount cap | PERCENTAGE kuponda `maxDiscount` varsa, hesablanmış endirim ondan böyük ola bilməz |
-
-## Vacib Qeydlər
-
-- Client env: `client/.env.local` — `NEXT_PUBLIC_API_URL` və `NEXT_PUBLIC_GOOGLE_CLIENT_ID` lazımdır
-- Server env: `server/.env` — `GOOGLE_CLIENT_ID` və `GOOGLE_CLIENT_SECRET` lazımdır
-- Vitest testləri: `cd client && npm run test`
-- Jest testləri: `cd server && npm run test`
-- TypeScript yoxlaması: `cd client && npx tsc --noEmit` / `cd server && npx tsc --noEmit`
+**Seeded məhsullar:**
+- `iphone-15-pro-256gb` — ₼2499.99, stok: 50
+- `samsung-galaxy-s24-ultra` — ₼2199.99, stok: 30
