@@ -105,6 +105,18 @@ describe('GET /api/products', () => {
     }
   });
 
+  it('supports vendorId filter (200)', async () => {
+    const res = await api.get('/api/products?vendorId=some-vendor-id');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
+
+  it('supports isActive filter (200)', async () => {
+    const res = await api.get('/api/products?isActive=true');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
+
   it('returns 400 for invalid sort value', async () => {
     const res = await api.get('/api/products?sort=invalid');
     expect(res.status).toBe(400);

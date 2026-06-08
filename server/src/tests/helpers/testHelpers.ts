@@ -32,6 +32,15 @@ export async function createTestUser(overrides: Partial<{
       role: overrides.role ?? 'CUSTOMER',
       isVerified: overrides.isVerified ?? true,
       isActive: overrides.isActive ?? true,
+      ...(overrides.role === 'VENDOR' && {
+        vendor: {
+          create: {
+            storeName: overrides.name ?? 'Test Store',
+            slug: `test-store-${Date.now()}`,
+            status: 'APPROVED',
+          },
+        },
+      }),
     },
     select: { id: true, email: true, name: true, role: true },
   });
