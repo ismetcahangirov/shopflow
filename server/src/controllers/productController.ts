@@ -10,6 +10,7 @@ import { AppError } from '../utils/AppError';
 import { successResponse } from '../utils/apiResponse';
 import { slugify } from '../utils/slugify';
 import { logger } from '../config/logger';
+import { verifyAccessToken } from '../utils/generateToken';
 
 // ── Constants ─────────────────────────────────────────────
 
@@ -126,14 +127,43 @@ export const getProducts = asyncHandler(
       featured,
       brand,
       inStock,
+      vendorId,
+      isActive,
     } = req.query as Record<string, string | undefined>;
 
     const page = Math.max(1, parseInt(pageStr, 10));
     const limit = Math.min(MAX_PAGE_SIZE, Math.max(1, parseInt(limitStr, 10)));
     const skip = (page - 1) * limit;
 
+    // Optionally check authentication to allow Admin/Vendor to view inactive products
+    let userRole: string | undefined = undefined;
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      if (token) {
+        try {
+          const decoded = verifyAccessToken(token);
+          userRole = decoded.role;
+        } catch {
+          // Ignore invalid token for public list, just treat as guest
+        }
+      }
+    }
+
     // Build where clause
-    const where: Prisma.ProductWhereInput = { isActive: true };
+    const where: Prisma.ProductWhereInput = {};
+
+    const isAuthorizedRole = userRole === 'ADMIN' || userRole === 'VENDOR';
+
+    if (isActive !== undefined) {
+      where.isActive = isActive === 'true';
+    } else if (!isAuthorizedRole) {
+      where.isActive = true;
+    }
+
+    if (vendorId) {
+      where.vendorId = vendorId;
+    }
 
     if (search) {
       where.OR = [
@@ -306,8 +336,15 @@ export const createProduct = asyncHandler(
       throw new AppError('Kateqoriya tapılmadı', 404, 'CATEGORY_NOT_FOUND');
     }
 
-    // Vendor check if vendorId provided
-    if (vendorId) {
+    // Resolve vendorId based on user role
+    let finalVendorId: string | null = vendorId ?? null;
+    if (req.user?.role === 'VENDOR') {
+      const vendor = await prisma.vendor.findUnique({ where: { userId: req.user.id } });
+      if (!vendor) {
+        throw new AppError('Satıcı profili tapılmadı', 404, 'VENDOR_NOT_FOUND');
+      }
+      finalVendorId = vendor.id;
+    } else if (vendorId) {
       const vendor = await prisma.vendor.findUnique({ where: { id: vendorId } });
       if (!vendor) {
         throw new AppError('Satıcı tapılmadı', 404, 'VENDOR_NOT_FOUND');
@@ -334,7 +371,7 @@ export const createProduct = asyncHandler(
         isFeatured: isFeatured ?? false,
         tags: tags ?? [],
         categoryId: categoryId ?? '',
-        vendorId: vendorId ?? null,
+        vendorId: finalVendorId,
         metaTitle: metaTitle ?? null,
         metaDesc: metaDesc ?? null,
       },
@@ -385,8 +422,11 @@ export const updateProduct = asyncHandler(
     }
 
     // Ownership check — Vendor can only edit own products
-    if (req.user?.role === 'VENDOR' && existing.vendorId !== req.user.id) {
-      throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+    if (req.user?.role === 'VENDOR') {
+      const vendor = await prisma.vendor.findUnique({ where: { userId: req.user.id } });
+      if (!vendor || existing.vendorId !== vendor.id) {
+        throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+      }
     }
 
     // Slug uniqueness
@@ -461,8 +501,11 @@ export const deleteProduct = asyncHandler(
     }
 
     // Vendor can only delete own products
-    if (req.user?.role === 'VENDOR' && product.vendorId !== req.user.id) {
-      throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+    if (req.user?.role === 'VENDOR') {
+      const vendor = await prisma.vendor.findUnique({ where: { userId: req.user.id } });
+      if (!vendor || product.vendorId !== vendor.id) {
+        throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+      }
     }
 
     // Block if product has orders
@@ -492,8 +535,11 @@ export const addProductImage = asyncHandler(
       throw new AppError('Məhsul tapılmadı', 404, 'PRODUCT_NOT_FOUND');
     }
 
-    if (req.user?.role === 'VENDOR' && product.vendorId !== req.user.id) {
-      throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+    if (req.user?.role === 'VENDOR') {
+      const vendor = await prisma.vendor.findUnique({ where: { userId: req.user.id } });
+      if (!vendor || product.vendorId !== vendor.id) {
+        throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+      }
     }
 
     if (!req.file) {
@@ -534,8 +580,11 @@ export const deleteProductImage = asyncHandler(
       throw new AppError('Məhsul tapılmadı', 404, 'PRODUCT_NOT_FOUND');
     }
 
-    if (req.user?.role === 'VENDOR' && product.vendorId !== req.user.id) {
-      throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+    if (req.user?.role === 'VENDOR') {
+      const vendor = await prisma.vendor.findUnique({ where: { userId: req.user.id } });
+      if (!vendor || product.vendorId !== vendor.id) {
+        throw new AppError('Bu əməliyyat üçün icazəniz yoxdur', 403, 'FORBIDDEN');
+      }
     }
 
     const image = await prisma.productImage.findFirst({ where: { id: imageId, productId: id } });

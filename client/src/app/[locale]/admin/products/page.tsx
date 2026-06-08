@@ -1,4 +1,4 @@
-// src/app/[locale]/vendor/products/page.tsx
+// src/app/[locale]/admin/products/page.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -18,7 +18,8 @@ import {
   Tag,
   DollarSign,
   Layers,
-  Globe
+  Globe,
+  Star
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
@@ -41,7 +42,6 @@ import {
   useDeleteProductImageMutation 
 } from '@/hooks/useProducts';
 import { useCategoriesQuery } from '@/hooks/useCategories';
-import { useMyVendor } from '@/hooks/useVendor';
 import type { Product, Category, ProductAttribute } from '@/types';
 
 // Simple slugify function helper
@@ -60,13 +60,9 @@ const slugify = (text: string) => {
     .replace(/-+$/, '');            // Trim - from end
 };
 
-export default function VendorProductsPage(): React.JSX.Element {
-  const tVendor = useTranslations('vendor');
-  const tAdmin = useTranslations('admin_products');
+export default function AdminProductsPage(): React.JSX.Element {
+  const t = useTranslations('admin_products');
   const tCommon = useTranslations('common');
-
-  // Fetch Vendor Profile
-  const { data: vendorProfile, isLoading: isVendorLoading, error: vendorProfileError } = useMyVendor();
 
   // Filters State
   const [searchTerm, setSearchTerm] = useState('');
@@ -113,6 +109,7 @@ export default function VendorProductsPage(): React.JSX.Element {
   const [formLowStockAlert, setFormLowStockAlert] = useState<number>(5);
 
   const [formIsActive, setFormIsActive] = useState(true);
+  const [formIsFeatured, setFormIsFeatured] = useState(false);
 
   // Custom attributes array
   const [formAttributes, setFormAttributes] = useState<Array<{ name: string; value: string }>>([]);
@@ -131,12 +128,11 @@ export default function VendorProductsPage(): React.JSX.Element {
   // API Queries & Mutations
   const { data: categoriesData } = useCategoriesQuery();
 
-  // Prepare product list query params (filtered by vendor ID)
+  // Prepare product list query params
   const productQueryParams: Record<string, unknown> = {
     page,
     limit,
     sort: 'newest',
-    vendorId: vendorProfile?.id,
   };
   if (debouncedSearch) productQueryParams.search = debouncedSearch;
   if (categoryFilter) productQueryParams.categoryId = categoryFilter;
@@ -187,6 +183,7 @@ export default function VendorProductsPage(): React.JSX.Element {
     setFormStock('');
     setFormLowStockAlert(5);
     setFormIsActive(true);
+    setFormIsFeatured(false);
     setFormAttributes([]);
     setFormTags([]);
     setTagInput('');
@@ -215,6 +212,7 @@ export default function VendorProductsPage(): React.JSX.Element {
     setFormStock(product.stock);
     setFormLowStockAlert(product.lowStockAlert || 5);
     setFormIsActive(product.isActive);
+    setFormIsFeatured(product.isFeatured);
     
     // Map attributes
     const attrs = product.attributes?.map(a => ({ name: a.name, value: a.value })) || [];
@@ -313,7 +311,7 @@ export default function VendorProductsPage(): React.JSX.Element {
       stock: Number(formStock),
       lowStockAlert: Number(formLowStockAlert),
       isActive: formIsActive,
-      vendorId: vendorProfile?.id, // associate with vendor profile
+      isFeatured: formIsFeatured,
       tags: formTags,
       attributes: formAttributes.filter(a => a.name.trim() && a.value.trim()) as ProductAttribute[],
       metaTitle: formMetaTitle.trim() || null,
@@ -382,27 +380,6 @@ export default function VendorProductsPage(): React.JSX.Element {
     }
   };
 
-  if (isVendorLoading) {
-    return (
-      <div className="flex h-96 flex-col items-center justify-center space-y-4">
-        <Spinner className="h-10 w-10 text-indigo-650" />
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{tCommon('loading')}</p>
-      </div>
-    );
-  }
-
-  if (vendorProfileError || !vendorProfile) {
-    return (
-      <div className="flex h-96 flex-col items-center justify-center p-6 text-center space-y-4">
-        <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
-          <AlertCircle className="h-10 w-10" />
-        </div>
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{tVendor('store_error') || 'Satıcı profili tapılmadı'}</h3>
-        <p className="text-sm text-slate-500 max-w-sm">Məhsul siyahısına baxmaq üçün aktiv satıcı hesabınız olmalıdır.</p>
-      </div>
-    );
-  }
-
   const products = productsData?.data?.products || [];
   const pagination = productsData?.pagination;
 
@@ -410,17 +387,17 @@ export default function VendorProductsPage(): React.JSX.Element {
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div>
-        <Breadcrumb items={[{ label: tVendor('dashboard'), href: '/vendor' }, { label: tVendor('my_products') }]} />
+        <Breadcrumb items={[{ label: 'Admin', href: '/admin' }, { label: 'Məhsullar' }]} />
         <PageHeader
-          title={tVendor('my_products')}
-          description="Mağazanızdakı məhsulların siyahısı, redaktəsi, yeni məhsul yaradılması və idarə edilməsi."
+          title={t('title')}
+          description={t('subtitle')}
           actions={
             <Button
               onClick={handleOpenCreateModal}
-              className="bg-indigo-650 hover:bg-indigo-750 text-white rounded-xl shadow-lg shadow-indigo-500/10 transition-all duration-200 font-bold"
+              className="bg-indigo-650 hover:bg-indigo-750 text-white rounded-xl shadow-lg shadow-indigo-500/10 transition-all duration-200"
             >
               <Plus className="mr-2 h-4 w-4" />
-              {tVendor('add_product')}
+              {t('add_product')}
             </Button>
           }
         />
@@ -467,9 +444,9 @@ export default function VendorProductsPage(): React.JSX.Element {
             }}
             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-200"
           >
-            <option value="all">{tVendor('status')}: Hamısı</option>
-            <option value="active">{tVendor('active')}</option>
-            <option value="inactive">{tVendor('inactive')}</option>
+            <option value="all">{t('status')}: Hamısı</option>
+            <option value="active">{t('active')}</option>
+            <option value="inactive">{t('inactive')}</option>
           </select>
         </div>
 
@@ -483,9 +460,9 @@ export default function VendorProductsPage(): React.JSX.Element {
             }}
             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-200"
           >
-            <option value="all">{tVendor('stock')}: Hamısı</option>
-            <option value="instock">Stokda var</option>
-            <option value="outofstock">Stokda yoxdur</option>
+            <option value="all">{t('stock')}: Hamısı</option>
+            <option value="instock">{tCommon('free_shipping_congrats') ? 'Stokda var' : 'In stock'}</option>
+            <option value="outofstock">{tCommon('free_shipping_congrats') ? 'Stokda yoxdur' : 'Out of stock'}</option>
           </select>
         </div>
       </div>
@@ -512,7 +489,7 @@ export default function VendorProductsPage(): React.JSX.Element {
             </div>
             <h4 className="font-extrabold text-slate-900 dark:text-white">{tCommon('no_data')}</h4>
             <p className="text-sm text-slate-500 dark:text-slate-450 max-w-xs">
-              Mağazanızda heç bir məhsul tapılmadı.
+              Platformada heç bir məhsul tapılmadı.
             </p>
           </div>
         ) : (
@@ -521,12 +498,12 @@ export default function VendorProductsPage(): React.JSX.Element {
               <thead>
                 <tr className="border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-950/20 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider select-none">
                   <th className="px-6 py-4">Şəkil</th>
-                  <th className="px-6 py-4">{tAdmin('product_name')}</th>
-                  <th className="px-6 py-4">{tAdmin('sku')}</th>
-                  <th className="px-6 py-4">{tAdmin('price')}</th>
-                  <th className="px-6 py-4">{tAdmin('stock')}</th>
-                  <th className="px-6 py-4">{tAdmin('category')}</th>
-                  <th className="px-6 py-4 text-center">{tAdmin('status')}</th>
+                  <th className="px-6 py-4">{t('product_name')}</th>
+                  <th className="px-6 py-4">{t('sku')}</th>
+                  <th className="px-6 py-4">{t('price')}</th>
+                  <th className="px-6 py-4">{t('stock')}</th>
+                  <th className="px-6 py-4">{t('category')}</th>
+                  <th className="px-6 py-4 text-center">{t('status')}</th>
                   <th className="px-6 py-4 text-right">Əməliyyatlar</th>
                 </tr>
               </thead>
@@ -579,7 +556,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                             {p.stock}
                           </span>
                           {p.stock === 0 ? (
-                            <Badge variant="destructive" className="text-[10px] py-0 px-1.5">{tAdmin('inactive')}</Badge>
+                            <Badge variant="destructive" className="text-[10px] py-0 px-1.5">{t('inactive')}</Badge>
                           ) : p.stock <= (p.lowStockAlert || 5) ? (
                             <Badge variant="warning" className="text-[10px] py-0 px-1.5">Az qalıb</Badge>
                           ) : null}
@@ -597,12 +574,18 @@ export default function VendorProductsPage(): React.JSX.Element {
                           {p.isActive ? (
                             <Badge variant="success" className="inline-flex items-center gap-0.5">
                               <CheckCircle className="h-3 w-3" />
-                              {tAdmin('active')}
+                              {t('active')}
                             </Badge>
                           ) : (
                             <Badge variant="secondary" className="inline-flex items-center gap-0.5">
                               <XCircle className="h-3 w-3" />
-                              {tAdmin('inactive')}
+                              {t('inactive')}
+                            </Badge>
+                          )}
+                          {p.isFeatured && (
+                            <Badge variant="warning" className="inline-flex items-center gap-0.5 text-[9px] py-0">
+                              <Star className="h-2.5 w-2.5 fill-current" />
+                              {t('featured')}
                             </Badge>
                           )}
                         </div>
@@ -656,18 +639,18 @@ export default function VendorProductsPage(): React.JSX.Element {
       <Modal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
-        title={editingProduct ? tAdmin('edit_product') : tAdmin('add_product')}
+        title={editingProduct ? t('edit_product') : t('add_product')}
         size="lg"
       >
         <div className="flex flex-col space-y-4 pt-2 max-h-[78vh] overflow-y-auto pr-1">
           {/* Tabs bar */}
           <div className="flex border-b border-slate-100 dark:border-slate-800/80 shrink-0">
             {([
-              { id: 'basic', label: tAdmin('tab_basic'), icon: Layers },
-              { id: 'pricing', label: tAdmin('tab_pricing'), icon: DollarSign },
-              { id: 'images', label: tAdmin('tab_images'), icon: ImageIcon },
-              { id: 'attributes', label: tAdmin('tab_attributes'), icon: Tag },
-              { id: 'seo', label: tAdmin('tab_seo'), icon: Globe }
+              { id: 'basic', label: t('tab_basic'), icon: Layers },
+              { id: 'pricing', label: t('tab_pricing'), icon: DollarSign },
+              { id: 'images', label: t('tab_images'), icon: ImageIcon },
+              { id: 'attributes', label: t('tab_attributes'), icon: Tag },
+              { id: 'seo', label: t('tab_seo'), icon: Globe }
             ] as const).map(tab => (
               <button
                 key={tab.id}
@@ -677,7 +660,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-colors select-none',
                   activeTab === tab.id
                     ? 'border-indigo-650 text-indigo-650 dark:text-indigo-400 dark:border-indigo-400'
-                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-455 dark:hover:text-white'
+                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-450 dark:hover:text-white'
                 ].join(' ')}
               >
                 <tab.icon className="h-4 w-4" />
@@ -813,6 +796,17 @@ export default function VendorProductsPage(): React.JSX.Element {
                     />
                     <Label htmlFor="prodIsActive" className="cursor-pointer select-none">Aktiv (Müştəriyə göstərilsin)</Label>
                   </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="prodIsFeatured"
+                      checked={formIsFeatured}
+                      onChange={(e) => setFormIsFeatured(e.target.checked)}
+                      className="h-4.5 w-4.5 rounded border-slate-300 text-indigo-650 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950"
+                    />
+                    <Label htmlFor="prodIsFeatured" className="cursor-pointer select-none">Seçilmiş məhsul (Önə çıxan)</Label>
+                  </div>
                 </div>
               </div>
             )}
@@ -886,10 +880,11 @@ export default function VendorProductsPage(): React.JSX.Element {
             {/* Tab 3: Images */}
             {activeTab === 'images' && (
               <div className="space-y-4 animate-in fade-in duration-200">
+                
                 {/* Upload Zone */}
                 <div>
                   <label className="relative flex flex-col items-center justify-center border-2 border-slate-250 border-dashed rounded-2xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 dark:border-slate-800 dark:bg-slate-950/50 dark:hover:bg-slate-950 dark:hover:border-indigo-900 cursor-pointer p-6 transition-all duration-200">
-                    <Upload className="h-8 w-8 text-slate-455 dark:text-slate-500 mb-2 animate-bounce" />
+                    <Upload className="h-8 w-8 text-slate-450 dark:text-slate-500 mb-2 animate-bounce" />
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-300">Resim Yükle</p>
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">JPEG, PNG veya WEBP. Max. 5MB</p>
                     <input
@@ -909,7 +904,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                       {imagesQueue.map((file, i) => (
                         <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-slate-105 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-1 flex items-center justify-center">
-                          <span className="text-[10px] text-slate-455 dark:text-slate-500 max-w-[85px] truncate font-semibold">{file.name}</span>
+                          <span className="text-[10px] text-slate-450 dark:text-slate-500 max-w-[85px] truncate font-semibold">{file.name}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveFromQueue(i)}
@@ -962,7 +957,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                 {/* Attributes Section */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-850 pb-2">
-                    <h5 className="text-sm font-bold text-slate-700 dark:text-slate-300">{tAdmin('attributes_title')}</h5>
+                    <h5 className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('attributes_title')}</h5>
                     <Button
                       type="button"
                       variant="secondary"
@@ -970,25 +965,25 @@ export default function VendorProductsPage(): React.JSX.Element {
                       className="px-2.5 py-1.5 h-auto text-xs font-bold bg-slate-50 hover:bg-indigo-50 border border-slate-200 text-slate-600 hover:text-indigo-650"
                     >
                       <Plus className="mr-1 h-3.5 w-3.5" />
-                      {tAdmin('add_attribute')}
+                      {t('add_attribute')}
                     </Button>
                   </div>
 
                   {formAttributes.length === 0 ? (
-                    <p className="text-xs text-slate-455 dark:text-slate-500 italic">Heç bir xüsusiyyət əlavə edilməyib (məs. Rəng, Yaddaş, Ekran və s.).</p>
+                    <p className="text-xs text-slate-450 dark:text-slate-500 italic">Heç bir xüsusiyyət əlavə edilməyib (məs. Rəng, Yaddaş, Ekran və s.).</p>
                   ) : (
                     <div className="space-y-3">
                       {formAttributes.map((attr, index) => (
                         <div key={index} className="flex items-center gap-3 animate-in slide-in-from-top-1 duration-150">
                           <div className="flex-1 grid grid-cols-2 gap-3">
                             <Input
-                              placeholder={tAdmin('attribute_name_placeholder')}
+                              placeholder={t('attribute_name_placeholder')}
                               value={attr.name}
                               onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
                               className="rounded-xl py-2 px-3 text-xs"
                             />
                             <Input
-                              placeholder={tAdmin('attribute_value_placeholder')}
+                              placeholder={t('attribute_value_placeholder')}
                               value={attr.value}
                               onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
                               className="rounded-xl py-2 px-3 text-xs"
@@ -1010,7 +1005,7 @@ export default function VendorProductsPage(): React.JSX.Element {
 
                 {/* Tags Section */}
                 <div className="space-y-2 border-t border-slate-100 dark:border-slate-850 pt-4">
-                  <Label htmlFor="tagInput">{tAdmin('tags')}</Label>
+                  <Label htmlFor="tagInput">{t('tags')}</Label>
                   <div className="flex flex-wrap gap-2 mb-2 p-2 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-850 rounded-xl min-h-[46px]">
                     {formTags.map(tag => (
                       <span key={tag} className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm">
@@ -1025,7 +1020,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                       </span>
                     ))}
                     {formTags.length === 0 && (
-                      <span className="text-xs text-slate-455 dark:text-slate-500 italic p-1">Heç bir teq əlavə edilməyib.</span>
+                      <span className="text-xs text-slate-450 dark:text-slate-500 italic p-1">Heç bir teq əlavə edilməyib.</span>
                     )}
                   </div>
                   <Input
@@ -1033,7 +1028,7 @@ export default function VendorProductsPage(): React.JSX.Element {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleAddTag}
-                    placeholder={tAdmin('tag_placeholder')}
+                    placeholder={t('tag_placeholder')}
                   />
                 </div>
               </div>
@@ -1114,8 +1109,8 @@ export default function VendorProductsPage(): React.JSX.Element {
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleDelete}
-        title={tAdmin('delete_product')}
-        message={tAdmin('delete_confirm')}
+        title={t('delete_product')}
+        message={t('delete_confirm')}
         confirmText="Bəli, Sil"
         cancelText="Ləğv Et"
         variant="destructive"

@@ -185,6 +185,16 @@ export const listProductsValidators = [
     .optional()
     .isIn(['price_asc', 'price_desc', 'newest', 'popular', 'rating'])
     .withMessage('Sıralama növü yanlışdır'),
+
+  query('vendorId')
+    .optional()
+    .trim()
+    .isString().withMessage('vendorId string olmalıdır'),
+
+  query('isActive')
+    .optional()
+    .trim()
+    .isIn(['true', 'false']).withMessage('isActive boolean olmalıdır'),
 ];
 
 // ── Param validators ───────────────────────────────────────

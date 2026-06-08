@@ -260,8 +260,8 @@
 - [x] Axtarış səhifəsi (`/search/page.tsx` — SSR)
 - [x] `generateMetadata()` məhsul detalı üçün
 - [x] `generateStaticParams()` populyar məhsullar üçün
-- [ ] Admin: məhsul siyahısı + CRUD panel
-- [ ] Vendor: məhsullarım səhifəsi
+- [x] Admin: məhsul siyahısı + CRUD panel
+- [x] Vendor: məhsullarım səhifəsi
 
 ---
 
