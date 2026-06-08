@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-08 (Admin və Vendor Məhsul CRUD Panelləri əlavə edildi)  
-> Cari mərhələ: **Mərhələ 6.2 tamamlandı (Admin/Vendor CRUD panelləri daxil), Mərhələ 19 (Deploy & CI/CD) davam edir**
+> Son yenilənmə: 2026-06-08 (Admin Sifarişlər Paneli əlavə edildi)  
+> Cari mərhələ: **Mərhələ 10.2 tamamlandı (Admin Sifarişlər Paneli daxil), Mərhələ 19 (Deploy & CI/CD) davam edir**
 
 ---
 
@@ -61,25 +61,20 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 6.2 — Admin və Vendor Məhsul CRUD Panelləri
+## Son Agent Tapşırığı: Mərhələ 10.2 — Admin Sifarişlər Paneli
 
-**Branch:** `feature/m06-admin-vendor-products`
+**Branch:** `feature/m10-admin-orders-panel`
 
 ### Tamamlanan işlər:
-- `client/src/app/[locale]/admin/products/page.tsx` yaradıldı/tənzimləndi: Admin üçün yüksək keyfiyyətli məhsul CRUD paneli, axtarış, filtrasiya və multi-tab modal formu.
-- `client/src/app/[locale]/vendor/products/page.tsx` yaradıldı: Satıcılar üçün məhsulların idarə edilməsi paneli, yalnız öz məhsullarını görmə, redaktə etmə və silmə imkanı, eyni CRUD modalı və fərqli icazələr.
-- `server/src/controllers/productController.ts` yeniləndi: `GET /api/products` endpointi `vendorId` və `isActive` filtrlərini dəstəkləyir. Admin/Vendor rolları üçün optional-auth ilə inactive/draft məhsulları görmə dəstəyi əlavə edildi.
-- Backend-də çox vacib olan VENDOR rolu üçün ownership bug-ı (istifadəçi ID-si ilə satıcı ID-sinin müqayisəsi səbəbilə) aradan qaldırıldı. Satıcılar artıq öz məhsullarını yeniləyə və silə bilərlər.
-- `server/src/tests/helpers/testHelpers.ts` yeniləndi: VENDOR rolunda yaradılan test istifadəçiləri üçün avtomatik olaraq Vendor profili yaradılması təmin olundu.
-- `server/src/tests/product.test.ts` daxilinə `vendorId` və `isActive` filtrləri üçün testlər əlavə olundu.
+- `client/src/hooks/useOrders.ts` yeniləndi: Axtarış, filter, pagination, və tarix parametrlərinə tam dəstək əlavə edildi, həmçinin `useUpdateOrderStatus` mutation hook yazıldı.
+- `client/messages/az.json`, `client/messages/en.json`, `client/messages/ru.json` yeniləndi: Admin orders paneli üçün lazım olan bütün lokallaşdırılmış mətnlər az, en, ru dillərində əlavə edildi.
+- `client/src/app/[locale]/admin/orders/page.tsx` yaradıldı: Sifariş siyahısı, axtarış, filter, səhifələmə, ətraflı baxış modalı, və status yeniləmə forması (izləmə nömrəsi, qeyd daxil olmaqla) olan yüksək keyfiyyətli admin paneli.
+- `client/src/app/[locale]/admin/orders/AdminOrdersPage.test.tsx` daxilində 7 fərqli ssenarini əhatə edən vahid testlər yazıldı.
 
 ### Yoxlama:
 - `client npx tsc --noEmit` — uğurlu ✅
 - `client npm run lint` — uğurlu ✅
-- `client npm run test` — 37 fayl / 185 test uğurlu ✅
-- `server npx tsc --noEmit` — uğurlu ✅
-- `server npm run lint` — uğurlu ✅
-- `server npx jest src/tests/product.test.ts` — 32/32 test uğurlu ✅
+- `client npm run test` — 38 fayl / 192 test uğurlu ✅
 
 ---
 

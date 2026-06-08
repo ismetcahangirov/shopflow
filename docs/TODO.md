@@ -305,7 +305,7 @@
 ### 8.2 Frontend
 **Branch:** `feature/m08-coupons-frontend`
 
-- [ ] `CouponInput.tsx` yaradıldı (3 vəziyyət: boş, uğurlu, xəta)
+- [x] `CouponInput.tsx` yaradıldı (3 vəziyyət: boş, uğurlu, xəta)
 - [x] Kupon CartSummary-ə inteqrasiya edildi
 - [x] Admin: Kuponlar CRUD səhifəsi
 
@@ -369,7 +369,7 @@
 - [x] Sifariş uğur səhifəsi yaradıldı (`/order/success/[id]/page.tsx`)
 - [x] Sifarişlər siyahısı (`/orders/page.tsx`)
 - [x] Sifariş detalı (`/orders/[id]/page.tsx`)
-- [ ] Admin: Sifarişlər paneli (filter, status dəyişmə)
+- [x] Admin: Sifarişlər paneli (filter, status dəyişmə)
 - [ ] Stripe Webhook Stripe Dashboard-da konfiqurasiya edildi
 
 ---
