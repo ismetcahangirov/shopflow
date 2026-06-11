@@ -400,12 +400,13 @@
 
 ### 12.1 Backend
 **Branch:** `feature/m12-reviews-backend`
+**Status:** `[x]` Tamamlandı
 
-- [ ] `GET /api/reviews` — məhsul rəyləri (filter + pagination)
-- [ ] `POST /api/reviews` — rəy yaz (alqı yoxlaması)
-- [ ] `PATCH /api/reviews/:id/approve` — təsdiq (Admin)
-- [ ] `DELETE /api/reviews/:id` — sil (Admin)
-- [ ] Rəy yaradılanda məhsul `avgRating` + `reviewCount` yenilənir
+- [x] `GET /api/reviews` — məhsul rəyləri (filter + pagination)
+- [x] `POST /api/reviews` — rəy yaz (alqı yoxlaması)
+- [x] `PATCH /api/reviews/:id/approve` — təsdiq (Admin)
+- [x] `DELETE /api/reviews/:id` — sil (Admin)
+- [x] Rəy yaradılanda məhsul `avgRating` + `reviewCount` yenilənir
 
 ### 12.2 Frontend ✅
 **Branch:** `feature/m12-reviews-frontend`  
@@ -413,8 +414,9 @@
 
 - [x] `ReviewCard.tsx` yaradıldı
 - [x] `ReviewForm.tsx` yaradıldı (interaktiv ulduz)
-- [ ] Məhsul detalında rəy bölməsi
-- [ ] Admin: Rəylər moderasiya paneli
+- [x] Məhsul detalında rəy bölməsi
+- [x] Admin: Rəylər moderasiya paneli
+
 
 ---
 

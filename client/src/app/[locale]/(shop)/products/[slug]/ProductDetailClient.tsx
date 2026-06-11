@@ -17,6 +17,7 @@ import { useCartStore } from '@/store/cartStore';
 import { useUiStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
+import { ProductReviewSection } from '@/components/reviews/ProductReviewSection';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -351,6 +352,13 @@ export function ProductDetailClient({ product, locale }: ProductDetailClientProp
           />
         </div>
       )}
+
+      {/* ── Reviews Section (full-width below) ── */}
+      <ProductReviewSection
+        productId={product.id}
+        avgRating={product.avgRating}
+        reviewCount={product.reviewCount}
+      />
     </div>
   );
 }

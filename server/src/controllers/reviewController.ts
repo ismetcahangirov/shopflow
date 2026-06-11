@@ -202,3 +202,39 @@ export const deleteReview = asyncHandler(
     successResponse(res, { message: 'Rəy silindi' });
   },
 );
+
+export const getAdminReviews = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 10));
+    const isApprovedStr = req.query.isApproved as string | undefined;
+
+    const where: Record<string, unknown> = {};
+    if (isApprovedStr === 'true') {
+      where.isApproved = true;
+    } else if (isApprovedStr === 'false') {
+      where.isApproved = false;
+    }
+
+    const [reviews, total] = await Promise.all([
+      prisma.review.findMany({
+        where,
+        include: {
+          user: { select: { id: true, name: true, avatar: true } },
+          product: { select: { id: true, name: true, slug: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.review.count({ where }),
+    ]);
+
+    successResponse(res, {
+      message: 'Admin rəyləri uğurla gətirildi',
+      data: reviews,
+      pagination: { page, limit, total, pages: Math.ceil(total / limit) },
+    });
+  },
+);
+

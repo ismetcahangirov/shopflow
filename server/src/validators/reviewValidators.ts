@@ -20,3 +20,10 @@ export const getReviewsValidators = [
   query('limit').optional().isInt({ min: 1, max: 50 }).withMessage('Limit 1-50 arasında olmalıdır'),
 ];
 
+export const getAdminReviewsValidators = [
+  query('page').optional().isInt({ min: 1 }).withMessage('Səhifə nömrəsi müsbət ədəd olmalıdır'),
+  query('limit').optional().isInt({ min: 1, max: 50 }).withMessage('Limit 1-50 arasında olmalıdır'),
+  query('isApproved').optional().isIn(['true', 'false', '']).withMessage('Yanlış təsdiq statusu'),
+];
+
+

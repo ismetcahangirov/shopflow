@@ -91,16 +91,28 @@ export interface Product {
 export interface Review {
   id: string;
   rating: number;
-  comment?: string | null;
+  title?: string | null;
+  body: string;
+  isApproved: boolean;
+  isVerified: boolean;
+  helpfulCount: number;
   userId: string;
   productId: string;
   createdAt: string;
-  user?: {
+  updatedAt: string;
+  user: {
     id: string;
     name: string;
     avatar?: string | null;
   };
+
+  product?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
 }
+
 
 export interface CartProduct {
   id: string;

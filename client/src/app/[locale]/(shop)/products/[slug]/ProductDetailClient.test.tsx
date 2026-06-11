@@ -1,8 +1,13 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ProductDetailClient } from './ProductDetailClient';
 import type { Product } from '@/types';
+
+vi.mock('@/components/reviews/ProductReviewSection', () => ({
+  ProductReviewSection: () => <div data-testid="mock-product-reviews" />,
+}));
+
 
 const mockProduct: Product = {
   id: 'prod-1',

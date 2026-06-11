@@ -53,6 +53,7 @@ export const adminNavItems: NavItem[] = [
   { label: 'nav_dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'nav_products', href: '/admin/products', icon: Package },
   { label: 'nav_orders', href: '/admin/orders', icon: ClipboardList },
+  { label: 'nav_reviews', href: '/admin/reviews', icon: Star },
   { label: 'nav_categories', href: '/admin/categories', icon: Tag },
   { label: 'nav_coupons', href: '/admin/coupons', icon: TicketPercent },
   { label: 'nav_users', href: '/admin/users', icon: Users },

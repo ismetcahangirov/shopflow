@@ -3,8 +3,8 @@ import { Router } from 'express';
 import { protect } from '../middleware/authMiddleware';
 import { authorize } from '../middleware/roleMiddleware';
 import { validateRequest } from '../middleware/validateRequest';
-import { createReviewValidators, reviewIdParamValidator, getReviewsValidators } from '../validators/reviewValidators';
-import { getReviews, createReview, approveReview, deleteReview } from '../controllers/reviewController';
+import { createReviewValidators, reviewIdParamValidator, getReviewsValidators, getAdminReviewsValidators } from '../validators/reviewValidators';
+import { getReviews, createReview, approveReview, deleteReview, getAdminReviews } from '../controllers/reviewController';
 
 const router = Router();
 
@@ -14,7 +14,9 @@ router.use(protect);
 router.post('/', createReviewValidators, validateRequest, createReview);
 
 router.use(authorize('ADMIN'));
+router.get('/admin', getAdminReviewsValidators, validateRequest, getAdminReviews);
 router.patch('/:id/approve', reviewIdParamValidator, validateRequest, approveReview);
 router.delete('/:id', reviewIdParamValidator, validateRequest, deleteReview);
+
 
 export default router;
