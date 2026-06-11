@@ -104,6 +104,7 @@
     "reviews": "Rəylər",
     "no_reviews": "Hələ heç bir rəy yazılmayıb.",
     "write_review": "Rəy yaz",
+    "be_first": "İlk rəyi siz yazın",
     "rating": "Qiymətləndirmə",
     "rating_required": "Zəhmət olmasa qiymət verin",
     "comment_required": "Şərh mütləqdir",
@@ -397,5 +398,29 @@
     "all": "Hamısı",
     "filter_all_status": "Bütün Statuslar",
     "filter_all_payment": "Bütün Ödənişlər"
+  },
+  "admin_reviews": {
+    "title": "Rəylərin İdarə Edilməsi",
+    "subtitle": "Platformadakı məhsul rəylərinin yoxlanılması, təsdiqlənməsi və silinməsi.",
+    "status_filter": "Təsdiq Statusu",
+    "all": "Hamısı",
+    "pending": "Gözləyən",
+    "approved": "Təsdiqlənmiş",
+    "rejected": "Təsdiqlənməmiş",
+    "product": "Məhsul",
+    "customer": "Müştəri",
+    "rating": "Ulduz",
+    "comment": "Rəy",
+    "date": "Tarix",
+    "actions": "Əməliyyatlar",
+    "approve": "Təsdiqlə",
+    "reject": "Rədd et",
+    "delete": "Sil",
+    "delete_confirm": "Bu rəyi silmək istədiyinizdən əminsiniz?",
+    "approve_success": "Rəy uğurla təsdiqləndi",
+    "reject_success": "Rəy uğurla rədd edildi",
+    "delete_success": "Rəy uğurla silindi",
+    "no_reviews": "Rəy tapılmadı"
   }
 }
+

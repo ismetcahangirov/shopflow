@@ -1,7 +1,8 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-11 (Wishlist Navbar sayğacı və BottomTabs ❤️ tab əlavə edildi)  
-> Cari mərhələ: **Mərhələ 11 tamamlandı, Mərhələ 12 (Rəylər) növbəlidir**
+> Son yenilənmə: 2026-06-11 (Rəylər və Admin Moderasiya Paneli əlavə edildi)  
+> Cari mərhələ: **Mərhələ 12 tamamlandı, Mərhələ 13 (Profil) növbəlidir**
+
 
 ---
 
@@ -61,18 +62,22 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 11 (Tamamlama) — Wishlist Navbar Sayğacı və BottomTabs ❤️ Tab
+## Son Agent Tapşırığı: Mərhələ 12 (Tamamlama) — Rəylər və Admin Moderasiya Paneli
 
-**Branch:** `feature/m11-wishlist-frontend-followup`
+**Branch:** `feature/m12-reviews-backend`
 
 ### Tamamlanan işlər:
-- **Navbar Wishlist Sayğacı:** `Navbar.tsx` faylına `useWishlistStore` inteqrasiya edildi. Masaüstü navbarda ❤️ ikonu əlavə edildi. İstək siyahısında məhsul olduqda qırmızı sayğac (badge) göstərilir.
-- **BottomTabs ❤️ Tab:** `BottomTabs.tsx`-də Customer rolu üçün ❤️ tabı əlavə edildi — `/wishlist` linkinə yönləndirir, sayğac badge-i var.
-- **TypeScript + Lint:** `npx tsc --noEmit` və `npm run lint` — hər ikisi xətasız keçdi ✅
+- **Backend API:** Adminlər üçün `/api/reviews/admin` endpoint-i yaradıldı. Bu endpoint pagination, filter (isApproved) və əlaqəli məhsul/istifadəçi məlumatlarını qaytarır.
+- **Backend Testlər:** `review.test.ts` daxilinə yeni admin endpoint-i üçün inteqrasiya testləri əlavə edildi və hamısı uğurla keçdi (coverage səviyyəsi qorundu).
+- **i18n Dəstəyi:** Moderasiya paneli üçün lazım olan bütün ifadələr 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_reviews` namespace-inə əlavə edildi.
+- **Frontend Admin Reviews Page:** `admin/reviews/page.tsx` səhifəsi yaradıldı. Bu səhifədə rəylər siyahı şəklində göstərilir, təsdiqlənmə statusuna görə filtrlənir, təsdiqlənir/rədd edilir və təsdiq pəncərəsi ilə silinir.
+- **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
 
 ### Yoxlama:
-- `client npx tsc --noEmit` — uğurlu ✅
-- `client npm run lint` — uğurlu ✅
+- `server` və `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
+- `server` və `client` üzərində `npm run lint` — Uğurlu ✅
+- `npm run test` (hər iki tərəfdə) — Bütün testlər keçdi (198 client, 214 server testləri) ✅
+
 
 ---
 

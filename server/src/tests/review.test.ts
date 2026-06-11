@@ -507,4 +507,95 @@ describe('Review API Integration Tests', () => {
       expect(productAfterDelete?.reviewCount).toBe(0);
     });
   });
+
+  interface TestAdminReview {
+    id: string;
+    isApproved: boolean;
+    user: {
+      name: string;
+    };
+    product: {
+      name: string;
+    };
+  }
+
+  describe('GET /api/reviews/admin', () => {
+    it('returns 401 when no token is provided', async () => {
+      const res = await request(app).get('/api/reviews/admin');
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 403 for non-admin users', async () => {
+      const res = await request(app)
+        .get('/api/reviews/admin')
+        .set('Authorization', customerToken);
+      expect(res.status).toBe(403);
+    });
+
+    it('returns reviews for admin with pagination, user, and product info', async () => {
+      const product = await createProduct();
+      const review1 = await createReview({
+        userId: customerUser.id,
+        productId: product.id,
+        rating: 4,
+        isApproved: false,
+        body: 'Pending review',
+      });
+      const review2 = await createReview({
+        userId: otherCustomerUser.id,
+        productId: product.id,
+        rating: 5,
+        isApproved: true,
+        body: 'Approved review',
+      });
+
+      const res = await request(app)
+        .get('/api/reviews/admin')
+        .set('Authorization', adminToken);
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBeGreaterThanOrEqual(2);
+      
+      const r1 = res.body.data.find((r: TestAdminReview) => r.id === review1.id);
+      const r2 = res.body.data.find((r: TestAdminReview) => r.id === review2.id);
+      expect(r1).toBeDefined();
+      expect(r1.user.name).toBe(customerUser.name);
+      expect(r1.product.name).toBeDefined();
+      expect(r1.isApproved).toBe(false);
+
+      expect(r2).toBeDefined();
+      expect(r2.user.name).toBe(otherCustomerUser.name);
+      expect(r2.isApproved).toBe(true);
+    });
+
+    it('filters reviews by isApproved status', async () => {
+      const product = await createProduct();
+      const reviewPending = await createReview({
+        userId: customerUser.id,
+        productId: product.id,
+        rating: 4,
+        isApproved: false,
+        body: 'Pending',
+      });
+
+      const resApproved = await request(app)
+        .get('/api/reviews/admin?isApproved=true')
+        .set('Authorization', adminToken);
+      
+      const resPending = await request(app)
+        .get('/api/reviews/admin?isApproved=false')
+        .set('Authorization', adminToken);
+
+      expect(resApproved.status).toBe(200);
+      const foundPendingInApproved = resApproved.body.data.find((r: TestAdminReview) => r.id === reviewPending.id);
+      expect(foundPendingInApproved).toBeUndefined();
+
+      expect(resPending.status).toBe(200);
+      const foundPendingInPending = resPending.body.data.find((r: TestAdminReview) => r.id === reviewPending.id);
+      expect(foundPendingInPending).toBeDefined();
+    });
+  });
 });
+

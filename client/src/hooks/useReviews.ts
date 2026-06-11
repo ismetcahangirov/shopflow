@@ -52,3 +52,58 @@ export function useCreateReview() {
     },
   });
 }
+
+// ── Admin hooks ──────────────────────────────────────────────────────────────
+
+export interface AdminReviewsParams {
+  page?: number;
+  limit?: number;
+  isApproved?: boolean | '';
+}
+
+interface AdminReviewsApiResponse extends ApiResponse<Review[]> {
+  pagination?: { page: number; limit: number; total: number; pages: number };
+}
+
+export function useAdminReviews(params: AdminReviewsParams = {}) {
+  const { page = 1, limit = 10, isApproved = '' } = params;
+
+  const searchParams = new URLSearchParams();
+  searchParams.set('page', String(page));
+  searchParams.set('limit', String(limit));
+  if (isApproved !== '') searchParams.set('isApproved', String(isApproved));
+
+  return useQuery<AdminReviewsApiResponse>({
+    queryKey: ['admin-reviews', page, limit, isApproved],
+    queryFn: async () => {
+      const res = await api.get<AdminReviewsApiResponse>(`/reviews/admin?${searchParams.toString()}`);
+      return res.data;
+    },
+  });
+}
+
+export function useApproveReview() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { id: string; isApproved: boolean }>({
+    mutationFn: async ({ id, isApproved }) => {
+      await api.patch(`/reviews/${id}/approve`, { isApproved });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-reviews'] });
+    },
+  });
+}
+
+export function useDeleteReview() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, string>({
+    mutationFn: async (id) => {
+      await api.delete(`/reviews/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-reviews'] });
+    },
+  });
+}
