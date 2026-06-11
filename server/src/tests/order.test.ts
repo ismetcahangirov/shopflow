@@ -2,6 +2,14 @@
 // Integration tests for /api/orders endpoints
 
 import supertest from 'supertest';
+
+jest.mock('../utils/sendEmail', () => ({
+  sendEmail: jest.fn().mockResolvedValue(undefined),
+  buildOrderConfirmationEmail: jest.fn().mockReturnValue('<html></html>'),
+  buildVerifyEmailHtml: jest.fn().mockReturnValue('<html></html>'),
+  buildResetPasswordHtml: jest.fn().mockReturnValue('<html></html>'),
+}));
+
 import { app } from '../server';
 import { prisma } from '../config/db';
 import { createTestUser, getBearerToken, TestUser } from './helpers/testHelpers';

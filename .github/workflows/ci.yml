@@ -73,7 +73,7 @@ jobs:
 
       - name: Verify database connection
         run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -d shopflow_test \
+          psql "postgresql://postgres:postgres@localhost:5432/shopflow_test" \
             -c "SELECT COUNT(*) AS table_count FROM information_schema.tables WHERE table_schema='public';"
 
       - name: Run tests

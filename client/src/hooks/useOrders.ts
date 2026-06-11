@@ -78,16 +78,20 @@ export interface CreatePaymentIntentResponse {
   currency: string;
 }
 
-export function useOrders(page = 1, limit = 10, status?: string) {
-  return useQuery<OrderListItem[]>({
-    queryKey: ['orders', page, limit, status],
+export function useOrders(params: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  paymentStatus?: string;
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+} = {}) {
+  return useQuery<ApiResponse<OrderListItem[]>>({
+    queryKey: ['orders', params],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      params.set('page', String(page));
-      params.set('limit', String(limit));
-      if (status) params.set('status', status);
-      const res = await api.get<ApiResponse<OrderListItem[]>>(`/orders?${params}`);
-      return res.data.data;
+      const { data } = await api.get<ApiResponse<OrderListItem[]>>('/orders', { params });
+      return data;
     },
   });
 }
@@ -136,6 +140,7 @@ export function useCancelOrder() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myOrders'] });
       queryClient.invalidateQueries({ queryKey: ['order'] });
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
   });
 }
@@ -145,6 +150,21 @@ export function useCreatePaymentIntent() {
     mutationFn: async (orderId) => {
       const res = await api.post<ApiResponse<CreatePaymentIntentResponse>>('/payments/create-intent', { orderId });
       return res.data.data;
+    },
+  });
+}
+
+export function useUpdateOrderStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation<OrderDetail, Error, { id: string; status: string; trackingNumber?: string; note?: string }>({
+    mutationFn: async ({ id, status, trackingNumber, note }) => {
+      const res = await api.patch<ApiResponse<OrderDetail>>(`/orders/${id}/status`, { status, trackingNumber, note });
+      return res.data.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+      queryClient.invalidateQueries({ queryKey: ['order', data.id] });
     },
   });
 }

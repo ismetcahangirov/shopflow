@@ -16,6 +16,17 @@ interface SendEmailOptions {
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
   const { to, subject, html } = options;
 
+  const isResendConfigured =
+    config.RESEND_API_KEY &&
+    config.RESEND_API_KEY !== 're_your-resend-api-key' &&
+    config.RESEND_API_KEY !== 're_placeholder' &&
+    config.RESEND_API_KEY.trim() !== '';
+
+  if (!isResendConfigured && process.env.NODE_ENV !== 'test') {
+    logger.info(`[Email Mock] Email would be sent to: ${to} with subject: ${subject}`);
+    return;
+  }
+
   const { error } = await resend.emails.send({
     from: config.EMAIL_FROM,
     to,
