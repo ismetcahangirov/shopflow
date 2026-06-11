@@ -16,11 +16,13 @@ import {
   LogOut, 
   LayoutDashboard, 
   Settings, 
-  ShoppingBag as CartIcon 
+  ShoppingBag as CartIcon,
+  Heart
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { useRole } from '@/hooks/useRole';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { shopNavItems } from '@/config/navItems';
@@ -36,6 +38,7 @@ export function Navbar(): React.JSX.Element {
   const { isSidebarOpen, toggleSidebar, openCart } = useUiStore();
   const { isAdmin, isVendor, isAuthenticated } = useRole();
   const { cart, fetchCart, isHydrated: isCartHydrated } = useCartStore();
+  const { likedIds, isHydrated: isWishlistHydrated } = useWishlistStore();
   const [profileOpen, setProfileOpen] = useState(false);
   
   // Category dropdown state
@@ -222,6 +225,21 @@ export function Navbar(): React.JSX.Element {
 
           {/* Language Switcher */}
           <LanguageSwitcher />
+
+          {/* Wishlist Icon */}
+          <Link
+            href={`/${locale}/wishlist`}
+            data-testid="wishlist-icon"
+            className="relative p-2 rounded-xl text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-950/30 transition-all duration-200 focus:outline-none hidden sm:block"
+            aria-label={t('wishlist')}
+          >
+            <Heart className="h-5 w-5" />
+            {isWishlistHydrated && likedIds.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-slate-950">
+                {likedIds.length}
+              </span>
+            )}
+          </Link>
 
           {/* Cart Icon Trigger */}
           <button

@@ -7,10 +7,11 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { Home, Package, ShoppingCart, User, ClipboardList, LayoutDashboard } from 'lucide-react';
+import { Home, Package, ShoppingCart, User, ClipboardList, LayoutDashboard, Heart } from 'lucide-react';
 import { useRole } from '@/hooks/useRole';
 import { useUiStore } from '@/store/uiStore';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 
 export function BottomTabs(): React.JSX.Element {
   const t = useTranslations('common');
@@ -19,6 +20,7 @@ export function BottomTabs(): React.JSX.Element {
   const { isAuthenticated, isVendor, isAdmin } = useRole();
   const { openCart } = useUiStore();
   const { cart, isHydrated: isCartHydrated } = useCartStore();
+  const { likedIds, isHydrated: isWishlistHydrated } = useWishlistStore();
 
   const isActive = (href: string) => {
     const localizedHref = `/${locale}${href === '/' ? '' : href}`;
@@ -103,18 +105,37 @@ export function BottomTabs(): React.JSX.Element {
               </Link>
             )}
             {!isVendor && !isAdmin && (
-              <Link
-                href={`/${locale}/account/orders`}
-                className={[
-                  'flex flex-col items-center justify-center gap-1 w-12 h-12 rounded-xl transition-all focus:outline-none',
-                  isActive('/account/orders') 
-                    ? 'text-indigo-600 dark:text-indigo-400' 
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'
-                ].join(' ')}
-              >
-                <ClipboardList className="h-5 w-5" />
-                <span className="text-[10px] font-bold">{t('nav_orders')}</span>
-              </Link>
+              <>
+                <Link
+                  href={`/${locale}/wishlist`}
+                  className={[
+                    'relative flex flex-col items-center justify-center gap-1 w-12 h-12 rounded-xl transition-all focus:outline-none',
+                    isActive('/wishlist')
+                      ? 'text-rose-500 dark:text-rose-400'
+                      : 'text-slate-500 hover:text-rose-500 dark:text-slate-400'
+                  ].join(' ')}
+                >
+                  <Heart className="h-5 w-5" />
+                  <span className="text-[10px] font-bold">{t('wishlist')}</span>
+                  {isWishlistHydrated && likedIds.length > 0 && (
+                    <span className="absolute top-1.5 right-1.5 h-4 w-4 rounded-full bg-rose-500 text-[9px] font-bold text-white flex items-center justify-center">
+                      {likedIds.length}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  href={`/${locale}/account/orders`}
+                  className={[
+                    'flex flex-col items-center justify-center gap-1 w-12 h-12 rounded-xl transition-all focus:outline-none',
+                    isActive('/account/orders')
+                      ? 'text-indigo-600 dark:text-indigo-400'
+                      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'
+                  ].join(' ')}
+                >
+                  <ClipboardList className="h-5 w-5" />
+                  <span className="text-[10px] font-bold">{t('nav_orders')}</span>
+                </Link>
+              </>
             )}
           </>
         ) : (
