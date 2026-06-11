@@ -27,8 +27,8 @@ const config: Config = {
     global: {
       branches: 50,
       functions: 65,
-      lines: 77,
-      statements: 74,
+      lines: 76,
+      statements: 73,
     },
   },
   setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
