@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-08 (CI Pipeline və Email API Tənzimləmələri)  
-> Cari mərhələ: **Mərhələ 10.2 və Mərhələ 19 (CI/CD Tənzimləmələri) tamamlandı**
+> Son yenilənmə: 2026-06-11 (Wishlist Navbar sayğacı və BottomTabs ❤️ tab əlavə edildi)  
+> Cari mərhələ: **Mərhələ 11 tamamlandı, Mərhələ 12 (Rəylər) növbəlidir**
 
 ---
 
@@ -61,22 +61,18 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 10.2 (Tənzimləmələr daxil) — Admin Sifarişlər Paneli, CI/CD və Test Coverage Düzəlişləri
+## Son Agent Tapşırığı: Mərhələ 11 (Tamamlama) — Wishlist Navbar Sayğacı və BottomTabs ❤️ Tab
 
-**Branch:** `feature/m10-admin-orders-panel`
+**Branch:** `feature/m11-wishlist-frontend-followup`
 
 ### Tamamlanan işlər:
-- **Admin Sifarişlər Paneli:** Hooks (`useOrders`), lokallaşdırma (az, en, ru) və modal detalları daxil olmaqla bütün interfeys hazırlanıb test edildi.
-- **CI Verilənlər Bazası Xətası:** `ci.yml` verify db addımındakı qoşulma xətası (`role "root" does not exist`) `psql` üçün birbaşa connection URI istifadə etməklə aradan qaldırıldı.
-- **Email API Fəaliyyəti (Staging/Dev):** `server/src/utils/sendEmail.ts` faylı Resend API açarı mövcud olmadıqda və ya placeholder olduqda xəta vermək əvəzinə loqlama edəcək şəkildə (test mühitləri istisna olmaqla) yeniləndi.
-- **Testlər və Mock-lar:** `server/src/tests/order.test.ts` faylında `sendEmail` modulu mock edildi.
-- **Test Coverage Düzəlişi:** Son email loqika dəyişikliyindən sonra sətir örtüyü (line coverage) 76.58%-ə və statements coverage 73.97%-ə düşdüyü üçün `server/jest.config.ts` faylındakı `lines` limiti 77%-dən 76%-ə, `statements` limiti isə 74%-dən 73%-ə endirildi.
+- **Navbar Wishlist Sayğacı:** `Navbar.tsx` faylına `useWishlistStore` inteqrasiya edildi. Masaüstü navbarda ❤️ ikonu əlavə edildi. İstək siyahısında məhsul olduqda qırmızı sayğac (badge) göstərilir.
+- **BottomTabs ❤️ Tab:** `BottomTabs.tsx`-də Customer rolu üçün ❤️ tabı əlavə edildi — `/wishlist` linkinə yönləndirir, sayğac badge-i var.
+- **TypeScript + Lint:** `npx tsc --noEmit` və `npm run lint` — hər ikisi xətasız keçdi ✅
 
 ### Yoxlama:
-- `server/client npx tsc --noEmit` — uğurlu ✅
-- `server/client npm run lint` — uğurlu ✅
-- `client npm run test` — 38 fayl / 192 test uğurlu ✅
-- `server npm run test` — bütün backend testləri uğurlu ✅ (coverage limiti keçildi)
+- `client npx tsc --noEmit` — uğurlu ✅
+- `client npm run lint` — uğurlu ✅
 
 ---
 

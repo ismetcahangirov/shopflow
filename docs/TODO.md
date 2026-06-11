@@ -390,9 +390,9 @@
 
 - [x] İstək siyahısı səhifəsi (`/wishlist/page.tsx`)
 - [x] Məhsul kartında ❤️ düyməsi (Zustand persist)
-- [ ] Navbar-da istək siyahısı sayğacı
+- [x] Navbar-da istək siyahısı sayğacı
 - [x] Zustand wishlistStore (localStorage persist)
-- [ ] BottomTabs-da ❤️ tab
+- [x] BottomTabs-da ❤️ tab
 
 ---
 
