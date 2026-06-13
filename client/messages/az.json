@@ -421,6 +421,37 @@
     "reject_success": "Rəy uğurla rədd edildi",
     "delete_success": "Rəy uğurla silindi",
     "no_reviews": "Rəy tapılmadı"
+  },
+  "admin_users": {
+    "title": "İstifadəçilərin İdarə Edilməsi",
+    "subtitle": "Platformadakı istifadəçilərin siyahısı, axtarışı, rollara görə filtrlənməsi və statuslarının dəyişdirilməsi.",
+    "search_placeholder": "Ad və ya email axtar...",
+    "role_filter": "Rol",
+    "status_filter": "Status",
+    "all": "Hamısı",
+    "customer": "Müştəri",
+    "vendor": "Satıcı",
+    "admin": "Admin",
+    "active": "Aktiv",
+    "inactive": "Deaktiv",
+    "name": "Ad",
+    "email": "Email",
+    "role": "Rol",
+    "status": "Status",
+    "orders_count": "Sifariş Sayı",
+    "created_at": "Qeydiyyat Tarixi",
+    "actions": "Əməliyyatlar",
+    "no_users": "İstifadəçi tapılmadı",
+    "no_users_desc": "Axtarış meyarlarına uyğun gələn istifadəçi yoxdur.",
+    "toggle_status_title": "Statusu Dəyişdir",
+    "toggle_status_confirm": "Bu istifadəçinin statusunu dəyişmək istədiyinizdən əminsiniz?",
+    "confirm_btn": "Bəli, dəyiş",
+    "cancel_btn": "Ləğv et",
+    "deactivate": "Deaktiv et",
+    "activate": "Aktivləşdir",
+    "cannot_toggle_admin": "Admin statusunu dəyişmək olmaz",
+    "toggle_success": "İstifadəçi statusu uğurla yeniləndi",
+    "joined": "Qeydiyyat"
   }
 }
 

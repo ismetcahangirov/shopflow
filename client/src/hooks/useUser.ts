@@ -62,3 +62,43 @@ export function useUpdateAvatar() {
     },
   });
 }
+
+export interface AdminUsersParams {
+  page?: number;
+  limit?: number;
+  role?: string;
+  search?: string;
+  isActive?: boolean;
+}
+
+export interface AdminUser extends UserProfile {
+  lastLoginAt?: string | null;
+  _count?: {
+    orders: number;
+  };
+}
+
+export function useAdminUsers(params: AdminUsersParams) {
+  return useQuery<ApiResponse<AdminUser[]>>({
+    queryKey: ['admin-users', params],
+    queryFn: async () => {
+      const res = await api.get<ApiResponse<AdminUser[]>>('/users', { params });
+      return res.data;
+    },
+  });
+}
+
+export function useToggleUserStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation<ApiResponse<void>, Error, { id: string; isActive: boolean }>({
+    mutationFn: async ({ id, isActive }) => {
+      const res = await api.patch<ApiResponse<void>>(`/users/${id}/status`, { isActive });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
+  });
+}
+
