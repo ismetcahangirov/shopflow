@@ -454,7 +454,8 @@
     "approve_success": "Vendor uğurla təsdiqləndi",
     "reject_success": "Vendor uğurla rədd edildi",
     "suspend_success": "Vendor uğurla dayandırıldı",
-    "error_occurred": "Əməliyyat zamanı xəta baş verdi",
+    "error_occurred": "Əməliyyat zamanı xəta baş verdi"
+  },
   "admin_users": {
     "title": "İstifadəçilərin İdarə Edilməsi",
     "subtitle": "Platformadakı istifadəçilərin siyahısı, axtarışı, rollara görə filtrlənməsi və statuslarının dəyişdirilməsi.",

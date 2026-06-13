@@ -454,7 +454,8 @@
     "approve_success": "Vendor approved successfully",
     "reject_success": "Vendor rejected successfully",
     "suspend_success": "Vendor suspended successfully",
-    "error_occurred": "An error occurred during the operation",
+    "error_occurred": "An error occurred during the operation"
+  },
   "admin_users": {
     "title": "User Management",
     "subtitle": "List, search, filter by roles, and toggle status of all users on the platform.",
