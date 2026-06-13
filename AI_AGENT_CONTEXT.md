@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-13 (Admin İstifadəçilər Paneli əlavə edildi)  
-> Cari mərhələ: **Mərhələ 13 tamamlandı, Mərhələ 14 (Vendorlar Paneli) növbəlidir**
+> Son yenilənmə: 2026-06-13 (Admin Vendorlar Paneli əlavə edildi)  
+> Cari mərhələ: **Mərhələ 14 (Vendor) tamamlandı, Mərhələ 19 (Deploy) davam edir**
 
 
 ---
@@ -62,21 +62,25 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 13.2 — Admin: İstifadəçilər paneli (filter, blok/aktiv)
+## Son Agent Tapşırığı: Mərhələ 14 (Tamamlama) — Admin Vendor İdarəetmə Paneli
 
-**Branch:** `feature/m13-admin-users-panel`
+**Branch:** `feature/m14-admin-vendors-panel`
 
 ### Tamamlanan işlər:
-- **Tərcümələr:** `az.json`, `en.json` və `ru.json` fayllarında `admin_users` namespace daxilində bütün lazım olan tərcümələr əlavə edildi.
-- **React Query Hooks:** `client/src/hooks/useUser.ts` daxilinə `useAdminUsers` (istifadəçilərin siyahısı, axtarışı, filtrlənməsi və səhifələnməsi) və `useToggleUserStatus` (istifadəçilərin aktiv/deaktiv edilməsi) hooks yazıldı.
-- **Admin Users Page:** `client/src/app/[locale]/admin/users/page.tsx` səhifəsi yaradıldı. Bu səhifədə axtarış (300ms debounce ilə), rollara və statusa görə filtrləmə, istifadəçilərin cədvəli (sifariş sayı ilə), səhifələmə və statusu dəyişmək üçün təsdiqləmə modalı (`ConfirmDialog`) tətbiq edildi. Admin istifadəçilərin statusunun dəyişdirilməsi bloklandı.
-- **Unit Testlər:** `client/src/app/[locale]/admin/users/AdminUsersPage.test.tsx` daxilində rendering, loading, empty state, filtrləmələr, search debouncing və status toggling əməliyyatlarını əhatə edən unit test suite yazıldı.
-- **TypeScript & Lint:** Bütün TS yoxlamaları və ESLint xətaları aradan qaldırıldı, frontend testləri uğurla keçdi (206/206 PASS).
+- **i18n Dəstəyi:** Satıcıların idarə edilməsi panelinin bütün ifadələri 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_vendors` namespace-inə əlavə edildi.
+- **useVendor Hooks:** Adminlər üçün vendor siyahısını almaq (`useAdminVendors`) və vendor statusunu yeniləmək (`useUpdateVendorStatus`) üçün yeni query/mutation hook-ları yazıldı.
+- **Frontend Admin Vendors Page:** `client/src/app/[locale]/admin/vendors/page.tsx` səhifəsi yaradıldı. Bu səhifədə vendor müraciətləri siyahı formatında, status filtri və axtarışla göstərir. Admin müraciətləri təsdiqləyə, rədd edə və ya dayandıra bilər. Həmçinin status dəyişikliyi zamanı qeyd (note) əlavə etmək üçün xüsusi təsdiq pəncərəsi quruldu.
+- **Testlər:** `AdminVendorsPage.test.tsx` daxilinə vendor idarəetmə səhifəsinin bütün funksionallıqlarını (render, axtarış, filtr, təsdiq/rədd əməliyyatları, confirm modal) yoxlayan testlər yazıldı və bütün testlər uğurla keçdi.
+- **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
+- **Düzəlişlər və Test Əhatəsi (Coverage):** 
+  - `client/src/store/uiStore.test.ts` yaradılaraq frontend funksiya əhatəsi 82%-ə yüksəldildi (80% minimum tələbini keçdi).
+  - Avatar testlərində `fill` və s. Next.js spesifik prop-ların DOM-a keçməsindən qaynaklanan xəbərdarlıqlar `client/src/test/setup.ts`-dəki mock yenilənərək həll olundu.
 
 ### Yoxlama:
-- `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
-- `client` üzərində `npm run lint` — Uğurlu ✅
-- `npm run test` (client) — Bütün testlər keçdi (206 client testləri) ✅
+- `server` və `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
+- `server` və `client` üzərində `npm run lint` — Uğurlu ✅
+- `npm run test` (client tərəfdə) — Bütün testlər keçdi (230 client testləri, 82% function coverage) ✅
+- `npm run test` (server tərəfdə) — Bütün testlər keçdi (214 server testləri) ✅
 
 
 ---

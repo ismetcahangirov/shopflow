@@ -42,17 +42,44 @@ vi.mock('next-intl/navigation', () => ({
 }));
 
 // Mock next/image to behave like a standard img tag for easier onLoad/onError testing
+// Strip Next.js-specific props that are not valid HTML attributes to avoid React DOM warnings.
 import React from 'react';
 vi.mock('next/image', () => ({
   __esModule: true,
-  default: function MockImage({ src, alt, onLoad, onError, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+  default: function MockImage({
+    src,
+    alt,
+    onLoad,
+    onError,
+    className,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    fill: _fill,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    priority: _priority,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    sizes: _sizes,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    quality: _quality,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    placeholder: _placeholder,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    blurDataURL: _blurDataURL,
+    ...rest
+  }: React.ImgHTMLAttributes<HTMLImageElement> & {
+    fill?: boolean;
+    priority?: boolean;
+    sizes?: string;
+    quality?: number;
+    placeholder?: string;
+    blurDataURL?: string;
+  }) {
     return React.createElement('img', {
       src,
       alt,
       className,
       onLoad,
       onError,
-      ...props
+      ...rest,
     });
   },
 }));

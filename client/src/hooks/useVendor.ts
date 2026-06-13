@@ -58,3 +58,71 @@ export function useVendorStats() {
     },
   });
 }
+
+// ─── Admin-only vendor types & hooks ──────────────────────────────────────────
+
+export type VendorStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
+
+export interface AdminVendor {
+  id: string;
+  storeName: string;
+  slug: string;
+  description: string | null;
+  logo: string | null;
+  status: VendorStatus;
+  commission: number;
+  totalSales: number;
+  productCount: number;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface AdminVendorsParams {
+  page?: number;
+  limit?: number;
+  status?: VendorStatus | 'ALL';
+  search?: string;
+}
+
+export function useAdminVendors(params: AdminVendorsParams) {
+  const { status, ...rest } = params;
+  const queryParams = {
+    ...rest,
+    ...(status && status !== 'ALL' ? { status } : {}),
+  };
+
+  return useQuery<ApiResponse<AdminVendor[]>>({
+    queryKey: ['admin-vendors', params],
+    queryFn: async () => {
+      const res = await api.get<ApiResponse<AdminVendor[]>>('/vendors', { params: queryParams });
+      return res.data;
+    },
+  });
+}
+
+export interface UpdateVendorStatusPayload {
+  id: string;
+  status: VendorStatus;
+  note?: string;
+}
+
+export function useUpdateVendorStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation<{ id: string; status: VendorStatus }, Error, UpdateVendorStatusPayload>({
+    mutationFn: async ({ id, status, note }) => {
+      const res = await api.patch<ApiResponse<{ id: string; status: VendorStatus }>>(
+        `/vendors/${id}/status`,
+        { status, note },
+      );
+      return res.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-vendors'] });
+    },
+  });
+}
