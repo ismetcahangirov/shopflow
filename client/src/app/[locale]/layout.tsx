@@ -9,6 +9,27 @@ import { routing } from '@/i18n/routing';
 import Providers from '@/components/providers/Providers';
 import '@/app/globals.css';
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ShopFlow',
+  url: 'https://shopflow.az',
+  logo: 'https://shopflow.az/logo.png',
+  sameAs: [],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'ShopFlow',
+  url: 'https://shopflow.az',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://shopflow.az/az/products?search={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
   variable: '--font-sans',
@@ -63,6 +84,12 @@ export default function LocaleLayout({ children, params: { locale } }: LocaleLay
     <html lang={locale} className={`${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <body className="min-h-screen bg-slate-50/50 dark:bg-slate-950 font-sans antialiased selection:bg-primary-500 selection:text-white transition-colors duration-300">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify([organizationSchema, websiteSchema]),
+            }}
+          />
           <Providers>
             <div className="relative flex min-h-screen flex-col overflow-hidden">
               {/* Decorative radial gradients for rich premium aesthetics */}
