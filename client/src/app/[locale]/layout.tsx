@@ -7,8 +7,28 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import Providers from '@/components/providers/Providers';
-import { organizationSchema, websiteSchema } from '@/app/layout';
 import '@/app/globals.css';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ShopFlow',
+  url: 'https://shopflow.az',
+  logo: 'https://shopflow.az/logo.png',
+  sameAs: [],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'ShopFlow',
+  url: 'https://shopflow.az',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://shopflow.az/az/products?search={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
