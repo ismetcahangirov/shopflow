@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-const organizationSchema = {
+export const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'ShopFlow',
@@ -9,7 +9,7 @@ const organizationSchema = {
   sameAs: [],
 };
 
-const websiteSchema = {
+export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'ShopFlow',
@@ -22,17 +22,7 @@ const websiteSchema = {
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([organizationSchema, websiteSchema]),
-        }}
-      />
-      {children}
-    </>
-  );
+  return children;
 }
 
 interface RootLayoutProps {

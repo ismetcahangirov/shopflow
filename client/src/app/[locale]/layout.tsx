@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import Providers from '@/components/providers/Providers';
+import { organizationSchema, websiteSchema } from '@/app/layout';
 import '@/app/globals.css';
 
 const inter = Inter({
@@ -63,6 +64,12 @@ export default function LocaleLayout({ children, params: { locale } }: LocaleLay
     <html lang={locale} className={`${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <body className="min-h-screen bg-slate-50/50 dark:bg-slate-950 font-sans antialiased selection:bg-primary-500 selection:text-white transition-colors duration-300">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify([organizationSchema, websiteSchema]),
+            }}
+          />
           <Providers>
             <div className="relative flex min-h-screen flex-col overflow-hidden">
               {/* Decorative radial gradients for rich premium aesthetics */}
