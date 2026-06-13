@@ -72,11 +72,15 @@
 - **Frontend Admin Vendors Page:** `client/src/app/[locale]/admin/vendors/page.tsx` səhifəsi yaradıldı. Bu səhifədə vendor müraciətləri siyahı formatında, status filtri və axtarışla göstərir. Admin müraciətləri təsdiqləyə, rədd edə və ya dayandıra bilər. Həmçinin status dəyişikliyi zamanı qeyd (note) əlavə etmək üçün xüsusi təsdiq pəncərəsi quruldu.
 - **Testlər:** `AdminVendorsPage.test.tsx` daxilinə vendor idarəetmə səhifəsinin bütün funksionallıqlarını (render, axtarış, filtr, təsdiq/rədd əməliyyatları, confirm modal) yoxlayan testlər yazıldı və bütün testlər uğurla keçdi.
 - **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
+- **Düzəlişlər və Test Əhatəsi (Coverage):** 
+  - `client/src/store/uiStore.test.ts` yaradılaraq frontend funksiya əhatəsi 82%-ə yüksəldildi (80% minimum tələbini keçdi).
+  - Avatar testlərində `fill` və s. Next.js spesifik prop-ların DOM-a keçməsindən qaynaklanan xəbərdarlıqlar `client/src/test/setup.ts`-dəki mock yenilənərək həll olundu.
 
 ### Yoxlama:
 - `server` və `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
 - `server` və `client` üzərində `npm run lint` — Uğurlu ✅
-- `npm run test` (client tərəfdə) — Bütün testlər keçdi (213 client testləri) ✅
+- `npm run test` (client tərəfdə) — Bütün testlər keçdi (230 client testləri, 82% function coverage) ✅
+- `npm run test` (server tərəfdə) — Bütün testlər keçdi (214 server testləri) ✅
 
 
 ---
