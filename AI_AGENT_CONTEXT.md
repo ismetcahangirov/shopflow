@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-11 (Rəylər və Admin Moderasiya Paneli əlavə edildi)  
-> Cari mərhələ: **Mərhələ 12 tamamlandı, Mərhələ 13 (Profil) növbəlidir**
+> Son yenilənmə: 2026-06-13 (Admin İstifadəçilər Paneli əlavə edildi)  
+> Cari mərhələ: **Mərhələ 13 tamamlandı, Mərhələ 14 (Vendorlar Paneli) növbəlidir**
 
 
 ---
@@ -62,21 +62,21 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 12 (Tamamlama) — Rəylər və Admin Moderasiya Paneli
+## Son Agent Tapşırığı: Mərhələ 13.2 — Admin: İstifadəçilər paneli (filter, blok/aktiv)
 
-**Branch:** `feature/m12-reviews-backend`
+**Branch:** `feature/m13-admin-users-panel`
 
 ### Tamamlanan işlər:
-- **Backend API:** Adminlər üçün `/api/reviews/admin` endpoint-i yaradıldı. Bu endpoint pagination, filter (isApproved) və əlaqəli məhsul/istifadəçi məlumatlarını qaytarır.
-- **Backend Testlər:** `review.test.ts` daxilinə yeni admin endpoint-i üçün inteqrasiya testləri əlavə edildi və hamısı uğurla keçdi (coverage səviyyəsi qorundu).
-- **i18n Dəstəyi:** Moderasiya paneli üçün lazım olan bütün ifadələr 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_reviews` namespace-inə əlavə edildi.
-- **Frontend Admin Reviews Page:** `admin/reviews/page.tsx` səhifəsi yaradıldı. Bu səhifədə rəylər siyahı şəklində göstərilir, təsdiqlənmə statusuna görə filtrlənir, təsdiqlənir/rədd edilir və təsdiq pəncərəsi ilə silinir.
-- **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
+- **Tərcümələr:** `az.json`, `en.json` və `ru.json` fayllarında `admin_users` namespace daxilində bütün lazım olan tərcümələr əlavə edildi.
+- **React Query Hooks:** `client/src/hooks/useUser.ts` daxilinə `useAdminUsers` (istifadəçilərin siyahısı, axtarışı, filtrlənməsi və səhifələnməsi) və `useToggleUserStatus` (istifadəçilərin aktiv/deaktiv edilməsi) hooks yazıldı.
+- **Admin Users Page:** `client/src/app/[locale]/admin/users/page.tsx` səhifəsi yaradıldı. Bu səhifədə axtarış (300ms debounce ilə), rollara və statusa görə filtrləmə, istifadəçilərin cədvəli (sifariş sayı ilə), səhifələmə və statusu dəyişmək üçün təsdiqləmə modalı (`ConfirmDialog`) tətbiq edildi. Admin istifadəçilərin statusunun dəyişdirilməsi bloklandı.
+- **Unit Testlər:** `client/src/app/[locale]/admin/users/AdminUsersPage.test.tsx` daxilində rendering, loading, empty state, filtrləmələr, search debouncing və status toggling əməliyyatlarını əhatə edən unit test suite yazıldı.
+- **TypeScript & Lint:** Bütün TS yoxlamaları və ESLint xətaları aradan qaldırıldı, frontend testləri uğurla keçdi (206/206 PASS).
 
 ### Yoxlama:
-- `server` və `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
-- `server` və `client` üzərində `npm run lint` — Uğurlu ✅
-- `npm run test` (hər iki tərəfdə) — Bütün testlər keçdi (198 client, 214 server testləri) ✅
+- `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
+- `client` üzərində `npm run lint` — Uğurlu ✅
+- `npm run test` (client) — Bütün testlər keçdi (206 client testləri) ✅
 
 
 ---
