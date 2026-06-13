@@ -441,7 +441,7 @@
 - [x] Profil redaktə forması
 - [x] Avatar yükləmə (Cloudinary)
 - [x] Şifrə dəyiş forması
-- [ ] Admin: İstifadəçilər paneli (filter, blok/aktiv)
+- [x] Admin: İstifadəçilər paneli (filter, blok/aktiv)
 
 ---
 

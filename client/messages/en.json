@@ -454,7 +454,37 @@
     "approve_success": "Vendor approved successfully",
     "reject_success": "Vendor rejected successfully",
     "suspend_success": "Vendor suspended successfully",
-    "error_occurred": "An error occurred during the operation"
+    "error_occurred": "An error occurred during the operation",
+  "admin_users": {
+    "title": "User Management",
+    "subtitle": "List, search, filter by roles, and toggle status of all users on the platform.",
+    "search_placeholder": "Search name or email...",
+    "role_filter": "Role",
+    "status_filter": "Status",
+    "all": "All",
+    "customer": "Customer",
+    "vendor": "Vendor",
+    "admin": "Admin",
+    "active": "Active",
+    "inactive": "Inactive",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "orders_count": "Orders Count",
+    "created_at": "Registration Date",
+    "actions": "Actions",
+    "no_users": "No users found",
+    "no_users_desc": "No users match the search criteria.",
+    "toggle_status_title": "Change Status",
+    "toggle_status_confirm": "Are you sure you want to change this user's status?",
+    "confirm_btn": "Yes, change",
+    "cancel_btn": "Cancel",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "cannot_toggle_admin": "Cannot change admin status",
+    "toggle_success": "User status updated successfully",
+    "joined": "Joined"
   }
 }
 

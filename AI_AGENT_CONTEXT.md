@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
 > Son yenilənmə: 2026-06-13 (Admin Vendorlar Paneli əlavə edildi)  
-> Cari mərhələ: **Mərhələ 14 (Vendor) tamamlandı, Mərhələ 13 (Profil) növbəlidir**
+> Cari mərhələ: **Mərhələ 14 (Vendor) tamamlandı, Mərhələ 19 (Deploy) davam edir**
 
 
 ---
@@ -69,7 +69,7 @@
 ### Tamamlanan işlər:
 - **i18n Dəstəyi:** Satıcıların idarə edilməsi panelinin bütün ifadələri 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_vendors` namespace-inə əlavə edildi.
 - **useVendor Hooks:** Adminlər üçün vendor siyahısını almaq (`useAdminVendors`) və vendor statusunu yeniləmək (`useUpdateVendorStatus`) üçün yeni query/mutation hook-ları yazıldı.
-- **Frontend Admin Vendors Page:** `client/src/app/[locale]/admin/vendors/page.tsx` səhifəsi yaradıldı. Bu səhifədə vendor müraciətləri siyahı formatında, status filtri və axtarışla göstərilir. Admin müraciətləri təsdiqləyə, rədd edə və ya dayandıra bilər. Həmçinin status dəyişikliyi zamanı qeyd (note) əlavə etmək üçün xüsusi təsdiq pəncərəsi quruldu.
+- **Frontend Admin Vendors Page:** `client/src/app/[locale]/admin/vendors/page.tsx` səhifəsi yaradıldı. Bu səhifədə vendor müraciətləri siyahı formatında, status filtri və axtarışla göstərir. Admin müraciətləri təsdiqləyə, rədd edə və ya dayandıra bilər. Həmçinin status dəyişikliyi zamanı qeyd (note) əlavə etmək üçün xüsusi təsdiq pəncərəsi quruldu.
 - **Testlər:** `AdminVendorsPage.test.tsx` daxilinə vendor idarəetmə səhifəsinin bütün funksionallıqlarını (render, axtarış, filtr, təsdiq/rədd əməliyyatları, confirm modal) yoxlayan testlər yazıldı və bütün testlər uğurla keçdi.
 - **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
 
