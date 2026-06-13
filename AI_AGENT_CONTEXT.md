@@ -1,7 +1,7 @@
 # AI_AGENT_CONTEXT.md — ShopFlow
 
-> Son yenilənmə: 2026-06-11 (Rəylər və Admin Moderasiya Paneli əlavə edildi)  
-> Cari mərhələ: **Mərhələ 12 tamamlandı, Mərhələ 13 (Profil) növbəlidir**
+> Son yenilənmə: 2026-06-13 (Admin Vendorlar Paneli əlavə edildi)  
+> Cari mərhələ: **Mərhələ 14 (Vendor) tamamlandı, Mərhələ 13 (Profil) növbəlidir**
 
 
 ---
@@ -62,21 +62,21 @@
 
 ---
 
-## Son Agent Tapşırığı: Mərhələ 12 (Tamamlama) — Rəylər və Admin Moderasiya Paneli
+## Son Agent Tapşırığı: Mərhələ 14 (Tamamlama) — Admin Vendor İdarəetmə Paneli
 
-**Branch:** `feature/m12-reviews-backend`
+**Branch:** `feature/m14-admin-vendors-panel`
 
 ### Tamamlanan işlər:
-- **Backend API:** Adminlər üçün `/api/reviews/admin` endpoint-i yaradıldı. Bu endpoint pagination, filter (isApproved) və əlaqəli məhsul/istifadəçi məlumatlarını qaytarır.
-- **Backend Testlər:** `review.test.ts` daxilinə yeni admin endpoint-i üçün inteqrasiya testləri əlavə edildi və hamısı uğurla keçdi (coverage səviyyəsi qorundu).
-- **i18n Dəstəyi:** Moderasiya paneli üçün lazım olan bütün ifadələr 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_reviews` namespace-inə əlavə edildi.
-- **Frontend Admin Reviews Page:** `admin/reviews/page.tsx` səhifəsi yaradıldı. Bu səhifədə rəylər siyahı şəklində göstərilir, təsdiqlənmə statusuna görə filtrlənir, təsdiqlənir/rədd edilir və təsdiq pəncərəsi ilə silinir.
+- **i18n Dəstəyi:** Satıcıların idarə edilməsi panelinin bütün ifadələri 3 dildə (`az.json`, `en.json`, `ru.json`) `admin_vendors` namespace-inə əlavə edildi.
+- **useVendor Hooks:** Adminlər üçün vendor siyahısını almaq (`useAdminVendors`) və vendor statusunu yeniləmək (`useUpdateVendorStatus`) üçün yeni query/mutation hook-ları yazıldı.
+- **Frontend Admin Vendors Page:** `client/src/app/[locale]/admin/vendors/page.tsx` səhifəsi yaradıldı. Bu səhifədə vendor müraciətləri siyahı formatında, status filtri və axtarışla göstərilir. Admin müraciətləri təsdiqləyə, rədd edə və ya dayandıra bilər. Həmçinin status dəyişikliyi zamanı qeyd (note) əlavə etmək üçün xüsusi təsdiq pəncərəsi quruldu.
+- **Testlər:** `AdminVendorsPage.test.tsx` daxilinə vendor idarəetmə səhifəsinin bütün funksionallıqlarını (render, axtarış, filtr, təsdiq/rədd əməliyyatları, confirm modal) yoxlayan testlər yazıldı və bütün testlər uğurla keçdi.
 - **TypeScript + Lint:** Bütün TS və Lint xətaları tam olaraq həll edildi.
 
 ### Yoxlama:
 - `server` və `client` üzərində `npx tsc --noEmit` — Uğurlu ✅
 - `server` və `client` üzərində `npm run lint` — Uğurlu ✅
-- `npm run test` (hər iki tərəfdə) — Bütün testlər keçdi (198 client, 214 server testləri) ✅
+- `npm run test` (client tərəfdə) — Bütün testlər keçdi (213 client testləri) ✅
 
 
 ---

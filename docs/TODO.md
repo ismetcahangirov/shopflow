@@ -467,7 +467,7 @@
 - [x] Vendor məhsulları (`/vendor/products/`)
 - [x] Vendor sifarişləri (`/vendor/orders/`)
 - [x] Vendor mağaza profili (`/vendor/store/`)
-- [ ] Admin: Vendorlar paneli (təsdiq/rədd)
+- [x] Admin: Vendorlar paneli (təsdiq/rədd)
 
 ---
 
