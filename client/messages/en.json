@@ -124,6 +124,8 @@
     "sort_price_desc": "Price: High to Low",
     "sort_rating": "Top Rated",
     "no_products_found": "No products found.",
+    "above_rating": "{count} stars & up",
+    "try_adjusting_filters": "Try adjusting your filters or search terms to find what you are looking for.",
     "search_results": "Search results for \"{query}\"",
     "search_page_title": "Product search",
     "search_page_desc": "Refine products found for \"{query}\" with filters and sorting.",
