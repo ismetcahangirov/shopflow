@@ -229,6 +229,11 @@ JWT_REFRESH_EXPIRES_IN=7d
 
 # CORS — frontend URL
 CLIENT_URL=https://shopflow-theta.vercel.app
+# Əlavə icazəli origin-lər (vergüllə) — yeni custom/production domen üçün.
+# Kodu dəyişmədən whitelist-ə domen əlavə etmək üçün istifadə et.
+# CORS_EXTRA_ORIGINS=https://shopflow.az,https://www.shopflow.az
+# Bu layihənin Vercel preview deploy-larına (shopflow-*.vercel.app) icazə: true|false
+CORS_ALLOW_VERCEL_PREVIEWS=false
 
 # Resend Email
 RESEND_API_KEY=re_live_...

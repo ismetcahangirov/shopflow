@@ -20,6 +20,13 @@ const envSchema = z.object({
   // Client
   CLIENT_URL: z.string().url('CLIENT_URL must be a valid URL'),
 
+  // CORS — extra allowed origins (comma-separated, e.g. production/custom domains)
+  // so new frontend URLs can be whitelisted via env without a code change.
+  CORS_EXTRA_ORIGINS: z.string().optional(),
+  // Allow this project's Vercel preview deployments (shopflow-*.vercel.app).
+  // Off by default — opt in per environment with "true".
+  CORS_ALLOW_VERCEL_PREVIEWS: z.enum(['true', 'false']).default('false'),
+
   // Cloudinary
   CLOUDINARY_CLOUD_NAME: z.string().min(1, 'CLOUDINARY_CLOUD_NAME is required'),
   CLOUDINARY_API_KEY: z.string().min(1, 'CLOUDINARY_API_KEY is required'),
