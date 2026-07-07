@@ -56,4 +56,15 @@ describe('FormField', () => {
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('aria-invalid', 'true');
   });
+
+  // Regression: react-hook-form's register() passes a ref that must reach the
+  // underlying <input>. If FormField is not wrapped in forwardRef, the ref is
+  // lost and RHF cannot read the field value, breaking all auth forms.
+  it('forwards ref to the underlying input element', () => {
+    const ref = React.createRef<HTMLInputElement>();
+    render(<FormField label="Email" htmlFor="email-ref" ref={ref} />);
+    const input = screen.getByRole('textbox');
+    expect(ref.current).toBe(input);
+    expect(ref.current?.tagName).toBe('INPUT');
+  });
 });
