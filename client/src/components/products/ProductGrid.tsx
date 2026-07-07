@@ -37,7 +37,7 @@ export function ProductGrid({
           {t('no_products_found')}
         </h3>
         <p className="text-sm text-slate-550 dark:text-slate-400 max-w-sm">
-          {t('try_adjusting_filters') || 'Try adjusting your filters or search terms to find what you are looking for.'}
+          {t('try_adjusting_filters')}
         </p>
       </div>
     );

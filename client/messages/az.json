@@ -124,6 +124,8 @@
     "sort_price_desc": "Qiymət: Bahadan ucuza",
     "sort_rating": "Reytinqə görə",
     "no_products_found": "Məhsul tapılmadı.",
+    "above_rating": "{count} ulduz və yuxarı",
+    "try_adjusting_filters": "Axtardığınızı tapmaq üçün filtrləri və ya axtarış sözlərini dəyişməyi sınayın.",
     "search_results": "\"{query}\" üçün axtarış nəticələri",
     "search_page_title": "Məhsul axtarışı",
     "search_page_desc": "\"{query}\" üçün tapılan məhsulları filtr və sıralama ilə dəqiqləşdirin.",

@@ -261,7 +261,7 @@ export function ProductFilters({
                     ))}
                   </div>
                   <span className="text-xs text-slate-500 dark:text-slate-400">
-                    & {t('above_rating') || 'Up'}
+                    {t('above_rating', { count: parseInt(starVal) })}
                   </span>
                 </div>
                 {isActive && <Check className="h-3.5 w-3.5" />}
