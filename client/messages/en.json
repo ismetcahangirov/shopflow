@@ -488,6 +488,12 @@
     "cannot_toggle_admin": "Cannot change admin status",
     "toggle_success": "User status updated successfully",
     "joined": "Joined"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for doesn't exist, has been removed, or the address may be incorrect.",
+    "back_home": "Back to home",
+    "browse_products": "Browse products"
   }
 }
 
