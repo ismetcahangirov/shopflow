@@ -97,6 +97,27 @@ describe('authStore tests', () => {
     expect((window as typeof window & { __accessToken?: string }).__accessToken).toBeUndefined();
   });
 
+  it('setHydrated sets isHydrated to true', () => {
+    useAuthStore.setState({ isHydrated: false });
+    expect(useAuthStore.getState().isHydrated).toBe(false);
+    useAuthStore.getState().setHydrated();
+    expect(useAuthStore.getState().isHydrated).toBe(true);
+  });
+
+  it('onRehydrateStorage flags hydration through the rehydrated state, not a direct store reference', () => {
+    // Regression: referencing useAuthStore.setState directly fails during the
+    // synchronous localStorage rehydration (temporal dead zone), so isHydrated
+    // never flips. The callback must delegate to the provided state instead.
+    const onRehydrateStorage = useAuthStore.persist.getOptions().onRehydrateStorage;
+    const setHydrated = vi.fn();
+    const postHydrationCallback = onRehydrateStorage?.(useAuthStore.getState());
+    postHydrationCallback?.(
+      { ...useAuthStore.getState(), setHydrated } as ReturnType<typeof useAuthStore.getState>,
+      undefined,
+    );
+    expect(setHydrated).toHaveBeenCalledTimes(1);
+  });
+
   it('should clear states completely on logout', async () => {
     vi.mocked(api.post).mockResolvedValueOnce({ success: true });
     
