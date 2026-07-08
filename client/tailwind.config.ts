@@ -1,6 +1,9 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  // Toggle dark mode via a `.dark` class on <html> (set by next-themes),
+  // matching the `.dark { … }` CSS variables in globals.css (issue #55).
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
