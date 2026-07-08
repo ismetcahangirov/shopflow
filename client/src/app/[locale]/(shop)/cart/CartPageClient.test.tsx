@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { CartPageClient } from './CartPageClient';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
@@ -55,6 +55,31 @@ describe('CartPageClient component tests', () => {
     render(<CartPageClient />);
     expect(screen.getByText('Giriş edilməyib')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
+  });
+
+  it('renders error state with retry when cart failed to load', () => {
+    const fetchCart = vi.fn();
+    (useAuthStore as unknown as Mock).mockReturnValue({
+      isAuthenticated: true,
+      isHydrated: true,
+    });
+    (useCartStore as unknown as Mock).mockReturnValue({
+      cart: null,
+      isLoading: false,
+      isHydrated: true,
+      error: 'Şəbəkə xətası baş verdi',
+      fetchCart,
+    });
+
+    render(<CartPageClient />);
+
+    expect(screen.getByTestId('error-state')).toBeInTheDocument();
+    expect(screen.getByText('Şəbəkə xətası baş verdi')).toBeInTheDocument();
+
+    // Ignore the mount-effect fetch; assert the retry button triggers a refetch.
+    fetchCart.mockClear();
+    fireEvent.click(screen.getByRole('button', { name: /yenidən/i }));
+    expect(fetchCart).toHaveBeenCalledTimes(1);
   });
 
   it('renders empty cart message when cart has no items', () => {

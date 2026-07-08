@@ -261,7 +261,9 @@
     "empty_desc": "Bəyəndiyiniz məhsulları istək siyahısına əlavə edin.",
     "browse_products": "Məhsullara bax",
     "add_to_cart": "Səbətə əlavə et",
-    "out_of_stock": "Stokda yoxdur"
+    "out_of_stock": "Stokda yoxdur",
+    "auth_required": "Giriş edilməyib",
+    "auth_required_desc": "İstək siyahınızı görmək və idarə etmək üçün hesabınıza daxil olun."
   },
   "profile": {
     "title": "Profilim",

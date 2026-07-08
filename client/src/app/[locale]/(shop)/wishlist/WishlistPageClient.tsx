@@ -2,11 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import { Heart, ShoppingCart, Trash2, Lock } from 'lucide-react';
 
 import { useWishlist, useRemoveFromWishlist } from '@/hooks/useWishlist';
 import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
@@ -14,23 +15,57 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { parseApiError } from '@/lib/api';
 import Image from 'next/image';
 
+function WishlistSkeleton() {
+  return (
+    <div className="mx-auto max-w-4xl py-8">
+      <Skeleton className="mb-6 h-10 w-56" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-64 w-full rounded-xl" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function WishlistPageClient() {
   const t = useTranslations('wishlist');
-  const { data: items, isLoading, isError, error, refetch } = useWishlist();
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
+  const { isAuthenticated, isHydrated: isAuthHydrated } = useAuthStore();
+  // Gate the query behind auth so an unauthenticated visit doesn't fire a
+  // doomed 401 request and get stuck in a retry-driven skeleton (issue #57).
+  const { data: items, isLoading, isError, error, refetch } = useWishlist({
+    enabled: isAuthHydrated && isAuthenticated,
+  });
   const removeMutation = useRemoveFromWishlist();
   const addToCart = useCartStore((s) => s.addItem);
 
-  if (isLoading) {
+  // 1. Auth still hydrating — show skeleton, not a premature login prompt.
+  if (!isAuthHydrated) {
+    return <WishlistSkeleton />;
+  }
+
+  // 2. Unauthenticated — prompt the user to log in instead of an endless skeleton.
+  if (!isAuthenticated) {
     return (
       <div className="mx-auto max-w-4xl py-8">
-        <Skeleton className="mb-6 h-10 w-56" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 w-full rounded-xl" />
-          ))}
-        </div>
+        <EmptyState
+          icon={<Lock className="h-12 w-12 text-slate-400" />}
+          title={t('auth_required')}
+          description={t('auth_required_desc')}
+          action={
+            <Link href={`/${locale}/login?redirect=/wishlist`}>
+              <Button>{tCommon('login')}</Button>
+            </Link>
+          }
+        />
       </div>
     );
+  }
+
+  if (isLoading) {
+    return <WishlistSkeleton />;
   }
 
   if (isError) {
