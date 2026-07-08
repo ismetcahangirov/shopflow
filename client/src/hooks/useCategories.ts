@@ -5,13 +5,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type { Category, ApiResponse } from '@/types';
 
-// Fetch category tree (all active categories hierarchically)
+// Fetch category tree (all active categories hierarchically).
+// The API wraps the list as { data: { categories: [...] } }; unwrap it so every
+// consumer reliably receives a Category[] (guards both shapes to avoid the
+// "categories.find is not a function" Navbar crash).
 export function useCategoriesQuery() {
   return useQuery<Category[]>({
     queryKey: ['categories', 'tree'],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<Category[]>>('/categories');
-      return data.data;
+      const { data } = await api.get<ApiResponse<Category[] | { categories: Category[] }>>('/categories');
+      const payload = data.data;
+      return Array.isArray(payload) ? payload : payload?.categories ?? [];
     },
   });
 }
