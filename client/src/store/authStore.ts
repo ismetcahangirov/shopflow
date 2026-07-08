@@ -29,6 +29,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
   setError: (error: string | null) => void;
+  setHydrated: () => void;
   
   // Async operations
   logout: () => Promise<void>;
@@ -63,6 +64,8 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setError: (error) => set({ error }),
+
+      setHydrated: () => set({ isHydrated: true }),
 
       logout: async () => {
         set({ isLoading: true, error: null });
@@ -125,8 +128,12 @@ export const useAuthStore = create<AuthState>()(
       // Persist only the user metadata, token is in-memory for security
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
       storage: createJSONStorage(() => localStorage),
-      onRehydrateStorage: () => () => {
-        useAuthStore.setState({ isHydrated: true });
+      onRehydrateStorage: () => (state) => {
+        // Delegate to the rehydrated state instead of referencing useAuthStore
+        // directly: for synchronous localStorage the callback runs inside
+        // create(), where the module-level store binding is still in its
+        // temporal dead zone, so a direct reference silently fails to hydrate.
+        state?.setHydrated();
       },
     }
   )
