@@ -37,7 +37,8 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const product = await getProductData(slug);
   if (!product) {
-    return { title: 'Məhsul tapılmadı | ShopFlow' };
+    // Bare title — the layout template appends " | ShopFlow" (issue #58).
+    return { title: 'Məhsul tapılmadı' };
   }
 
   const title = product.metaTitle || `${product.name} | ShopFlow`;
@@ -46,7 +47,9 @@ export async function generateMetadata({
   const mainImage = product.images?.find((img) => img.isMain) || product.images?.[0];
 
   return {
-    title,
+    // `title` already contains "| ShopFlow" (or an admin-set metaTitle); use
+    // `absolute` so the layout template doesn't append a second one (issue #58).
+    title: { absolute: title },
     description,
     alternates: {
       canonical: `/products/${slug}`,

@@ -40,7 +40,8 @@ export async function generateMetadata({
   const category = await getCategoryData(slug);
   if (!category) {
     return {
-      title: 'Category Not Found | ShopFlow',
+      // Bare title — the layout template appends " | ShopFlow" (issue #58).
+      title: 'Category Not Found',
     };
   }
 
@@ -51,7 +52,9 @@ export async function generateMetadata({
     `${category.name} kateqoriyasındakı premium məhsulları kəşf edin.`;
 
   return {
-    title: metaTitle,
+    // `metaTitle` already contains "| ShopFlow" (or an admin-set metaTitle); use
+    // `absolute` so the layout template doesn't append a second one (issue #58).
+    title: { absolute: metaTitle },
     description: metaDesc,
     alternates: {
       canonical: `/category/${slug}`,

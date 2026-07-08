@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { CartPageClient } from './CartPageClient';
 
 export const metadata: Metadata = {
-  title: 'Səbət | ShopFlow',
+  title: 'Səbət',
   robots: {
     index: false,
     follow: true,
