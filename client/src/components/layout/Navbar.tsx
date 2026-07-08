@@ -25,6 +25,7 @@ import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useRole } from '@/hooks/useRole';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { shopNavItems } from '@/config/navItems';
 import { useCategoriesQuery } from '@/hooks/useCategories';
 import { useEffect } from 'react';
@@ -222,6 +223,9 @@ export function Navbar(): React.JSX.Element {
           >
             <Search className="h-5 w-5" />
           </button>
+
+          {/* Dark / Light Theme Toggle */}
+          <ThemeToggle />
 
           {/* Language Switcher */}
           <LanguageSwitcher />
