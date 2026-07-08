@@ -12,12 +12,13 @@ import { useAuthStore } from '@/store/authStore';
 import { CartItem } from '@/components/cart/CartItem';
 import { CartSummary } from '@/components/cart/CartSummary';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { ErrorState } from '@/components/ui/error-state';
 
 export function CartPageClient(): React.JSX.Element {
   const t = useTranslations('cart');
   const tCommon = useTranslations('common');
   const locale = useLocale();
-  const { cart, isLoading, isMutating, fetchCart, clearCart, isHydrated } = useCartStore();
+  const { cart, isLoading, isMutating, error, fetchCart, clearCart, isHydrated } = useCartStore();
   const { isAuthenticated, isHydrated: isAuthHydrated } = useAuthStore();
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -78,7 +79,22 @@ export function CartPageClient(): React.JSX.Element {
 
   const items = cart?.items || [];
 
-  // 3. Empty Cart State
+  // 3. Error State — the initial fetch failed and there is nothing to show.
+  // Distinct from the empty-cart state so the user isn't misled into thinking
+  // their cart is empty when the backend actually errored. (issue #57)
+  if (error && items.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-md">
+        <ErrorState
+          title="Səbət yüklənə bilmədi"
+          message={error}
+          onRetry={() => fetchCart()}
+        />
+      </div>
+    );
+  }
+
+  // 4. Empty Cart State
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-md text-center">
@@ -102,7 +118,7 @@ export function CartPageClient(): React.JSX.Element {
     );
   }
 
-  // 4. Full Cart State
+  // 5. Full Cart State
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       {/* Title Header */}

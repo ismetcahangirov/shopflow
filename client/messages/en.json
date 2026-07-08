@@ -261,7 +261,9 @@
     "empty_desc": "Add products you like to your wishlist.",
     "browse_products": "Browse products",
     "add_to_cart": "Add to cart",
-    "out_of_stock": "Out of stock"
+    "out_of_stock": "Out of stock",
+    "auth_required": "Not signed in",
+    "auth_required_desc": "Sign in to your account to view and manage your wishlist."
   },
   "profile": {
     "title": "My Profile",
