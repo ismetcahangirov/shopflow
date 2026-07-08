@@ -39,7 +39,10 @@
     "cart_title": "Your Cart",
     "search_title": "Search",
     "unauthorized_title": "Access Denied",
-    "all_products_in": "All products in:"
+    "all_products_in": "All products in:",
+    "categories_subtitle": "Explore all our product categories",
+    "categories_empty": "No categories are available yet.",
+    "products_count": "{count} products"
   },
   "auth": {
     "welcome_back": "Welcome Back!",
