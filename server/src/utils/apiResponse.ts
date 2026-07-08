@@ -2,6 +2,7 @@
 // Standardized API response helpers — ensures consistent response shape
 
 import { Response } from 'express';
+import { serializeDecimals } from './serializeDecimals';
 
 interface PaginationMeta {
   page: number;
@@ -31,7 +32,7 @@ export function successResponse(
   return res.status(statusCode).json({
     success: true,
     message,
-    ...(data !== undefined && { data }),
+    ...(data !== undefined && { data: serializeDecimals(data) }),
     ...(pagination && { pagination }),
   });
 }
