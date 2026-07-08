@@ -17,7 +17,7 @@ const badgeVariants = cva(
         outline:
           "border border-slate-200 bg-transparent text-slate-650 dark:border-slate-850 dark:text-slate-400",
         destructive:
-          "bg-rose-50 text-rose-700 border border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30",
+          "bg-rose-50 text-white border border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30",
         success:
           "bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30",
         warning:
@@ -33,32 +33,43 @@ const badgeVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
-const dotVariants = cva("h-1.5 w-1.5 rounded-full shrink-0 animate-[pulse_2s_infinite]", {
-  variants: {
-    variant: {
-      default: "bg-indigo-600 dark:bg-indigo-400",
-      secondary: "bg-slate-550 dark:bg-slate-400",
-      outline: "bg-slate-400 dark:bg-slate-500",
-      destructive: "bg-rose-600 dark:bg-rose-400",
-      success: "bg-emerald-600 dark:bg-emerald-400",
-      warning: "bg-amber-600 dark:bg-amber-400",
+const dotVariants = cva(
+  "h-1.5 w-1.5 rounded-full shrink-0 animate-[pulse_2s_infinite]",
+  {
+    variants: {
+      variant: {
+        default: "bg-indigo-600 dark:bg-indigo-400",
+        secondary: "bg-slate-550 dark:bg-slate-400",
+        outline: "bg-slate-400 dark:bg-slate-500",
+        destructive: "bg-rose-600 dark:bg-rose-400",
+        success: "bg-emerald-600 dark:bg-emerald-400",
+        warning: "bg-amber-600 dark:bg-amber-400",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
     },
   },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+);
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
+  extends
+    React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {
   showDot?: boolean;
 }
 
-function Badge({ className, variant, size, showDot = false, children, ...props }: BadgeProps) {
+function Badge({
+  className,
+  variant,
+  size,
+  showDot = false,
+  children,
+  ...props
+}: BadgeProps) {
   return (
     <span
       className={cn(badgeVariants({ variant, size }), className)}
@@ -66,7 +77,17 @@ function Badge({ className, variant, size, showDot = false, children, ...props }
     >
       {showDot && (
         <span
-          className={dotVariants({ variant: variant as "default" | "secondary" | "outline" | "destructive" | "success" | "warning" | null | undefined })}
+          className={dotVariants({
+            variant: variant as
+              | "default"
+              | "secondary"
+              | "outline"
+              | "destructive"
+              | "success"
+              | "warning"
+              | null
+              | undefined,
+          })}
           data-testid="badge-dot"
         />
       )}
