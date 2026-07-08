@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import OrderDetailClient from './OrderDetailClient';
 
 export const metadata: Metadata = {
-  title: 'Sifariş Detalı — ShopFlow',
+  title: 'Sifariş Detalı',
   robots: 'noindex, nofollow',
 };
 

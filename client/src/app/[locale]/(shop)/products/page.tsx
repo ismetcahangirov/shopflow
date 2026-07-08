@@ -39,7 +39,9 @@ export async function generateMetadata({
     : 'ShopFlow platformasındakı bütün məhsulları kəşf edin. Minlərlə məhsul, sürətli çatdırılma, təhlükəsiz ödəniş.';
 
   return {
-    title,
+    // `title` already contains "| ShopFlow"; use `absolute` so the layout's
+    // "%s | ShopFlow" template doesn't append a second one (issue #58).
+    title: { absolute: title },
     description,
     alternates: {
       canonical: '/products',

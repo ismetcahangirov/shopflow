@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import CheckoutPageClient from './CheckoutPageClient';
 
 export const metadata: Metadata = {
-  title: 'Sifarişi rəsmiləşdir — ShopFlow',
+  title: 'Sifarişi rəsmiləşdir',
   description: 'Sifarişinizi tamamlayın',
   robots: 'noindex, nofollow',
 };

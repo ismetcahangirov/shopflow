@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import AddressListClient from './AddressListClient';
 
 export const metadata: Metadata = {
-  title: 'Ünvanlarım — ShopFlow',
+  title: 'Ünvanlarım',
   description: 'Çatdırılma ünvanlarınızı idarə edin',
   robots: 'noindex, nofollow',
 };

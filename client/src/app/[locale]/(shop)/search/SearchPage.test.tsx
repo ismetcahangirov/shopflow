@@ -130,7 +130,13 @@ describe('SearchPage Server Component', () => {
     };
 
     const metadataWithQuery = await generateMetadata(propsWithQuery);
-    expect(metadataWithQuery.title).toContain('product.search_results_with_query:laptop');
+    // title is an { absolute } object so the layout's "%s | ShopFlow" template
+    // does not double the brand (issue #58) — assert on the absolute string and
+    // that ShopFlow appears exactly once.
+    const titleWithQuery = metadataWithQuery.title as { absolute: string };
+    expect(titleWithQuery.absolute).toContain('product.search_results_with_query:laptop');
+    expect(titleWithQuery.absolute).toContain('| ShopFlow');
+    expect(titleWithQuery.absolute.match(/ShopFlow/g)).toHaveLength(1);
     expect(metadataWithQuery.description).toContain('product.search_page_desc_with_query:laptop');
 
     const propsWithoutQuery = {
@@ -139,7 +145,9 @@ describe('SearchPage Server Component', () => {
     };
 
     const metadataWithoutQuery = await generateMetadata(propsWithoutQuery);
-    expect(metadataWithoutQuery.title).toContain('common.search_title');
+    const titleWithoutQuery = metadataWithoutQuery.title as { absolute: string };
+    expect(titleWithoutQuery.absolute).toContain('common.search_title');
+    expect(titleWithoutQuery.absolute.match(/ShopFlow/g)).toHaveLength(1);
     expect(metadataWithoutQuery.description).toContain('common.site_desc');
   });
 });

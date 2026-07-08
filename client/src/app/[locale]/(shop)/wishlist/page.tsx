@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import WishlistPageClient from './WishlistPageClient';
 
 export const metadata: Metadata = {
-  title: 'İstək Siyahısı — ShopFlow',
+  title: 'İstək Siyahısı',
   robots: 'noindex, nofollow',
 };
 

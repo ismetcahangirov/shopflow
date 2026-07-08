@@ -141,7 +141,9 @@ export async function generateMetadata({
   const title = query ? `${product('search_results', { query })} | ShopFlow` : `${common('search_title')} | ShopFlow`;
 
   return {
-    title,
+    // `title` already contains "| ShopFlow"; use `absolute` so the layout's
+    // "%s | ShopFlow" template doesn't append a second one (issue #58).
+    title: { absolute: title },
     description: query ? product('search_page_desc', { query }) : common('site_desc'),
     alternates: {
       canonical: query ? `/search?q=${encodeURIComponent(query)}` : '/search',
