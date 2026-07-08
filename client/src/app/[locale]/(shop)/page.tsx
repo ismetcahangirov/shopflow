@@ -197,8 +197,8 @@ export default function HomePage() {
             const IconComponent = cat.icon;
             return (
               <Link 
-                key={cat.id} 
-                href={`/categories/${cat.slug}`}
+                key={cat.id}
+                href={`/category/${cat.slug}`}
                 className="group relative p-6 rounded-2xl border border-slate-100 dark:border-slate-800/50 bg-white dark:bg-slate-900/20 shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col justify-between aspect-[4/3]"
               >
                 <div className={`p-3 rounded-xl bg-gradient-to-br ${cat.color} w-fit`}>

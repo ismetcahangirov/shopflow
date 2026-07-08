@@ -39,7 +39,10 @@
     "cart_title": "Ваша Корзина",
     "search_title": "Поиск",
     "unauthorized_title": "Доступ Запрещен",
-    "all_products_in": "Все товары в:"
+    "all_products_in": "Все товары в:",
+    "categories_subtitle": "Просмотрите все категории товаров",
+    "categories_empty": "Категории пока недоступны.",
+    "products_count": "{count} товаров"
   },
   "auth": {
     "welcome_back": "С возвращением!",

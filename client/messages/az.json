@@ -39,7 +39,10 @@
     "cart_title": "Səbətiniz",
     "search_title": "Axtarış",
     "unauthorized_title": "Giriş qadağandır",
-    "all_products_in": "Bütün məhsullar:"
+    "all_products_in": "Bütün məhsullar:",
+    "categories_subtitle": "Bütün məhsul kateqoriyalarımızı kəşf edin",
+    "categories_empty": "Hələlik heç bir kateqoriya mövcud deyil.",
+    "products_count": "{count} məhsul"
   },
   "auth": {
     "welcome_back": "Xoş gördük!",
