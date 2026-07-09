@@ -11,6 +11,8 @@ export interface UserProfile {
   isVerified: boolean;
   isActive: boolean;
   createdAt: string;
+  /** Whether the account has a local password. False for Google-only sign-in. */
+  hasPassword?: boolean;
 }
 
 export function useMe() {

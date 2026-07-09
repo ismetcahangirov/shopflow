@@ -23,7 +23,13 @@ import {
 import type { Address } from '@/types';
 import AddressForm from './AddressForm';
 
-export default function AddressListClient() {
+interface AddressListClientProps {
+  /** When embedded inside another page (e.g. /account/settings), render as a
+   * section card with an h2 heading instead of a standalone h1 page. */
+  embedded?: boolean;
+}
+
+export default function AddressListClient({ embedded = false }: AddressListClientProps) {
   const t = useTranslations('addresses');
   const { data: addresses, isLoading, isError, error, refetch } = useAddresses();
 
@@ -99,13 +105,25 @@ export default function AddressListClient() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div
+      className={cn(
+        'flex flex-col gap-6',
+        embedded && 'rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900',
+      )}
+    >
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            {t('my_addresses')}
-          </h1>
+          {embedded ? (
+            <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-200">
+              <MapPin className="h-5 w-5 text-indigo-500" />
+              {t('my_addresses')}
+            </h2>
+          ) : (
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              {t('my_addresses')}
+            </h1>
+          )}
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {t('addresses_subtitle')}
           </p>
