@@ -18,9 +18,32 @@ jest.mock('../config/cloudinary', () => ({
 }));
 
 import supertest from 'supertest';
+import bcrypt from 'bcryptjs';
 import { app } from '../server';
 import { prisma } from '../config/db';
 import { createTestUser, getBearerToken, TestUser } from './helpers/testHelpers';
+
+/**
+ * Create an APPROVED vendor user with an explicit, unique slug. The shared
+ * `createTestUser` helper derives the vendor slug from `Date.now()`, so two
+ * vendors created in the same millisecond collide — we avoid that here.
+ */
+async function createVendorUser(email: string, name: string, slug: string): Promise<TestUser> {
+  const hashed = await bcrypt.hash('TestPass123!', 10);
+  const user = await prisma.user.create({
+    data: {
+      email,
+      name,
+      password: hashed,
+      role: 'VENDOR',
+      isVerified: true,
+      isActive: true,
+      vendor: { create: { storeName: name, slug, status: 'APPROVED' } },
+    },
+    select: { id: true, email: true, name: true, role: true },
+  });
+  return { ...user, password: 'TestPass123!', role: 'VENDOR' };
+}
 
 const api = supertest(app);
 jest.setTimeout(120000);
@@ -117,8 +140,8 @@ async function createOrder(opts: {
 
 beforeAll(async () => {
   [vendorAUser, vendorBUser, customerUser] = await Promise.all([
-    createTestUser({ email: EMAILS.vendorA, name: 'Vendor A Store', role: 'VENDOR' }),
-    createTestUser({ email: EMAILS.vendorB, name: 'Vendor B Store', role: 'VENDOR' }),
+    createVendorUser(EMAILS.vendorA, 'Vendor A Store', `scope-store-a-${RUN_ID}`),
+    createVendorUser(EMAILS.vendorB, 'Vendor B Store', `scope-store-b-${RUN_ID}`),
     createTestUser({ email: EMAILS.customer, role: 'CUSTOMER' }),
   ]);
   vendorAToken = getBearerToken(vendorAUser);
