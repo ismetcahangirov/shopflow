@@ -139,7 +139,10 @@ async function main(): Promise<void> {
   });
 }
 
-if (config.NODE_ENV !== 'test') {
+// On Vercel the exported `app` is invoked per-request as a serverless handler —
+// it must NOT bind a port (app.listen) or eagerly connectDB()/process.exit() on
+// failure. Only run the long-lived server bootstrap on a real host.
+if (config.NODE_ENV !== 'test' && !process.env.VERCEL) {
   main().catch((err: unknown) => {
     logger.error('Failed to start server', { err });
     process.exit(1);
