@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
+import tailwindcssAnimate from 'tailwindcss-animate';
 
 const config: Config = {
   // Toggle dark mode via a `.dark` class on <html> (set by next-themes),
@@ -126,7 +128,54 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    tailwindcssAnimate,
+    // Reconcile shadcn "base-nova" (Tailwind v4) primitives with this project's
+    // Tailwind v3 engine: replicate the `@custom-variant` / `@utility` rules that
+    // ship in `shadcn/tailwind.css` (a v4-only file) so the generated components
+    // (dialog, sidebar, dropdown-menu, …) style correctly under v3. See #76.
+    plugin(({ addVariant, addUtilities }) => {
+      addVariant('data-open', [
+        '&:where([data-state="open"])',
+        '&:where([data-open]:not([data-open="false"]))',
+      ]);
+      addVariant('data-closed', [
+        '&:where([data-state="closed"])',
+        '&:where([data-closed]:not([data-closed="false"]))',
+      ]);
+      addVariant('data-checked', [
+        '&:where([data-state="checked"])',
+        '&:where([data-checked]:not([data-checked="false"]))',
+      ]);
+      addVariant('data-unchecked', [
+        '&:where([data-state="unchecked"])',
+        '&:where([data-unchecked]:not([data-unchecked="false"]))',
+      ]);
+      addVariant('data-selected', '&:where([data-selected="true"])');
+      addVariant('data-disabled', [
+        '&:where([data-disabled="true"])',
+        '&:where([data-disabled]:not([data-disabled="false"]))',
+      ]);
+      addVariant('data-active', [
+        '&:where([data-state="active"])',
+        '&:where([data-active]:not([data-active="false"]))',
+      ]);
+      addVariant('data-horizontal', '&:where([data-orientation="horizontal"])');
+      addVariant('data-vertical', '&:where([data-orientation="vertical"])');
+      addUtilities({
+        '.no-scrollbar': {
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
+        },
+        // v4's `outline-hidden` (transparent outline preserved for forced-colors).
+        '.outline-hidden': {
+          outline: '2px solid transparent',
+          'outline-offset': '2px',
+        },
+      });
+    }),
+  ],
 };
 
 export default config;

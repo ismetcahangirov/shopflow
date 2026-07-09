@@ -26,6 +26,8 @@ const buttonVariants = cva(
         sm: "h-9 px-3.5 py-2 text-xs rounded-lg gap-1.5",
         lg: "h-12 px-6 py-3 text-base rounded-2xl gap-2.5",
         icon: "h-11 w-11 rounded-xl",
+        // Compact icon button used by shadcn primitives (e.g. SidebarTrigger, DialogClose).
+        "icon-sm": "h-8 w-8 rounded-lg",
       },
     },
     defaultVariants: {
