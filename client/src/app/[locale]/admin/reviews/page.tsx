@@ -106,7 +106,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
             <Button
               variant="outline"
               onClick={() => refetch()}
-              className="rounded-xl border-slate-200 dark:border-slate-800"
+              className="rounded-xl border-border dark:border-border"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               Yenilə
@@ -116,12 +116,12 @@ export default function AdminReviewsPage(): React.JSX.Element {
       </div>
 
       {/* Filter Options Panel */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-880 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm">
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-start">
-          <span className="text-xs font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider">
+          <span className="text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
             {t('status_filter')}:
           </span>
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-955 border border-slate-100 dark:border-slate-850">
+          <div className="inline-flex rounded-xl bg-muted p-1 dark:bg-background border border-border dark:border-border">
             {(['', 'false', 'true'] as const).map((filter) => (
               <button
                 key={filter}
@@ -130,8 +130,8 @@ export default function AdminReviewsPage(): React.JSX.Element {
                 className={[
                   'rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all duration-250',
                   isApprovedFilter === filter
-                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-450 dark:hover:text-white',
+                    ? 'bg-card text-foreground shadow-sm dark:bg-card dark:text-foreground'
+                    : 'text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-white',
                 ].join(' ')}
               >
                 {filter === ''
@@ -146,7 +146,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
       </div>
 
       {/* Reviews Table Container */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border dark:border-border rounded-2xl shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-16 space-y-4">
             <Skeleton className="h-10 w-full" />
@@ -160,18 +160,18 @@ export default function AdminReviewsPage(): React.JSX.Element {
             <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
               <AlertCircle className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">Xəta baş verdi</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-sm">
+            <h4 className="font-extrabold text-foreground dark:text-foreground">Xəta baş verdi</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-sm">
               Rəylər yüklənərkən xəta baş verdi. Yenidən cəhd edin.
             </p>
           </div>
         ) : !reviewsData?.data || reviewsData.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl text-slate-400">
+            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
               <MessageSquare className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">{t('no_reviews')}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-xs">
+            <h4 className="font-extrabold text-foreground dark:text-foreground">{t('no_reviews')}</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-xs">
               Bu kateqoriya üzrə heç bir rəy tapılmadı.
             </p>
           </div>
@@ -192,16 +192,16 @@ export default function AdminReviewsPage(): React.JSX.Element {
                 </TableHeader>
                 <TableBody>
                   {reviewsData.data.map((review) => (
-                    <TableRow key={review.id} className="group hover:bg-slate-50/20 dark:hover:bg-slate-950/5">
-                      <TableCell className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                    <TableRow key={review.id} className="group hover:bg-muted/20 dark:hover:bg-background/5">
+                      <TableCell className="px-6 py-4 font-semibold text-foreground dark:text-foreground">
                         {review.product?.name || 'Məhsul Silinib'}
                       </TableCell>
                       <TableCell className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                          <span className="text-sm font-semibold text-foreground dark:text-foreground">
                             {review.user?.name || 'Anonim'}
                           </span>
-                          <span className="text-xs text-slate-400 dark:text-slate-500 truncate max-w-[180px]">
+                          <span className="text-xs text-muted-foreground dark:text-muted-foreground truncate max-w-[180px]">
                             {review.user?.avatar ? 'Avatar mövcuddur' : 'İstifadəçi'}
                           </span>
                         </div>
@@ -211,15 +211,15 @@ export default function AdminReviewsPage(): React.JSX.Element {
                           <StarRating rating={review.rating} size="sm" />
                         </div>
                       </TableCell>
-                      <TableCell className="px-6 py-4 text-sm max-w-xs text-slate-650 dark:text-slate-400">
+                      <TableCell className="px-6 py-4 text-sm max-w-xs text-foreground dark:text-muted-foreground">
                         {review.title && (
-                          <div className="font-semibold text-slate-900 dark:text-white mb-0.5">
+                          <div className="font-semibold text-foreground dark:text-foreground mb-0.5">
                             {review.title}
                           </div>
                         )}
                         <div className="line-clamp-2">{review.body}</div>
                       </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                      <TableCell className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                         {new Date(review.createdAt).toLocaleDateString('az-AZ', {
                           day: '2-digit',
                           month: '2-digit',
@@ -274,7 +274,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
 
             {/* Pagination */}
             {reviewsData.pagination && (
-              <div className="border-t border-slate-50 dark:border-slate-800/80 px-4">
+              <div className="border-t border-border dark:border-border/80 px-4">
                 <Pagination
                   currentPage={page}
                   totalPages={reviewsData.pagination.pages}

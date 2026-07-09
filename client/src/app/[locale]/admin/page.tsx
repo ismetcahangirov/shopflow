@@ -46,16 +46,16 @@ export default function AdminPage(): React.JSX.Element {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold text-foreground dark:text-foreground">Admin Dashboard</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((s, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div key={i} className="rounded-xl border border-border bg-card p-5 shadow-sm dark:border-border dark:bg-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-slate-500">{s.label}</p>
-                <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{s.value}</p>
-                <p className="mt-0.5 text-xs text-slate-400">{s.sub}</p>
+                <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
+                <p className="mt-1 text-2xl font-bold text-foreground dark:text-foreground">{s.value}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{s.sub}</p>
               </div>
               <div className={`rounded-xl p-3 ${s.color}`}>
                 <s.icon className="h-5 w-5" />
@@ -67,8 +67,8 @@ export default function AdminPage(): React.JSX.Element {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Revenue Chart */}
-        <div className="lg:col-span-7 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-200">
+        <div className="lg:col-span-7 rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground dark:text-foreground">
             <TrendingUp className="h-5 w-5 text-indigo-500" />
             Gəlir Qrafiki (son 30 gün)
           </h2>
@@ -88,15 +88,15 @@ export default function AdminPage(): React.JSX.Element {
         </div>
 
         {/* Orders by Status */}
-        <div className="lg:col-span-5 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-          <h2 className="mb-4 text-lg font-semibold text-slate-800 dark:text-slate-200">Sifariş Statusları</h2>
+        <div className="lg:col-span-5 rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-foreground">Sifariş Statusları</h2>
           <div className="flex flex-col gap-2">
             {Object.entries(data.ordersByStatus).map(([status, count]) => (
               <div key={status} className="flex items-center justify-between">
-                <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', STATUS_COLORS[status] ?? 'bg-slate-100')}>
+                <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', STATUS_COLORS[status] ?? 'bg-muted')}>
                   {status}
                 </span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">{count}</span>
+                <span className="font-semibold text-foreground dark:text-muted-foreground">{count}</span>
               </div>
             ))}
           </div>
@@ -104,23 +104,23 @@ export default function AdminPage(): React.JSX.Element {
       </div>
 
       {/* Top Products */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-        <h2 className="mb-4 text-lg font-semibold text-slate-800 dark:text-slate-200">Ən Çox Satılan Məhsullar</h2>
+      <div className="rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
+        <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-foreground">Ən Çox Satılan Məhsullar</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 dark:border-slate-700">
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Məhsul</th>
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Satış</th>
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Gəlir</th>
+              <tr className="border-b border-border dark:border-border">
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Məhsul</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Satış</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Gəlir</th>
               </tr>
             </thead>
             <tbody>
               {data.topProducts.map((p) => (
-                <tr key={p.id} className="border-b border-slate-50 dark:border-slate-800">
-                  <td className="px-3 py-2 font-medium text-slate-800 dark:text-slate-200">{p.name}</td>
-                  <td className="px-3 py-2 text-slate-600">{p.salesCount}</td>
-                  <td className="px-3 py-2 text-slate-600">{p.revenue.toFixed(2)} AZN</td>
+                <tr key={p.id} className="border-b border-border dark:border-border">
+                  <td className="px-3 py-2 font-medium text-foreground dark:text-foreground">{p.name}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{p.salesCount}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{p.revenue.toFixed(2)} AZN</td>
                 </tr>
               ))}
             </tbody>
@@ -129,9 +129,9 @@ export default function AdminPage(): React.JSX.Element {
       </div>
 
       {/* Recent Orders */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
+      <div className="rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Son Sifarişlər</h2>
+          <h2 className="text-lg font-semibold text-foreground dark:text-foreground">Son Sifarişlər</h2>
           <Link href="/admin/orders" className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700">
             Hamısı <ArrowRight className="h-4 w-4" />
           </Link>
@@ -139,21 +139,21 @@ export default function AdminPage(): React.JSX.Element {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 dark:border-slate-700">
-                <th className="px-3 py-2 text-left font-medium text-slate-500">#</th>
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Müştəri</th>
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Məbləğ</th>
-                <th className="px-3 py-2 text-left font-medium text-slate-500">Status</th>
+              <tr className="border-b border-border dark:border-border">
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">#</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Müştəri</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Məbləğ</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Status</th>
               </tr>
             </thead>
             <tbody>
               {data.recentOrders.map((o) => (
-                <tr key={o.id} className="border-b border-slate-50 dark:border-slate-800">
-                  <td className="px-3 py-2 font-mono text-xs text-slate-600">{o.orderNumber}</td>
-                  <td className="px-3 py-2 text-slate-600">{o.user.name}</td>
-                  <td className="px-3 py-2 text-slate-600">{o.total.toFixed(2)} AZN</td>
+                <tr key={o.id} className="border-b border-border dark:border-border">
+                  <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{o.orderNumber}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{o.user.name}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{o.total.toFixed(2)} AZN</td>
                   <td className="px-3 py-2">
-                    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium', STATUS_COLORS[o.status] ?? 'bg-slate-100')}>{o.status}</span>
+                    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium', STATUS_COLORS[o.status] ?? 'bg-muted')}>{o.status}</span>
                   </td>
                 </tr>
               ))}

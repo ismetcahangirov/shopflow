@@ -541,6 +541,26 @@
     "description": "The page you are looking for doesn't exist, has been removed, or the address may be incorrect.",
     "back_home": "Back to home",
     "browse_products": "Browse products"
+  },
+  "admin": {
+    "groups": {
+      "overview": "Overview",
+      "catalog": "Catalog",
+      "sales": "Sales",
+      "people": "People",
+      "system": "System"
+    },
+    "search": "Search",
+    "search_placeholder": "Search pages…",
+    "command_empty": "No results found.",
+    "command_pages": "Pages",
+    "toggle_sidebar": "Toggle sidebar",
+    "toggle_theme": "Toggle theme",
+    "notifications": "Notifications",
+    "user_menu": {
+      "account": "My Account",
+      "profile": "Profile",
+      "logout": "Log out"
+    }
   }
 }
-

@@ -404,14 +404,14 @@ export default function AdminProductsPage(): React.JSX.Element {
       </div>
 
       {/* Filters bar */}
-      <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-105 dark:border-slate-800 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
           <Input
             placeholder={tCommon('search_placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-slate-50/50 focus:bg-white dark:bg-slate-950/50 dark:focus:bg-slate-950 rounded-xl"
+            className="pl-9 bg-muted/50 focus:bg-card dark:bg-background/50 dark:focus:bg-background rounded-xl"
           />
         </div>
 
@@ -423,7 +423,7 @@ export default function AdminProductsPage(): React.JSX.Element {
               setCategoryFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-200"
+            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
           >
             <option value="">{tCommon('categories')}: Hamısı</option>
             {flattenedCategories.map((cat) => (
@@ -442,7 +442,7 @@ export default function AdminProductsPage(): React.JSX.Element {
               setStatusFilter(e.target.value as 'all' | 'active' | 'inactive');
               setPage(1);
             }}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-200"
+            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
           >
             <option value="all">{t('status')}: Hamısı</option>
             <option value="active">{t('active')}</option>
@@ -458,7 +458,7 @@ export default function AdminProductsPage(): React.JSX.Element {
               setStockFilter(e.target.value as 'all' | 'instock' | 'outofstock');
               setPage(1);
             }}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-700 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-200"
+            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
           >
             <option value="all">{t('stock')}: Hamısı</option>
             <option value="instock">{tCommon('free_shipping_congrats') ? 'Stokda var' : 'In stock'}</option>
@@ -468,27 +468,27 @@ export default function AdminProductsPage(): React.JSX.Element {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-105 dark:border-slate-800/80 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border dark:border-border/80 rounded-2xl shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4">
             <Spinner className="h-8 w-8 text-indigo-650" />
-            <p className="text-sm font-semibold text-slate-500 dark:text-slate-450">{tCommon('loading')}</p>
+            <p className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground">{tCommon('loading')}</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
             <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
               <AlertCircle className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">{tCommon('error_occurred')}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-sm">{parseApiError(error)}</p>
+            <h4 className="font-extrabold text-foreground dark:text-foreground">{tCommon('error_occurred')}</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-sm">{parseApiError(error)}</p>
           </div>
         ) : products.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl text-slate-400">
+            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
               <FolderOpen className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">{tCommon('no_data')}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-xs">
+            <h4 className="font-extrabold text-foreground dark:text-foreground">{tCommon('no_data')}</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-xs">
               Platformada heç bir məhsul tapılmadı.
             </p>
           </div>
@@ -496,7 +496,7 @@ export default function AdminProductsPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-950/20 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider select-none">
+                <tr className="border-b border-border dark:border-border/60 bg-muted/50 dark:bg-background/20 text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider select-none">
                   <th className="px-6 py-4">Şəkil</th>
                   <th className="px-6 py-4">{t('product_name')}</th>
                   <th className="px-6 py-4">{t('sku')}</th>
@@ -507,15 +507,15 @@ export default function AdminProductsPage(): React.JSX.Element {
                   <th className="px-6 py-4 text-right">Əməliyyatlar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+              <tbody className="divide-y divide-border dark:divide-border/40">
                 {products.map((p) => {
                   const mainImage = p.images?.find(img => img.isMain) || p.images?.[0];
                   return (
-                    <tr key={p.id} className="group hover:bg-slate-50/30 dark:hover:bg-slate-950/5 transition-colors">
+                    <tr key={p.id} className="group hover:bg-muted/30 dark:hover:bg-background/5 transition-colors">
                       {/* Image */}
                       <td className="px-6 py-4">
                         {mainImage ? (
-                          <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-850">
+                          <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-border dark:border-border">
                             <Image
                               src={mainImage.url}
                               alt={mainImage.alt || p.name}
@@ -525,7 +525,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                             />
                           </div>
                         ) : (
-                          <div className="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-400 dark:text-slate-600 border border-slate-100 dark:border-slate-850">
+                          <div className="h-12 w-12 rounded-xl bg-muted dark:bg-background flex items-center justify-center text-muted-foreground dark:text-muted-foreground border border-border dark:border-border">
                             <ImageIcon className="h-6 w-6" />
                           </div>
                         )}
@@ -534,25 +534,25 @@ export default function AdminProductsPage(): React.JSX.Element {
                       {/* Name & Featured Badge */}
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{p.name}</span>
-                          {p.brand && <span className="text-xs text-slate-400">{p.brand}</span>}
+                          <span className="text-sm font-semibold text-foreground dark:text-foreground line-clamp-1">{p.name}</span>
+                          {p.brand && <span className="text-xs text-muted-foreground">{p.brand}</span>}
                         </div>
                       </td>
 
                       {/* SKU */}
-                      <td className="px-6 py-4 text-sm font-mono text-slate-500 dark:text-slate-400">
+                      <td className="px-6 py-4 text-sm font-mono text-muted-foreground dark:text-muted-foreground">
                         {p.sku}
                       </td>
 
                       {/* Price */}
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                      <td className="px-6 py-4 text-sm font-bold text-foreground dark:text-foreground">
                         ₼{p.price}
                       </td>
 
                       {/* Stock */}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1.5">
-                          <span className={`text-sm font-bold ${p.stock <= (p.lowStockAlert || 5) ? 'text-amber-500' : 'text-slate-700 dark:text-slate-355'}`}>
+                          <span className={`text-sm font-bold ${p.stock <= (p.lowStockAlert || 5) ? 'text-amber-500' : 'text-foreground dark:text-muted-foreground'}`}>
                             {p.stock}
                           </span>
                           {p.stock === 0 ? (
@@ -564,7 +564,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                       </td>
 
                       {/* Category */}
-                      <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-450">
+                      <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                         {p.category?.name || '-'}
                       </td>
 
@@ -597,7 +597,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                           <Button
                             variant="secondary"
                             onClick={() => handleOpenEditModal(p)}
-                            className="p-2 h-auto text-slate-600 hover:text-indigo-650 dark:text-slate-400 dark:hover:text-indigo-400 bg-slate-50 hover:bg-indigo-50 dark:bg-slate-950 dark:hover:bg-indigo-950/20 rounded-lg transition-colors duration-200"
+                            className="p-2 h-auto text-muted-foreground hover:text-indigo-650 dark:text-muted-foreground dark:hover:text-indigo-400 bg-muted hover:bg-indigo-50 dark:bg-background dark:hover:bg-indigo-950/20 rounded-lg transition-colors duration-200"
                             title={tCommon('edit')}
                           >
                             <Edit2 className="h-4 w-4" />
@@ -605,7 +605,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                           <Button
                             variant="secondary"
                             onClick={() => handleOpenDeleteConfirm(p.id)}
-                            className="p-2 h-auto text-slate-600 hover:text-red-650 dark:text-slate-400 dark:hover:text-red-400 bg-slate-50 hover:bg-red-50 dark:bg-slate-950 dark:hover:bg-red-950/20 rounded-lg transition-colors duration-200"
+                            className="p-2 h-auto text-muted-foreground hover:text-red-650 dark:text-muted-foreground dark:hover:text-red-400 bg-muted hover:bg-red-50 dark:bg-background dark:hover:bg-red-950/20 rounded-lg transition-colors duration-200"
                             title={tCommon('delete')}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -622,7 +622,7 @@ export default function AdminProductsPage(): React.JSX.Element {
 
         {/* Pagination */}
         {pagination && pagination.pages > 1 && (
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800">
+          <div className="p-4 border-t border-border dark:border-border">
             <Pagination
               currentPage={page}
               totalPages={pagination.pages}
@@ -644,7 +644,7 @@ export default function AdminProductsPage(): React.JSX.Element {
       >
         <div className="flex flex-col space-y-4 pt-2 max-h-[78vh] overflow-y-auto pr-1">
           {/* Tabs bar */}
-          <div className="flex border-b border-slate-100 dark:border-slate-800/80 shrink-0">
+          <div className="flex border-b border-border dark:border-border/80 shrink-0">
             {([
               { id: 'basic', label: t('tab_basic'), icon: Layers },
               { id: 'pricing', label: t('tab_pricing'), icon: DollarSign },
@@ -660,7 +660,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                   'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-colors select-none',
                   activeTab === tab.id
                     ? 'border-indigo-650 text-indigo-650 dark:text-indigo-400 dark:border-indigo-400'
-                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-450 dark:hover:text-white'
+                    : 'border-transparent text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-white'
                 ].join(' ')}
               >
                 <tab.icon className="h-4 w-4" />
@@ -728,7 +728,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                       value={formCategoryId}
                       onChange={(e) => setFormCategoryId(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                      className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
                     >
                       <option value="">-- Kateqoriya Seçin --</option>
                       {flattenedCategories.map((cat) => (
@@ -768,7 +768,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                     onChange={(e) => setFormShortDesc(e.target.value)}
                     placeholder="Məhsul haqqında qısa məlumat..."
                     rows={2}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white resize-none"
+                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground resize-none"
                   />
                 </div>
 
@@ -781,7 +781,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                     placeholder="Məhsul haqqında ətraflı məlumat..."
                     rows={5}
                     required
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
                   />
                 </div>
 
@@ -792,7 +792,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                       id="prodIsActive"
                       checked={formIsActive}
                       onChange={(e) => setFormIsActive(e.target.checked)}
-                      className="h-4.5 w-4.5 rounded border-slate-300 text-indigo-650 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950"
+                      className="h-4.5 w-4.5 rounded border-border text-indigo-650 focus:ring-indigo-500 dark:border-border dark:bg-background"
                     />
                     <Label htmlFor="prodIsActive" className="cursor-pointer select-none">Aktiv (Müştəriyə göstərilsin)</Label>
                   </div>
@@ -803,7 +803,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                       id="prodIsFeatured"
                       checked={formIsFeatured}
                       onChange={(e) => setFormIsFeatured(e.target.checked)}
-                      className="h-4.5 w-4.5 rounded border-slate-300 text-indigo-650 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950"
+                      className="h-4.5 w-4.5 rounded border-border text-indigo-650 focus:ring-indigo-500 dark:border-border dark:bg-background"
                     />
                     <Label htmlFor="prodIsFeatured" className="cursor-pointer select-none">Seçilmiş məhsul (Önə çıxan)</Label>
                   </div>
@@ -883,10 +883,10 @@ export default function AdminProductsPage(): React.JSX.Element {
                 
                 {/* Upload Zone */}
                 <div>
-                  <label className="relative flex flex-col items-center justify-center border-2 border-slate-250 border-dashed rounded-2xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 dark:border-slate-800 dark:bg-slate-950/50 dark:hover:bg-slate-950 dark:hover:border-indigo-900 cursor-pointer p-6 transition-all duration-200">
-                    <Upload className="h-8 w-8 text-slate-450 dark:text-slate-500 mb-2 animate-bounce" />
-                    <p className="text-sm font-bold text-slate-800 dark:text-slate-300">Resim Yükle</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">JPEG, PNG veya WEBP. Max. 5MB</p>
+                  <label className="relative flex flex-col items-center justify-center border-2 border-border border-dashed rounded-2xl bg-muted/50 hover:bg-muted hover:border-indigo-400 dark:border-border dark:bg-background/50 dark:hover:bg-background dark:hover:border-indigo-900 cursor-pointer p-6 transition-all duration-200">
+                    <Upload className="h-8 w-8 text-muted-foreground dark:text-muted-foreground mb-2 animate-bounce" />
+                    <p className="text-sm font-bold text-foreground dark:text-muted-foreground">Resim Yükle</p>
+                    <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">JPEG, PNG veya WEBP. Max. 5MB</p>
                     <input
                       type="file"
                       accept="image/*"
@@ -900,11 +900,11 @@ export default function AdminProductsPage(): React.JSX.Element {
                 {/* Upload queue list */}
                 {imagesQueue.length > 0 && (
                   <div className="space-y-2">
-                    <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Yüklənəcək Şəkillər ({imagesQueue.length})</h5>
+                    <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Yüklənəcək Şəkillər ({imagesQueue.length})</h5>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                       {imagesQueue.map((file, i) => (
-                        <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-slate-105 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-1 flex items-center justify-center">
-                          <span className="text-[10px] text-slate-450 dark:text-slate-500 max-w-[85px] truncate font-semibold">{file.name}</span>
+                        <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border dark:border-border bg-muted dark:bg-background p-1 flex items-center justify-center">
+                          <span className="text-[10px] text-muted-foreground dark:text-muted-foreground max-w-[85px] truncate font-semibold">{file.name}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveFromQueue(i)}
@@ -920,11 +920,11 @@ export default function AdminProductsPage(): React.JSX.Element {
 
                 {/* Already uploaded images (Edit mode) */}
                 {editingProduct && editingProduct.images && editingProduct.images.length > 0 && (
-                  <div className="space-y-2 border-t border-slate-100 dark:border-slate-850 pt-4">
-                    <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Mövcud Şəkillər ({editingProduct.images.length})</h5>
+                  <div className="space-y-2 border-t border-border dark:border-border pt-4">
+                    <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Mövcud Şəkillər ({editingProduct.images.length})</h5>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                       {editingProduct.images.map((img) => (
-                        <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm group">
+                        <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-border dark:border-border shadow-sm group">
                           <Image
                             src={img.url}
                             alt={img.alt || ''}
@@ -956,13 +956,13 @@ export default function AdminProductsPage(): React.JSX.Element {
               <div className="space-y-5 animate-in fade-in duration-200">
                 {/* Attributes Section */}
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-850 pb-2">
-                    <h5 className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('attributes_title')}</h5>
+                  <div className="flex items-center justify-between border-b border-border dark:border-border pb-2">
+                    <h5 className="text-sm font-bold text-foreground dark:text-muted-foreground">{t('attributes_title')}</h5>
                     <Button
                       type="button"
                       variant="secondary"
                       onClick={handleAddAttribute}
-                      className="px-2.5 py-1.5 h-auto text-xs font-bold bg-slate-50 hover:bg-indigo-50 border border-slate-200 text-slate-600 hover:text-indigo-650"
+                      className="px-2.5 py-1.5 h-auto text-xs font-bold bg-muted hover:bg-indigo-50 border border-border text-muted-foreground hover:text-indigo-650"
                     >
                       <Plus className="mr-1 h-3.5 w-3.5" />
                       {t('add_attribute')}
@@ -970,7 +970,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                   </div>
 
                   {formAttributes.length === 0 ? (
-                    <p className="text-xs text-slate-450 dark:text-slate-500 italic">Heç bir xüsusiyyət əlavə edilməyib (məs. Rəng, Yaddaş, Ekran və s.).</p>
+                    <p className="text-xs text-muted-foreground dark:text-muted-foreground italic">Heç bir xüsusiyyət əlavə edilməyib (məs. Rəng, Yaddaş, Ekran və s.).</p>
                   ) : (
                     <div className="space-y-3">
                       {formAttributes.map((attr, index) => (
@@ -993,7 +993,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                             type="button"
                             variant="secondary"
                             onClick={() => handleRemoveAttribute(index)}
-                            className="p-2 h-auto text-slate-500 hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent rounded-lg shrink-0"
+                            className="p-2 h-auto text-muted-foreground hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent rounded-lg shrink-0"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -1004,23 +1004,23 @@ export default function AdminProductsPage(): React.JSX.Element {
                 </div>
 
                 {/* Tags Section */}
-                <div className="space-y-2 border-t border-slate-100 dark:border-slate-850 pt-4">
+                <div className="space-y-2 border-t border-border dark:border-border pt-4">
                   <Label htmlFor="tagInput">{t('tags')}</Label>
-                  <div className="flex flex-wrap gap-2 mb-2 p-2 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-850 rounded-xl min-h-[46px]">
+                  <div className="flex flex-wrap gap-2 mb-2 p-2 bg-muted/50 dark:bg-background/20 border border-border dark:border-border rounded-xl min-h-[46px]">
                     {formTags.map(tag => (
-                      <span key={tag} className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm">
+                      <span key={tag} className="inline-flex items-center gap-1 bg-muted hover:bg-muted text-foreground dark:bg-muted dark:text-muted-foreground rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm">
                         <span>#{tag}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveTag(tag)}
-                          className="text-slate-400 hover:text-slate-600 focus:outline-none"
+                          className="text-muted-foreground hover:text-muted-foreground focus:outline-none"
                         >
                           <XCircle className="h-3.5 w-3.5 fill-current" />
                         </button>
                       </span>
                     ))}
                     {formTags.length === 0 && (
-                      <span className="text-xs text-slate-450 dark:text-slate-500 italic p-1">Heç bir teq əlavə edilməyib.</span>
+                      <span className="text-xs text-muted-foreground dark:text-muted-foreground italic p-1">Heç bir teq əlavə edilməyib.</span>
                     )}
                   </div>
                   <Input
@@ -1046,7 +1046,7 @@ export default function AdminProductsPage(): React.JSX.Element {
                     placeholder="Məs. Apple iPhone 15 Pro ucuz qiymətə alın | ShopFlow"
                     maxLength={160}
                   />
-                  <p className="text-[10px] text-slate-400 font-bold select-none">{formMetaTitle.length}/160</p>
+                  <p className="text-[10px] text-muted-foreground font-bold select-none">{formMetaTitle.length}/160</p>
                 </div>
                 
                 <div className="space-y-1.5">
@@ -1058,15 +1058,15 @@ export default function AdminProductsPage(): React.JSX.Element {
                     placeholder="Axtarış motorlarında görünən qısa reklam mətni..."
                     rows={3}
                     maxLength={320}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
                   />
-                  <p className="text-[10px] text-slate-400 font-bold select-none">{formMetaDesc.length}/320</p>
+                  <p className="text-[10px] text-muted-foreground font-bold select-none">{formMetaDesc.length}/320</p>
                 </div>
               </div>
             )}
 
             {/* Form actions */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/80 shrink-0">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-border/80 shrink-0">
               <Button
                 type="button"
                 variant="secondary"

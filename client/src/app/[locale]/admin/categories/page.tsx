@@ -274,20 +274,20 @@ export default function AdminCategoriesPage(): React.JSX.Element {
       </div>
 
       {/* Filters bar */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
           <Input
             placeholder="Kateqoriya axtar..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-slate-50/50 focus:bg-white dark:bg-slate-950/50 dark:focus:bg-slate-950 rounded-xl"
+            className="pl-9 bg-muted/50 focus:bg-card dark:bg-background/50 dark:focus:bg-background rounded-xl"
           />
         </div>
         
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Status:</span>
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-950 border border-slate-100 dark:border-slate-850">
+          <span className="text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">Status:</span>
+          <div className="inline-flex rounded-xl bg-muted p-1 dark:bg-background border border-border dark:border-border">
             {(['all', 'active', 'inactive'] as const).map((filter) => (
               <button
                 key={filter}
@@ -296,8 +296,8 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                 className={[
                   'rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-250 capitalize',
                   statusFilter === filter
-                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-450 dark:hover:text-white',
+                    ? 'bg-card text-foreground shadow-sm dark:bg-card dark:text-foreground'
+                    : 'text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-white',
                 ].join(' ')}
               >
                 {filter === 'all' ? 'Hamısı' : filter === 'active' ? 'Aktiv' : 'Deaktiv'}
@@ -308,27 +308,27 @@ export default function AdminCategoriesPage(): React.JSX.Element {
       </div>
 
       {/* Categories Table/List */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border dark:border-border/80 rounded-2xl shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4">
             <Spinner className="h-8 w-8 text-indigo-600" />
-            <p className="text-sm font-semibold text-slate-500 dark:text-slate-450">Kateqoriyalar yüklənir...</p>
+            <p className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground">Kateqoriyalar yüklənir...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
             <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
               <AlertCircle className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">Xəta baş verdi</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-sm">Kateqoriya siyahısını yükləmək mümkün olmadı. Lütfən yenidən cəhd edin.</p>
+            <h4 className="font-extrabold text-foreground dark:text-foreground">Xəta baş verdi</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-sm">Kateqoriya siyahısını yükləmək mümkün olmadı. Lütfən yenidən cəhd edin.</p>
           </div>
         ) : filteredFlattened.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl text-slate-400">
+            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
               <FolderOpen className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">Kateqoriya tapılmadı</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-xs">
+            <h4 className="font-extrabold text-foreground dark:text-foreground">Kateqoriya tapılmadı</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-xs">
               Axtarış meyarlarınıza uyğun gələn kateqoriya yoxdur.
             </p>
           </div>
@@ -336,7 +336,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-950/20 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider select-none">
+                <tr className="border-b border-border dark:border-border/60 bg-muted/50 dark:bg-background/20 text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider select-none">
                   <th className="px-6 py-4">Şəkil</th>
                   <th className="px-6 py-4">Kateqoriya Adı</th>
                   <th className="px-6 py-4">Slug</th>
@@ -345,17 +345,17 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                   <th className="px-6 py-4 text-right">Əməliyyatlar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+              <tbody className="divide-y divide-border dark:divide-border/40">
                 {filteredFlattened.map((cat) => {
                   return (
                     <tr 
                       key={cat.id} 
-                      className="group hover:bg-slate-50/30 dark:hover:bg-slate-950/5 transition-colors"
+                      className="group hover:bg-muted/30 dark:hover:bg-background/5 transition-colors"
                     >
                       {/* Thumbnail Image */}
                       <td className="px-6 py-4 shrink-0">
                         {cat.image ? (
-                          <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-slate-100 dark:border-slate-850">
+                          <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-border dark:border-border">
                             <Image
                               src={cat.image}
                               alt={cat.name}
@@ -365,7 +365,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                             />
                           </div>
                         ) : (
-                          <div className="h-10 w-10 rounded-lg bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-400 dark:text-slate-600 border border-slate-100 dark:border-slate-850">
+                          <div className="h-10 w-10 rounded-lg bg-muted dark:bg-background flex items-center justify-center text-muted-foreground dark:text-muted-foreground border border-border dark:border-border">
                             <Folder className="h-5 w-5" />
                           </div>
                         )}
@@ -376,14 +376,14 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                         <div className="flex items-center">
                           {cat.level > 0 && (
                             <span 
-                              className="text-slate-300 dark:text-slate-700 font-medium select-none mr-2"
+                              className="text-muted-foreground dark:text-foreground font-medium select-none mr-2"
                               style={{ paddingLeft: `${(cat.level - 1) * 1.5}rem` }}
                             >
                               └─
                             </span>
                           )}
                           <span className={[
-                            'text-sm font-semibold tracking-tight text-slate-900 dark:text-white',
+                            'text-sm font-semibold tracking-tight text-foreground dark:text-foreground',
                             cat.level === 0 ? 'font-bold text-base' : 'font-medium'
                           ].join(' ')}>
                             {cat.name}
@@ -392,7 +392,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                       </td>
                       
                       {/* Slug */}
-                      <td className="px-6 py-4 text-sm font-mono text-slate-400 dark:text-slate-500">
+                      <td className="px-6 py-4 text-sm font-mono text-muted-foreground dark:text-muted-foreground">
                         {cat.slug}
                       </td>
                       
@@ -412,7 +412,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                       </td>
                       
                       {/* Products Count */}
-                      <td className="px-6 py-4 text-center text-sm font-bold text-slate-700 dark:text-slate-350">
+                      <td className="px-6 py-4 text-center text-sm font-bold text-foreground dark:text-muted-foreground">
                         {cat._count?.products ?? 0}
                       </td>
                       
@@ -422,7 +422,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                           <Button
                             variant="secondary"
                             onClick={() => handleOpenEditModal(cat)}
-                            className="p-2 h-auto text-slate-600 hover:text-indigo-650 dark:text-slate-400 dark:hover:text-indigo-400 bg-slate-50 hover:bg-indigo-50 dark:bg-slate-950 dark:hover:bg-indigo-950/20 rounded-lg transition-colors duration-200"
+                            className="p-2 h-auto text-muted-foreground hover:text-indigo-650 dark:text-muted-foreground dark:hover:text-indigo-400 bg-muted hover:bg-indigo-50 dark:bg-background dark:hover:bg-indigo-950/20 rounded-lg transition-colors duration-200"
                             title="Redaktə Et"
                           >
                             <Edit2 className="h-4 w-4" />
@@ -430,7 +430,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                           <Button
                             variant="secondary"
                             onClick={() => handleOpenDeleteConfirm(cat.id)}
-                            className="p-2 h-auto text-slate-600 hover:text-red-650 dark:text-slate-400 dark:hover:text-red-400 bg-slate-50 hover:bg-red-50 dark:bg-slate-950 dark:hover:bg-red-950/20 rounded-lg transition-colors duration-200"
+                            className="p-2 h-auto text-muted-foreground hover:text-red-650 dark:text-muted-foreground dark:hover:text-red-400 bg-muted hover:bg-red-50 dark:bg-background dark:hover:bg-red-950/20 rounded-lg transition-colors duration-200"
                             title="Sil"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -486,7 +486,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
               id="categoryParent"
               value={formParentId}
               onChange={(e) => setFormParentId(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+              className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
             >
               <option value="">-- Heç biri (Ana Kateqoriya) --</option>
               {getParentCandidates().map((cat) => (
@@ -507,7 +507,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
               onChange={(e) => setFormDescription(e.target.value)}
               placeholder="Kateqoriya haqqında qısa məlumat..."
               rows={3}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white resize-none"
+              className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground resize-none"
             />
           </div>
 
@@ -516,7 +516,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
             <Label>Kateqoriya Şəkli</Label>
             <div className="flex gap-4 items-center">
               {formImage ? (
-                <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0 border border-border dark:border-border shadow-sm">
                   <Image
                     src={formImage}
                     alt="Preview"
@@ -533,21 +533,21 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                   </button>
                 </div>
               ) : (
-                <div className="h-20 w-20 rounded-xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-200 dark:border-slate-850 flex flex-col items-center justify-center shrink-0 text-slate-450 dark:text-slate-650">
+                <div className="h-20 w-20 rounded-xl bg-muted dark:bg-background border border-dashed border-border dark:border-border flex flex-col items-center justify-center shrink-0 text-muted-foreground dark:text-foreground">
                   <ImageIcon className="h-6 w-6" />
                   <span className="text-[10px] font-bold mt-1 uppercase tracking-wider">Şəkil yoxdur</span>
                 </div>
               )}
 
               <div className="flex-1">
-                <label className="relative flex flex-col items-center justify-center h-20 w-full border-2 border-slate-250 border-dashed rounded-xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 dark:border-slate-800 dark:bg-slate-950/50 dark:hover:bg-slate-950 dark:hover:border-indigo-900 cursor-pointer transition-all duration-200">
+                <label className="relative flex flex-col items-center justify-center h-20 w-full border-2 border-border border-dashed rounded-xl bg-muted/50 hover:bg-muted hover:border-indigo-400 dark:border-border dark:bg-background/50 dark:hover:bg-background dark:hover:border-indigo-900 cursor-pointer transition-all duration-200">
                   <div className="flex flex-col items-center justify-center pt-3 pb-3">
                     {uploadMutation.isPending ? (
                       <Loader2 className="h-6 w-6 animate-spin text-indigo-500" />
                     ) : (
-                      <Upload className="h-5 w-5 text-slate-450 dark:text-slate-500" />
+                      <Upload className="h-5 w-5 text-muted-foreground dark:text-muted-foreground" />
                     )}
-                    <p className="text-xs font-bold text-slate-600 dark:text-slate-400 mt-1.5">
+                    <p className="text-xs font-bold text-muted-foreground dark:text-muted-foreground mt-1.5">
                       {uploadMutation.isPending ? 'Fayl yüklənir...' : 'Şəkil Yüklə (Max. 2MB)'}
                     </p>
                   </div>
@@ -564,18 +564,18 @@ export default function AdminCategoriesPage(): React.JSX.Element {
           </div>
 
           {/* Accordion SEO meta tags */}
-          <div className="border border-slate-100 dark:border-slate-800/80 rounded-xl overflow-hidden bg-slate-50/50 dark:bg-slate-950/20">
+          <div className="border border-border dark:border-border/80 rounded-xl overflow-hidden bg-muted/50 dark:bg-background/20">
             <button
               type="button"
               onClick={() => setShowSeoSettings(!showSeoSettings)}
-              className="w-full flex items-center justify-between px-4 py-3 text-xs font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider hover:bg-slate-50 dark:hover:bg-slate-950 transition-colors focus:outline-none"
+              className="w-full flex items-center justify-between px-4 py-3 text-xs font-black uppercase text-muted-foreground dark:text-muted-foreground tracking-wider hover:bg-muted dark:hover:bg-background transition-colors focus:outline-none"
             >
               <span>SEO Meta Tənzimləmələri</span>
               <ChevronDown className={['h-4 w-4 transition-transform duration-250', showSeoSettings ? 'rotate-180' : ''].join(' ')} />
             </button>
 
             {showSeoSettings && (
-              <div className="p-4 border-t border-slate-100 dark:border-slate-850 space-y-4 animate-in fade-in duration-200">
+              <div className="p-4 border-t border-border dark:border-border space-y-4 animate-in fade-in duration-200">
                 <div className="space-y-1.5">
                   <Label htmlFor="metaTitle">Meta Başlıq (Meta Title)</Label>
                   <Input
@@ -595,7 +595,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
                     onChange={(e) => setFormMetaDesc(e.target.value)}
                     placeholder="Axtarış motorları üçün qısa açıqlama..."
                     rows={2}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white resize-none"
+                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground resize-none"
                   />
                 </div>
               </div>
@@ -609,7 +609,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
               id="formIsActive"
               checked={formIsActive}
               onChange={(e) => setFormIsActive(e.target.checked)}
-              className="h-4.5 w-4.5 rounded border-slate-350 text-indigo-650 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950"
+              className="h-4.5 w-4.5 rounded border-border text-indigo-650 focus:ring-indigo-500 dark:border-border dark:bg-background"
             />
             <Label htmlFor="formIsActive" className="cursor-pointer select-none">
               Bu kateqoriya aktivdir (müştərilərə göstərilsin)
@@ -617,7 +617,7 @@ export default function AdminCategoriesPage(): React.JSX.Element {
           </div>
 
           {/* Submit buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-border/80">
             <Button
               type="button"
               variant="secondary"

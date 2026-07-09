@@ -541,6 +541,26 @@
     "description": "Запрашиваемая страница не существует, была удалена или адрес указан неверно.",
     "back_home": "На главную",
     "browse_products": "Смотреть товары"
+  },
+  "admin": {
+    "groups": {
+      "overview": "Обзор",
+      "catalog": "Каталог",
+      "sales": "Продажи",
+      "people": "Люди",
+      "system": "Система"
+    },
+    "search": "Поиск",
+    "search_placeholder": "Поиск страниц…",
+    "command_empty": "Ничего не найдено.",
+    "command_pages": "Страницы",
+    "toggle_sidebar": "Свернуть панель",
+    "toggle_theme": "Сменить тему",
+    "notifications": "Уведомления",
+    "user_menu": {
+      "account": "Мой аккаунт",
+      "profile": "Профиль",
+      "logout": "Выйти"
+    }
   }
 }
-
