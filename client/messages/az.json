@@ -541,6 +541,26 @@
     "description": "Axtardığınız səhifə mövcud deyil, silinib və ya ünvan yanlış ola bilər.",
     "back_home": "Ana səhifəyə qayıt",
     "browse_products": "Məhsullara bax"
+  },
+  "admin": {
+    "groups": {
+      "overview": "İcmal",
+      "catalog": "Kataloq",
+      "sales": "Satışlar",
+      "people": "İnsanlar",
+      "system": "Sistem"
+    },
+    "search": "Axtar",
+    "search_placeholder": "Səhifələri axtar…",
+    "command_empty": "Nəticə tapılmadı.",
+    "command_pages": "Səhifələr",
+    "toggle_sidebar": "Yan paneli aç/bağla",
+    "toggle_theme": "Mövzunu dəyiş",
+    "notifications": "Bildirişlər",
+    "user_menu": {
+      "account": "Hesabım",
+      "profile": "Profil",
+      "logout": "Çıxış"
+    }
   }
 }
-

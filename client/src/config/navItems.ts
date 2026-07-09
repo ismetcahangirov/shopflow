@@ -1,5 +1,5 @@
 // src/config/navItems.ts
-// Role-based navigation items for Navbar, AdminSidebar, VendorSidebar
+// Role-based navigation items for Navbar, AppSidebar, VendorSidebar
 
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -24,6 +24,12 @@ export interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  /**
+   * Optional sidebar group key (translated via the `admin` namespace as
+   * `groups.<group>`). Used by the admin `AppSidebar` to render grouped nav
+   * sections; ignored by sidebars that render a flat list.
+   */
+  group?: string;
 }
 
 /** Public shop navigation links */
@@ -58,16 +64,23 @@ export const vendorNavItems: NavItem[] = [
   { label: 'nav_store_settings', href: '/vendor/settings', icon: Store },
 ];
 
-/** Admin dashboard sidebar navigation */
+/**
+ * Admin dashboard sidebar navigation.
+ * `group` keys map to `admin.groups.<group>` translations and drive the
+ * grouped sections in `AppSidebar`. Order within a group is preserved.
+ */
 export const adminNavItems: NavItem[] = [
-  { label: 'nav_dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'nav_products', href: '/admin/products', icon: Package },
-  { label: 'nav_orders', href: '/admin/orders', icon: ClipboardList },
-  { label: 'nav_reviews', href: '/admin/reviews', icon: Star },
-  { label: 'nav_categories', href: '/admin/categories', icon: Tag },
-  { label: 'nav_coupons', href: '/admin/coupons', icon: TicketPercent },
-  { label: 'nav_users', href: '/admin/users', icon: Users },
-  { label: 'nav_vendors', href: '/admin/vendors', icon: Store },
-  { label: 'nav_analytics', href: '/admin/analytics', icon: BarChart2 },
-  { label: 'nav_settings', href: '/admin/settings', icon: Settings },
+  { label: 'nav_dashboard', href: '/admin', icon: LayoutDashboard, group: 'overview' },
+  { label: 'nav_analytics', href: '/admin/analytics', icon: BarChart2, group: 'overview' },
+  { label: 'nav_products', href: '/admin/products', icon: Package, group: 'catalog' },
+  { label: 'nav_categories', href: '/admin/categories', icon: Tag, group: 'catalog' },
+  { label: 'nav_coupons', href: '/admin/coupons', icon: TicketPercent, group: 'catalog' },
+  { label: 'nav_orders', href: '/admin/orders', icon: ClipboardList, group: 'sales' },
+  { label: 'nav_users', href: '/admin/users', icon: Users, group: 'people' },
+  { label: 'nav_vendors', href: '/admin/vendors', icon: Store, group: 'people' },
+  { label: 'nav_reviews', href: '/admin/reviews', icon: Star, group: 'people' },
+  { label: 'nav_settings', href: '/admin/settings', icon: Settings, group: 'system' },
 ];
+
+/** Ordered admin sidebar group keys (translated via `admin.groups.<key>`). */
+export const adminNavGroups = ['overview', 'catalog', 'sales', 'people', 'system'] as const;
