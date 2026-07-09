@@ -30,6 +30,8 @@
     "nav_reviews": "My Reviews",
     "nav_payments": "My Payments",
     "nav_settings": "Settings",
+    "nav_addresses": "Addresses",
+    "nav_wishlist": "Wishlist",
     "nav_dashboard": "Dashboard",
     "nav_my_products": "My Products",
     "nav_analytics": "Analytics",
@@ -254,7 +256,10 @@
     "status_shipped": "Shipped",
     "status_delivered": "Delivered",
     "status_cancelled": "Cancelled",
-    "status_refunded": "Refunded"
+    "status_refunded": "Refunded",
+    "filter_all": "All",
+    "filter_by_status": "Filter by status",
+    "item_count": "{count, plural, one {# item} other {# items}}"
   },
   "wishlist": {
     "title": "Wishlist",

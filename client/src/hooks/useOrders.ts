@@ -97,7 +97,7 @@ export function useOrders(params: {
 }
 
 export function useMyOrders(page = 1, limit = 10, status?: string) {
-  return useQuery<OrderListItem[]>({
+  return useQuery<ApiResponse<OrderListItem[]>>({
     queryKey: ['myOrders', page, limit, status],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -105,7 +105,7 @@ export function useMyOrders(page = 1, limit = 10, status?: string) {
       params.set('limit', String(limit));
       if (status) params.set('status', status);
       const res = await api.get<ApiResponse<OrderListItem[]>>(`/orders/my?${params}`);
-      return res.data.data;
+      return res.data;
     },
   });
 }

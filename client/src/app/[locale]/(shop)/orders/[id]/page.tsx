@@ -1,14 +1,9 @@
 // src/app/[locale]/(shop)/orders/[id]/page.tsx
+// Legacy path — order detail now lives under the account section. Redirect to keep old links working.
 
-import type { Metadata } from 'next';
-import OrderDetailClient from './OrderDetailClient';
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'Sifariş Detalı',
-  robots: 'noindex, nofollow',
-};
-
-export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  return <OrderDetailClient orderId={id} />;
+export default async function OrderDetailPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
+  const { locale, id } = await params;
+  redirect(`/${locale}/account/orders/${id}`);
 }

@@ -1,39 +1,34 @@
+// src/components/orders/OrderDetail.tsx
+// Shared order-detail view: status-history timeline, items, address, summary and cancel (PENDING only).
+// Rendered by /account/orders/[id].
+
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, MapPin, Package, CreditCard, Truck } from 'lucide-react';
 
 import { useOrder, useCancelOrder } from '@/hooks/useOrders';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { ErrorState } from '@/components/ui/error-state';
-import { cn } from '@/lib/utils';
 import { parseApiError } from '@/lib/api';
+import { OrderStatusBadge } from './OrderStatusBadge';
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  CONFIRMED: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  PROCESSING: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  SHIPPED: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
-  DELIVERED: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  REFUNDED: 'bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400',
-};
-
-interface OrderDetailClientProps {
+interface OrderDetailProps {
   orderId: string;
 }
 
-export default function OrderDetailClient({ orderId }: OrderDetailClientProps) {
+export function OrderDetail({ orderId }: OrderDetailProps): React.JSX.Element {
   const t = useTranslations('orders');
+  const locale = useLocale();
   const { data: order, isLoading, isError, error, refetch } = useOrder(orderId);
   const cancelOrder = useCancelOrder();
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-2xl py-8">
+      <div className="mx-auto max-w-2xl">
         <Spinner />
       </div>
     );
@@ -41,15 +36,18 @@ export default function OrderDetailClient({ orderId }: OrderDetailClientProps) {
 
   if (isError || !order) {
     return (
-      <div className="mx-auto max-w-2xl py-8">
+      <div className="mx-auto max-w-2xl">
         <ErrorState message={parseApiError(error) || t('order_not_found')} onRetry={() => refetch()} />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl py-8">
-      <Link href="/orders" className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400">
+    <div className="mx-auto max-w-2xl">
+      <Link
+        href={`/${locale}/account/orders`}
+        className="mb-4 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
+      >
         <ArrowLeft className="h-4 w-4" />
         {t('back_to_orders')}
       </Link>
@@ -59,9 +57,7 @@ export default function OrderDetailClient({ orderId }: OrderDetailClientProps) {
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">#{order.orderNumber}</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">{new Date(order.createdAt).toLocaleDateString('az-AZ')}</p>
         </div>
-        <span className={cn('inline-block rounded-full px-3 py-1 text-xs font-semibold', STATUS_COLORS[order.status] ?? 'bg-slate-100 text-slate-700')}>
-          {t(`status_${order.status.toLowerCase()}`)}
-        </span>
+        <OrderStatusBadge status={order.status} className="px-3 py-1 text-xs font-semibold" />
       </div>
 
       {/* Status History */}

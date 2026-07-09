@@ -30,6 +30,8 @@
     "nav_reviews": "Мои Отзывы",
     "nav_payments": "Мои Платежи",
     "nav_settings": "Настройки",
+    "nav_addresses": "Адреса",
+    "nav_wishlist": "Список желаний",
     "nav_dashboard": "Панель управления",
     "nav_my_products": "Мои Товары",
     "nav_analytics": "Аналитика",
@@ -254,7 +256,10 @@
     "status_shipped": "Отправлен",
     "status_delivered": "Доставлен",
     "status_cancelled": "Отменен",
-    "status_refunded": "Возврат"
+    "status_refunded": "Возврат",
+    "filter_all": "Все",
+    "filter_by_status": "Фильтр по статусу",
+    "item_count": "{count, plural, one {# товар} few {# товара} many {# товаров} other {# товаров}}"
   },
   "wishlist": {
     "title": "Список желаний",
