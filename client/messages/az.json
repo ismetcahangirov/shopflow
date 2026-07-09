@@ -30,6 +30,8 @@
     "nav_reviews": "Rəylərim",
     "nav_payments": "Ödənişlərim",
     "nav_settings": "Parametrlər",
+    "nav_addresses": "Ünvanlarım",
+    "nav_wishlist": "İstək siyahısı",
     "nav_dashboard": "İdarə Paneli",
     "nav_my_products": "Məhsullarım",
     "nav_analytics": "Analitika",
@@ -254,7 +256,10 @@
     "status_shipped": "Göndərildi",
     "status_delivered": "Çatdırıldı",
     "status_cancelled": "Ləğv edildi",
-    "status_refunded": "Geri qaytarıldı"
+    "status_refunded": "Geri qaytarıldı",
+    "filter_all": "Hamısı",
+    "filter_by_status": "Statusa görə",
+    "item_count": "{count, plural, one {# məhsul} other {# məhsul}}"
   },
   "wishlist": {
     "title": "İstək Siyahısı",

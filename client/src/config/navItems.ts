@@ -16,6 +16,8 @@ import {
   CreditCard,
   LayoutDashboard,
   TicketPercent,
+  MapPin,
+  Heart,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -37,6 +39,14 @@ export const customerNavItems: NavItem[] = [
   { label: 'nav_reviews', href: '/account/reviews', icon: Star },
   { label: 'nav_payments', href: '/account/payments', icon: CreditCard },
   { label: 'nav_settings', href: '/account/settings', icon: Settings },
+];
+
+/** Account section sub-navigation (My Orders, Settings, Addresses, Wishlist) */
+export const accountNavItems: NavItem[] = [
+  { label: 'nav_orders', href: '/account/orders', icon: ClipboardList },
+  { label: 'nav_settings', href: '/account/settings', icon: Settings },
+  { label: 'nav_addresses', href: '/profile/addresses', icon: MapPin },
+  { label: 'nav_wishlist', href: '/wishlist', icon: Heart },
 ];
 
 /** Vendor dashboard sidebar navigation */

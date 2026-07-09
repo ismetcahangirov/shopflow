@@ -9,7 +9,7 @@ import { routing } from './i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 // List of protected routes that require authentication
-const protectedRoutes = ['/checkout', '/orders', '/profile', '/settings'];
+const protectedRoutes = ['/account', '/checkout', '/orders', '/profile', '/settings'];
 const adminRoutes = ['/admin'];
 const vendorRoutes = ['/vendor'];
 const authRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];

@@ -1,13 +1,9 @@
 // src/app/[locale]/(shop)/orders/page.tsx
+// Legacy path — order history now lives under the account section. Redirect to keep old links working.
 
-import type { Metadata } from 'next';
-import OrdersPageClient from './OrdersPageClient';
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'Sifarişlərim',
-  robots: 'noindex, nofollow',
-};
-
-export default function OrdersPage() {
-  return <OrdersPageClient />;
+export default async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect(`/${locale}/account/orders`);
 }
