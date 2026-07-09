@@ -11,8 +11,9 @@ vi.mock('@/hooks/useUser', () => ({
   useUpdateAvatar: vi.fn(),
 }));
 
-const updateProfileMutate = vi.fn();
-const updateAvatarMutate = vi.fn();
+// Invoke the success callback so the component's onSuccess branches run.
+const updateProfileMutate = vi.fn((_payload, opts?: { onSuccess?: () => void }) => opts?.onSuccess?.());
+const updateAvatarMutate = vi.fn((_file, opts?: { onSuccess?: () => void }) => opts?.onSuccess?.());
 
 const user: UserProfile = {
   id: 'u1',
@@ -54,13 +55,40 @@ describe('ProfileSection', () => {
     );
   });
 
-  it('uploads the selected avatar file', () => {
+  it('shows a success message after saving the profile', () => {
     render(<ProfileSection user={user} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'edit_profile' }));
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    expect(screen.getByText('profile_updated')).toBeInTheDocument();
+    // Form collapses back to the edit button after a successful save.
+    expect(screen.getByRole('button', { name: 'edit_profile' })).toBeInTheDocument();
+  });
+
+  it('exits edit mode when cancel is clicked without saving', () => {
+    render(<ProfileSection user={user} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'edit_profile' }));
+    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'cancel' }));
+
+    expect(screen.queryByLabelText(/name/i)).not.toBeInTheDocument();
+    expect(updateProfileMutate).not.toHaveBeenCalled();
+  });
+
+  it('uploads the selected avatar file and shows a success message', () => {
+    render(<ProfileSection user={user} />);
+
+    // Trigger the hidden file input via its button (covers the click handler).
+    fireEvent.click(screen.getByRole('button', { name: 'change_avatar' }));
 
     const file = new File(['x'], 'avatar.png', { type: 'image/png' });
     const input = screen.getByTestId('avatar-input') as HTMLInputElement;
     fireEvent.change(input, { target: { files: [file] } });
 
     expect(updateAvatarMutate).toHaveBeenCalledWith(file, expect.any(Object));
+    expect(screen.getByText('avatar_updated')).toBeInTheDocument();
   });
 });

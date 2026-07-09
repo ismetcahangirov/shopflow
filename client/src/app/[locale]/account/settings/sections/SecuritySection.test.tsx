@@ -10,7 +10,8 @@ vi.mock('@/hooks/useUser', () => ({
   useUpdatePassword: vi.fn(),
 }));
 
-const mutate = vi.fn();
+// Invoke the success callback so the component's onSuccess branch runs.
+const mutate = vi.fn((_payload, opts?: { onSuccess?: () => void }) => opts?.onSuccess?.());
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -68,5 +69,31 @@ describe('SecuritySection', () => {
       { currentPassword: 'oldpass12', newPassword: 'newpass123', confirmPassword: 'newpass123' },
       expect.any(Object),
     );
+  });
+
+  it('collapses the form and shows a success message after a successful change', () => {
+    render(<SecuritySection hasPassword={true} />);
+    openForm();
+
+    fireEvent.change(screen.getByLabelText(/current_password/), { target: { value: 'oldpass12' } });
+    fireEvent.change(screen.getByLabelText(/new_password/), { target: { value: 'newpass123' } });
+    fireEvent.change(screen.getByLabelText(/confirm_password/), { target: { value: 'newpass123' } });
+    fireEvent.click(screen.getByRole('button', { name: 'save' }));
+
+    expect(screen.getByText('password_updated')).toBeInTheDocument();
+    expect(screen.queryByLabelText(/current_password/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'change_password_btn' })).toBeInTheDocument();
+  });
+
+  it('closes the form without submitting when cancel is clicked', () => {
+    render(<SecuritySection hasPassword={true} />);
+    openForm();
+    fireEvent.change(screen.getByLabelText(/current_password/), { target: { value: 'oldpass12' } });
+
+    fireEvent.click(screen.getByRole('button', { name: 'cancel' }));
+
+    expect(screen.queryByLabelText(/current_password/)).not.toBeInTheDocument();
+    expect(mutate).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'change_password_btn' })).toBeInTheDocument();
   });
 });
