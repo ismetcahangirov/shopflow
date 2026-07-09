@@ -1,166 +1,273 @@
+// src/app/[locale]/admin/page.tsx
+// Admin dashboard: shadcn Cards + recharts revenue trend / orders-by-status
+// donut, top products and recent orders, with a 7/30/90-day period selector.
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Users, ShoppingBag, DollarSign, Package, TrendingUp, ArrowRight } from 'lucide-react';
+import {
+  Users,
+  ShoppingBag,
+  DollarSign,
+  Package,
+  TrendingUp,
+  ArrowRight,
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 import { useDashboard } from '@/hooks/useAnalytics';
+import { StatCard } from '@/components/ui/stat-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
-import { cn } from '@/lib/utils';
+import { PageHeader } from '@/components/ui/page-header';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChartCard } from '@/components/admin/ChartCard';
+import { TimeSeriesChart } from '@/components/admin/charts/TimeSeriesChart';
+import { StatusDonut } from '@/components/admin/charts/StatusDonut';
+import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge';
+import { formatAxisDate, formatCurrency, formatNumber } from '@/lib/format';
 import { parseApiError } from '@/lib/api';
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-700',
-  CONFIRMED: 'bg-blue-100 text-blue-700',
-  PROCESSING: 'bg-purple-100 text-purple-700',
-  SHIPPED: 'bg-indigo-100 text-indigo-700',
-  DELIVERED: 'bg-green-100 text-green-700',
-  CANCELLED: 'bg-red-100 text-red-700',
+/** Solid hex colours for the orders-by-status donut (recharts needs a colour). */
+const STATUS_HEX: Record<string, string> = {
+  PENDING: '#f59e0b',
+  CONFIRMED: '#3b82f6',
+  PROCESSING: '#a855f7',
+  SHIPPED: '#6366f1',
+  DELIVERED: '#22c55e',
+  CANCELLED: '#ef4444',
+  REFUNDED: '#64748b',
 };
 
+const PERIODS = [7, 30, 90] as const;
+type Period = (typeof PERIODS)[number];
+
+const compactCurrency = (v: number): string =>
+  v >= 1000 ? `${Math.round(v / 1000)}k` : String(v);
+
 export default function AdminPage(): React.JSX.Element {
-  const { data, isLoading, isError, error, refetch } = useDashboard();
+  const t = useTranslations('admin_dashboard');
+  const tStatus = useTranslations('orders');
+  const [period, setPeriod] = useState<Period>(30);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
-        </div>
-      </div>
-    );
-  }
+  const { data, isLoading, isError, error, refetch } = useDashboard(period);
 
-  if (isError || !data) {
-    return <ErrorState message={parseApiError(error)} onRetry={() => refetch()} />;
-  }
+  const statusData = useMemo(
+    () =>
+      data
+        ? Object.entries(data.ordersByStatus)
+            .filter(([, count]) => count > 0)
+            .map(([name, value]) => ({
+              name,
+              label: tStatus(`status_${name.toLowerCase()}`),
+              value,
+              color: STATUS_HEX[name] ?? '#64748b',
+            }))
+        : [],
+    [data, tStatus],
+  );
 
-  const statCards = [
-    { label: 'Ümumi Gəlir', value: `${data.summary.totalRevenue.toFixed(2)} AZN`, sub: `Avg: ${data.summary.avgOrderValue.toFixed(2)}`, icon: DollarSign, color: 'text-green-600 bg-green-50' },
-    { label: 'Sifarişlər', value: data.summary.totalOrders.toString(), sub: `son 30 gün`, icon: ShoppingBag, color: 'text-blue-600 bg-blue-50' },
-    { label: 'Müştərilər', value: data.summary.totalCustomers.toString(), sub: 'CUSTOMER', icon: Users, color: 'text-purple-600 bg-purple-50' },
-    { label: 'Məhsullar', value: data.summary.totalProducts.toString(), sub: 'aktiv', icon: Package, color: 'text-orange-600 bg-orange-50' },
-  ];
+  const periodSelector = (
+    <Tabs value={String(period)} onValueChange={(v) => setPeriod(Number(v) as Period)}>
+      <TabsList>
+        {PERIODS.map((p) => (
+          <TabsTrigger key={p} value={String(p)}>
+            {t(`period_${p}d`)}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
+  );
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-foreground dark:text-foreground">Admin Dashboard</h1>
+      <PageHeader title={t('title')} description={t('subtitle')} actions={periodSelector} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((s, i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-5 shadow-sm dark:border-border dark:bg-card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
-                <p className="mt-1 text-2xl font-bold text-foreground dark:text-foreground">{s.value}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{s.sub}</p>
-              </div>
-              <div className={`rounded-xl p-3 ${s.color}`}>
-                <s.icon className="h-5 w-5" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Revenue Chart */}
-        <div className="lg:col-span-7 rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground dark:text-foreground">
-            <TrendingUp className="h-5 w-5 text-indigo-500" />
-            Gəlir Qrafiki (son 30 gün)
-          </h2>
-          <div className="flex items-end gap-1" style={{ height: 120 }}>
-            {data.revenueChart.map((d, i) => {
-              const max = Math.max(...data.revenueChart.map((r) => r.revenue), 1);
-              return (
-                <div key={i} className="flex flex-1 flex-col items-center">
-                  <div
-                    className="w-full rounded-t bg-indigo-500 transition-all hover:bg-indigo-600"
-                    style={{ height: `${(d.revenue / max) * 100}%` }}
+      {isError && !data ? (
+        <ErrorState message={parseApiError(error)} onRetry={() => refetch()} />
+      ) : (
+        <>
+          {/* Stat cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {isLoading || !data
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-32 rounded-2xl" />
+                ))
+              : [
+                  {
+                    title: t('stat_revenue'),
+                    value: formatCurrency(data.summary.totalRevenue),
+                    icon: <DollarSign className="h-5 w-5" />,
+                    colorTheme: 'emerald' as const,
+                  },
+                  {
+                    title: t('stat_orders'),
+                    value: formatNumber(data.summary.totalOrders),
+                    icon: <ShoppingBag className="h-5 w-5" />,
+                    colorTheme: 'indigo' as const,
+                  },
+                  {
+                    title: t('stat_customers'),
+                    value: formatNumber(data.summary.totalCustomers),
+                    icon: <Users className="h-5 w-5" />,
+                    colorTheme: 'sky' as const,
+                  },
+                  {
+                    title: t('stat_products'),
+                    value: formatNumber(data.summary.totalProducts),
+                    icon: <Package className="h-5 w-5" />,
+                    colorTheme: 'amber' as const,
+                  },
+                  {
+                    title: t('stat_avg_order'),
+                    value: formatCurrency(data.summary.avgOrderValue),
+                    icon: <TrendingUp className="h-5 w-5" />,
+                    colorTheme: 'rose' as const,
+                  },
+                ].map((s) => (
+                  <StatCard
+                    key={s.title}
+                    title={s.title}
+                    value={s.value}
+                    icon={s.icon}
+                    colorTheme={s.colorTheme}
                   />
+                ))}
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <ChartCard
+              title={t('revenue_trend')}
+              description={t('revenue_trend_desc')}
+              isLoading={isLoading || !data}
+              isEmpty={!!data && data.revenueChart.length === 0}
+              emptyText={t('no_data')}
+              className="lg:col-span-2"
+            >
+              {data && (
+                <TimeSeriesChart
+                  data={data.revenueChart}
+                  xKey="date"
+                  yKey="revenue"
+                  variant="area"
+                  seriesName={t('stat_revenue')}
+                  xTickFormatter={(v) => formatAxisDate(v, 'day')}
+                  valueFormatter={(v) => formatCurrency(v)}
+                  yTickFormatter={compactCurrency}
+                />
+              )}
+            </ChartCard>
+
+            <ChartCard
+              title={t('orders_by_status')}
+              description={t('orders_by_status_desc')}
+              isLoading={isLoading || !data}
+              isEmpty={statusData.length === 0}
+              emptyText={t('no_data')}
+            >
+              <StatusDonut data={statusData} valueFormatter={(v) => formatNumber(v)} />
+            </ChartCard>
+          </div>
+
+          {/* Top products */}
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('top_products')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoading || !data ? (
+                <div className="space-y-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-10 w-full rounded-lg" />
+                  ))}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              ) : data.topProducts.length === 0 ? (
+                <p className="py-6 text-center text-sm text-muted-foreground">{t('no_data')}</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        <th className="px-3 py-2">{t('col_product')}</th>
+                        <th className="px-3 py-2">{t('col_sales')}</th>
+                        <th className="px-3 py-2 text-right">{t('col_revenue')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.topProducts.map((p) => (
+                        <tr key={p.id} className="border-b border-border last:border-0">
+                          <td className="px-3 py-2 font-medium text-foreground">{p.name}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {formatNumber(p.salesCount)}
+                          </td>
+                          <td className="px-3 py-2 text-right font-semibold text-foreground">
+                            {formatCurrency(p.revenue)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-        {/* Orders by Status */}
-        <div className="lg:col-span-5 rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
-          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-foreground">Sifariş Statusları</h2>
-          <div className="flex flex-col gap-2">
-            {Object.entries(data.ordersByStatus).map(([status, count]) => (
-              <div key={status} className="flex items-center justify-between">
-                <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', STATUS_COLORS[status] ?? 'bg-muted')}>
-                  {status}
-                </span>
-                <span className="font-semibold text-foreground dark:text-muted-foreground">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Top Products */}
-      <div className="rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
-        <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-foreground">Ən Çox Satılan Məhsullar</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border dark:border-border">
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Məhsul</th>
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Satış</th>
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Gəlir</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.topProducts.map((p) => (
-                <tr key={p.id} className="border-b border-border dark:border-border">
-                  <td className="px-3 py-2 font-medium text-foreground dark:text-foreground">{p.name}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{p.salesCount}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{p.revenue.toFixed(2)} AZN</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Recent Orders */}
-      <div className="rounded-xl border border-border bg-card p-5 dark:border-border dark:bg-card">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground dark:text-foreground">Son Sifarişlər</h2>
-          <Link href="/admin/orders" className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700">
-            Hamısı <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border dark:border-border">
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">#</th>
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Müştəri</th>
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Məbləğ</th>
-                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.recentOrders.map((o) => (
-                <tr key={o.id} className="border-b border-border dark:border-border">
-                  <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{o.orderNumber}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{o.user.name}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{o.total.toFixed(2)} AZN</td>
-                  <td className="px-3 py-2">
-                    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium', STATUS_COLORS[o.status] ?? 'bg-muted')}>{o.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+          {/* Recent orders */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>{t('recent_orders')}</CardTitle>
+              <Link
+                href="/admin/orders"
+                className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              >
+                {t('view_all')} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </CardHeader>
+            <CardContent>
+              {isLoading || !data ? (
+                <div className="space-y-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-10 w-full rounded-lg" />
+                  ))}
+                </div>
+              ) : data.recentOrders.length === 0 ? (
+                <p className="py-6 text-center text-sm text-muted-foreground">{t('no_data')}</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        <th className="px-3 py-2">{t('col_order')}</th>
+                        <th className="px-3 py-2">{t('col_customer')}</th>
+                        <th className="px-3 py-2 text-right">{t('col_amount')}</th>
+                        <th className="px-3 py-2 text-right">{t('col_status')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.recentOrders.map((o) => (
+                        <tr key={o.id} className="border-b border-border last:border-0">
+                          <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
+                            {o.orderNumber}
+                          </td>
+                          <td className="px-3 py-2 text-foreground">{o.user.name}</td>
+                          <td className="px-3 py-2 text-right font-semibold text-foreground">
+                            {formatCurrency(o.total)}
+                          </td>
+                          <td className="px-3 py-2 text-right">
+                            <OrderStatusBadge status={o.status} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   );
 }
