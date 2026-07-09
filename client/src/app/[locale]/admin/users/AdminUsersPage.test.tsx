@@ -1,95 +1,134 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
-import { render, screen, fireEvent, within, act } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import AdminUsersPage from './page';
 import { useAdminUsers, useToggleUserStatus } from '@/hooks/useUser';
 
-// Mock next-intl
 vi.mock('next-intl', () => ({
-  useTranslations: (namespace?: string) => (key: string) => {
-    return namespace ? `${namespace}.${key}` : key;
-  },
+  useTranslations: (namespace?: string) => (key: string) =>
+    namespace ? `${namespace}.${key}` : key,
 }));
 
-// Mock hooks
+vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+
 vi.mock('@/hooks/useUser', () => ({
   useAdminUsers: vi.fn(),
   useToggleUserStatus: vi.fn(),
 }));
 
-// Mock UI components to simplify test rendering and prevent portal/modal errors
 vi.mock('@/components/layout/Breadcrumb', () => ({
   Breadcrumb: () => <div data-testid="mock-breadcrumb" />,
 }));
 
-interface MockPageHeaderProps {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
-}
-
 vi.mock('@/components/ui/page-header', () => ({
-  PageHeader: ({ title, description, actions }: MockPageHeaderProps) => (
+  PageHeader: ({ title, actions }: { title: React.ReactNode; actions?: React.ReactNode }) => (
     <div data-testid="mock-page-header">
       <h1>{title}</h1>
-      {description && <p>{description}</p>}
       {actions}
     </div>
   ),
 }));
 
-interface MockPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-vi.mock('@/components/ui/pagination', () => ({
-  Pagination: ({ currentPage, totalPages, onPageChange }: MockPaginationProps) => (
-    <div data-testid="mock-pagination">
-      <span>{currentPage}/{totalPages}</span>
-      <button onClick={() => onPageChange(currentPage - 1)} data-testid="prev-page">Prev</button>
-      <button onClick={() => onPageChange(currentPage + 1)} data-testid="next-page">Next</button>
-    </div>
-  ),
+vi.mock('@/components/ui/avatar', () => ({
+  Avatar: ({ fallback }: { fallback: string }) => <div data-testid="mock-avatar">{fallback[0]}</div>,
 }));
 
-interface MockConfirmDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-}
-
-vi.mock('@/components/ui/confirm-dialog', () => ({
-  ConfirmDialog: ({ isOpen, onClose, onConfirm, title, message }: MockConfirmDialogProps) => {
-    if (!isOpen) return null;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+vi.mock('@/components/admin/data-table', () => ({
+  DataTableColumnHeader: () => null,
+  DataTableFilterSelect: ({ value, onValueChange, options, ariaLabel }: any) => (
+    <select
+      aria-label={ariaLabel}
+      data-testid={`filter-${ariaLabel}`}
+      value={value}
+      onChange={(e) => onValueChange(e.target.value)}
+    >
+      {options.map((o: any) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  ),
+  DataTable: ({
+    data,
+    columns,
+    isLoading,
+    isError,
+    emptyTitle,
+    errorTitle,
+    searchValue,
+    onSearchChange,
+    searchPlaceholder,
+    filters,
+  }: any) => {
+    if (isLoading) return <div data-testid="dt-loading" />;
     return (
-      <div data-testid="mock-confirm-dialog">
-        <h2>{title}</h2>
-        <p>{message}</p>
-        <button onClick={onConfirm} data-testid="confirm-btn">Confirm</button>
-        <button onClick={onClose} data-testid="cancel-btn">Cancel</button>
+      <div>
+        {onSearchChange && (
+          <input
+            data-testid="dt-search"
+            placeholder={searchPlaceholder}
+            value={searchValue ?? ''}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        )}
+        {filters}
+        {isError ? (
+          <div data-testid="dt-error">{errorTitle}</div>
+        ) : data.length === 0 ? (
+          <div data-testid="dt-empty">{emptyTitle}</div>
+        ) : (
+          <table>
+            <tbody>
+              {data.map((item: any, index: number) => (
+                <tr key={item.id ?? index}>
+                  {columns.map((col: any, ci: number) => (
+                    <td key={ci}>
+                      {col.cell
+                        ? col.cell({ row: { original: item, index, getValue: (k: string) => item[k] } })
+                        : null}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     );
   },
 }));
 
-interface MockAvatarProps {
-  src?: string | null;
-  fallback: string;
-}
-
-vi.mock('@/components/ui/avatar', () => ({
-  Avatar: ({ src, fallback }: MockAvatarProps) => (
-    <div data-testid="mock-avatar" data-src={src || ''} data-fallback={fallback}>
-      Avatar: {fallback}
-    </div>
+vi.mock('@/components/ui/dropdown-menu', () => ({
+  DropdownMenu: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ render }: any) => render ?? null,
+  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, variant, inset, ...props }: any) => (
+    <button type="button" {...props}>
+      {children}
+    </button>
   ),
+  DropdownMenuSeparator: () => null,
 }));
 
-describe('AdminUsersPage component tests', () => {
+vi.mock('@/components/admin/AdminConfirmDialog', () => ({
+  AdminConfirmDialog: ({ open, onConfirm, onOpenChange, title }: any) =>
+    open ? (
+      <div data-testid="confirm-dialog">
+        <h2>{title}</h2>
+        <button data-testid="confirm-btn" onClick={onConfirm}>
+          Confirm
+        </button>
+        <button data-testid="cancel-btn" onClick={() => onOpenChange(false)}>
+          Cancel
+        </button>
+      </div>
+    ) : null,
+}));
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+describe('AdminUsersPage', () => {
   const mockUsers = [
     {
       id: 'user-1',
@@ -98,7 +137,6 @@ describe('AdminUsersPage component tests', () => {
       role: 'CUSTOMER',
       avatar: null,
       isActive: true,
-      isVerified: true,
       createdAt: '2026-06-08T10:00:00Z',
       _count: { orders: 5 },
     },
@@ -107,9 +145,8 @@ describe('AdminUsersPage component tests', () => {
       name: 'Vendor User',
       email: 'vendor@test.com',
       role: 'VENDOR',
-      avatar: 'https://avatar.com/vendor',
+      avatar: null,
       isActive: false,
-      isVerified: true,
       createdAt: '2026-06-09T11:00:00Z',
       _count: { orders: 0 },
     },
@@ -120,165 +157,109 @@ describe('AdminUsersPage component tests', () => {
       role: 'ADMIN',
       avatar: null,
       isActive: true,
-      isVerified: true,
       createdAt: '2026-06-10T12:00:00Z',
       _count: { orders: 0 },
     },
   ];
 
-  const mockToggleStatusMutateAsync = vi.fn();
-  const mockRefetch = vi.fn();
+  const mockToggle = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
+    mockToggle.mockResolvedValue(undefined);
 
     (useAdminUsers as Mock).mockReturnValue({
-      data: {
-        data: mockUsers,
-        pagination: { total: 3, pages: 1, page: 1, limit: 10 },
-      },
+      data: { data: mockUsers, pagination: { total: 3, pages: 1, page: 1, limit: 10 } },
       isLoading: false,
       isError: false,
-      refetch: mockRefetch,
+      refetch: vi.fn(),
     });
-
-    (useToggleUserStatus as Mock).mockReturnValue({
-      mutateAsync: mockToggleStatusMutateAsync,
-      isPending: false,
-    });
+    (useToggleUserStatus as Mock).mockReturnValue({ mutateAsync: mockToggle, isPending: false });
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('renders loading skeleton when isLoading is true', () => {
+  it('renders loading state', () => {
     (useAdminUsers as Mock).mockReturnValue({
       data: null,
       isLoading: true,
       isError: false,
       refetch: vi.fn(),
     });
-
     render(<AdminUsersPage />);
-    expect(screen.getByTestId('mock-page-header')).toBeInTheDocument();
-    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(screen.getByTestId('dt-loading')).toBeInTheDocument();
   });
 
-  it('renders empty state when no users are found', () => {
+  it('renders empty state', () => {
     (useAdminUsers as Mock).mockReturnValue({
-      data: {
-        data: [],
-        pagination: { total: 0, pages: 0, page: 1, limit: 10 },
-      },
+      data: { data: [], pagination: { total: 0, pages: 0, page: 1, limit: 10 } },
       isLoading: false,
       isError: false,
       refetch: vi.fn(),
     });
-
     render(<AdminUsersPage />);
     expect(screen.getByText('admin_users.no_users')).toBeInTheDocument();
   });
 
-  it('renders users list table correctly', () => {
+  it('renders users list', () => {
     render(<AdminUsersPage />);
-
-    expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('john@test.com')).toBeInTheDocument();
     expect(screen.getByText('Vendor User')).toBeInTheDocument();
-    expect(screen.getByText('vendor@test.com')).toBeInTheDocument();
     expect(screen.getByText('Admin User')).toBeInTheDocument();
-    expect(screen.getByText('admin@shopflow.az')).toBeInTheDocument();
   });
 
-  it('handles role filter updates', () => {
+  it('role filter refetches with role', () => {
     render(<AdminUsersPage />);
-
-    const vendorBtn = screen.getByRole('button', { name: 'admin_users.vendor' });
-    fireEvent.click(vendorBtn);
-
+    fireEvent.change(screen.getByTestId('filter-admin_users.role_filter'), {
+      target: { value: 'VENDOR' },
+    });
     expect(useAdminUsers).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        role: 'VENDOR',
-        page: 1,
-      })
+      expect.objectContaining({ role: 'VENDOR', page: 1 }),
     );
   });
 
-  it('handles status filter updates', () => {
+  it('status filter refetches with isActive', () => {
     render(<AdminUsersPage />);
-
-    const inactiveBtn = screen.getByRole('button', { name: 'admin_users.inactive' });
-    fireEvent.click(inactiveBtn);
-
+    fireEvent.change(screen.getByTestId('filter-admin_users.status_filter'), {
+      target: { value: 'INACTIVE' },
+    });
     expect(useAdminUsers).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        isActive: false,
-        page: 1,
-      })
+      expect.objectContaining({ isActive: false, page: 1 }),
     );
   });
 
-  it('handles search input with 300ms debouncing', () => {
+  it('search input debounces before refetching', () => {
     render(<AdminUsersPage />);
-
-    const searchInput = screen.getByTestId('search-users-input');
-    fireEvent.change(searchInput, { target: { value: 'alice' } });
-
-    // Should not trigger query immediately
+    fireEvent.change(screen.getByTestId('dt-search'), { target: { value: 'alice' } });
     expect(useAdminUsers).not.toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        search: 'alice',
-      })
+      expect.objectContaining({ search: 'alice' }),
     );
-
-    // Advance timers by 300ms
     act(() => {
       vi.advanceTimersByTime(300);
     });
-
     expect(useAdminUsers).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        search: 'alice',
-        page: 1,
-      })
+      expect.objectContaining({ search: 'alice', page: 1 }),
     );
   });
 
-  it('opens confirm modal and toggles user status when confirm button is clicked', async () => {
+  it('toggling a non-admin user opens confirm and calls the mutation', async () => {
     render(<AdminUsersPage />);
-
-    const rows = screen.getAllByRole('row');
-    // Row 0: Header, Row 1: John Doe (Customer), Row 2: Vendor User (Vendor), Row 3: Admin User (Admin)
-    
-    // Vendor is inactive, click button to activate (confirm toggle)
-    const vendorRowActionBtn = within(rows[2]).getByRole('button');
-    fireEvent.click(vendorRowActionBtn);
-
-    expect(screen.getByTestId('mock-confirm-dialog')).toBeInTheDocument();
-    expect(screen.getByText('admin_users.toggle_status_confirm')).toBeInTheDocument();
-
-    const confirmBtn = screen.getByTestId('confirm-btn');
-    
+    // user-2 is inactive -> "activate" action is shown
+    fireEvent.click(screen.getByText('admin_users.activate'));
+    expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
     await act(async () => {
-      fireEvent.click(confirmBtn);
+      fireEvent.click(screen.getByTestId('confirm-btn'));
     });
-
-    expect(mockToggleStatusMutateAsync).toHaveBeenCalledWith({
-      id: 'user-2',
-      isActive: true,
-    });
+    expect(mockToggle).toHaveBeenCalledWith({ id: 'user-2', isActive: true });
   });
 
-  it('disables toggle status button for admin users', () => {
+  it('admin users cannot be toggled (disabled control)', () => {
     render(<AdminUsersPage />);
-
-    const rows = screen.getAllByRole('row');
-    // Row 3 is Admin User
-    const adminActionBtn = within(rows[3]).getByRole('button');
-    
-    expect(adminActionBtn).toBeDisabled();
+    const adminBtn = screen.getByLabelText('admin_users.cannot_toggle_admin');
+    expect(adminBtn).toBeDisabled();
   });
 });
