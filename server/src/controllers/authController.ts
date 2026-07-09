@@ -471,6 +471,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response): Promise<v
       isVerified: true,
       lastLoginAt: true,
       createdAt: true,
+      password: true,
       vendor: {
         select: {
           id: true,
@@ -486,5 +487,11 @@ export const getMe = asyncHandler(async (req: Request, res: Response): Promise<v
     throw new AppError('İstifadəçi tapılmadı', 404, 'NOT_FOUND');
   }
 
-  successResponse(res, { message: 'İstifadəçi məlumatı', data: user });
+  // Expose whether the account has a local password (Google-only accounts have
+  // none) so the settings UI can hide the change-password form. Never leak the hash.
+  const { password, ...safeUser } = user;
+  successResponse(res, {
+    message: 'İstifadəçi məlumatı',
+    data: { ...safeUser, hasPassword: Boolean(password) },
+  });
 });

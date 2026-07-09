@@ -294,7 +294,17 @@
     "avatar_updated": "Avatar updated!",
     "profile_updated": "Profile updated!",
     "password_updated": "Password changed!",
-    "addresses": "My addresses"
+    "addresses": "My addresses",
+    "settings_title": "Settings",
+    "settings_subtitle": "Manage your account details and preferences",
+    "profile_info": "Profile information",
+    "security": "Security",
+    "security_google_managed": "You signed in with Google. Your password is managed by Google.",
+    "preferences": "Preferences",
+    "preferences_subtitle": "Language and appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "change_avatar": "Change avatar"
   },
   "vendor": {
     "dashboard": "Vendor Dashboard",

@@ -462,6 +462,42 @@ describe('GET /api/auth/me', () => {
     expect(res.body.data.email).toBe(TEST_EMAIL);
   });
 
+  it('200 — reports hasPassword=true for a local-password account without leaking the hash', async () => {
+    const user = await createTestUser({ email: TEST_EMAIL });
+    const token = getBearerToken(user);
+
+    const res = await request(app).get('/api/auth/me').set('Authorization', token);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.hasPassword).toBe(true);
+    expect(res.body.data.password).toBeUndefined();
+  });
+
+  it('200 — reports hasPassword=false for a Google-only account', async () => {
+    const googleUser = await prisma.user.create({
+      data: {
+        email: GOOGLE_NEW_EMAIL,
+        name: 'Google Only',
+        googleId: 'google-sub-getme-test',
+        isVerified: true,
+      },
+      select: { id: true, email: true, role: true },
+    });
+    const token = getBearerToken({
+      id: googleUser.id,
+      email: googleUser.email,
+      name: 'Google Only',
+      password: '',
+      role: googleUser.role as 'ADMIN' | 'VENDOR' | 'CUSTOMER',
+    });
+
+    const res = await request(app).get('/api/auth/me').set('Authorization', token);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.hasPassword).toBe(false);
+    expect(res.body.data.password).toBeUndefined();
+  });
+
   it('401 — rejects unauthenticated request', async () => {
     const res = await request(app).get('/api/auth/me');
 

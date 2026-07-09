@@ -1,11 +1,10 @@
-import type { Metadata } from 'next';
-import ProfilePageClient from './ProfilePageClient';
+// src/app/[locale]/(shop)/profile/page.tsx
+// The profile UI has been consolidated into /account/settings. Keep this route
+// as a permanent redirect so old links (and the previous header entry) still work.
 
-export const metadata: Metadata = {
-  title: 'Profilim',
-  robots: 'noindex, nofollow',
-};
+import { redirect } from 'next/navigation';
 
-export default function ProfilePage() {
-  return <ProfilePageClient />;
+export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect(`/${locale}/account/settings`);
 }

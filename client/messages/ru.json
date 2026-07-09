@@ -294,7 +294,17 @@
     "avatar_updated": "Аватар обновлен!",
     "profile_updated": "Профиль обновлен!",
     "password_updated": "Пароль изменен!",
-    "addresses": "Мои адреса"
+    "addresses": "Мои адреса",
+    "settings_title": "Настройки",
+    "settings_subtitle": "Управляйте данными аккаунта и настройками",
+    "profile_info": "Информация профиля",
+    "security": "Безопасность",
+    "security_google_managed": "Вы вошли через Google. Ваш пароль управляется Google.",
+    "preferences": "Предпочтения",
+    "preferences_subtitle": "Язык и оформление",
+    "language": "Язык",
+    "theme": "Тема",
+    "change_avatar": "Изменить аватар"
   },
   "vendor": {
     "dashboard": "Панель Продавца",

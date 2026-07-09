@@ -294,7 +294,17 @@
     "avatar_updated": "Avatar yeniləndi!",
     "profile_updated": "Profil yeniləndi!",
     "password_updated": "Şifrə dəyişdirildi!",
-    "addresses": "Ünvanlarım"
+    "addresses": "Ünvanlarım",
+    "settings_title": "Ayarlar",
+    "settings_subtitle": "Hesab məlumatlarınızı və tərcihlərinizi idarə edin",
+    "profile_info": "Profil məlumatları",
+    "security": "Təhlükəsizlik",
+    "security_google_managed": "Google hesabı ilə daxil olmusunuz. Şifrəniz Google tərəfindən idarə olunur.",
+    "preferences": "Tərcihlər",
+    "preferences_subtitle": "Dil və görünüş",
+    "language": "Dil",
+    "theme": "Tema",
+    "change_avatar": "Avatarı dəyiş"
   },
   "vendor": {
     "dashboard": "Satıcı Paneli",
