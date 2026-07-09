@@ -81,6 +81,13 @@ vi.mock('@/components/admin/data-table', () => ({
           />
         )}
         {filters}
+        <div style={{ display: 'none' }} aria-hidden>
+          {columns.map((col: any, ci: number) => (
+            <span key={`h-${ci}`}>
+              {col.header ? col.header({ column: {}, header: {}, table: {} }) : null}
+            </span>
+          ))}
+        </div>
         {isError ? (
           <div data-testid="dt-error">{errorTitle}</div>
         ) : data.length === 0 ? (
@@ -208,6 +215,32 @@ describe('AdminReviewsPage', () => {
     expect(screen.getByText('Very Good')).toBeInTheDocument();
     expect(screen.getByText('Excellent product quality')).toBeInTheDocument();
     expect(screen.getByText('Wireless Charger')).toBeInTheDocument();
+  });
+
+  it('renders fallbacks for a review missing product, user and title', () => {
+    (useAdminReviews as Mock).mockReturnValue({
+      data: {
+        data: [
+          {
+            id: 'r3',
+            rating: 3,
+            title: null,
+            body: 'Anonymous body',
+            isApproved: true,
+            createdAt: '2026-06-08T10:00:00Z',
+            user: null,
+            product: null,
+          },
+        ],
+        pagination: { total: 1, pages: 1, page: 1, limit: 10 },
+      },
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    render(<AdminReviewsPage />);
+    expect(screen.getByText('Məhsul Silinib')).toBeInTheDocument();
+    expect(screen.getByText('Anonim')).toBeInTheDocument();
   });
 
   it('changing the status filter refetches with isApproved=false', () => {

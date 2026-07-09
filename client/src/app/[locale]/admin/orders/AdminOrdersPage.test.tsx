@@ -72,6 +72,13 @@ vi.mock('@/components/admin/data-table', () => ({
           />
         )}
         {filters}
+        <div style={{ display: 'none' }} aria-hidden>
+          {columns.map((col: any, ci: number) => (
+            <span key={`h-${ci}`}>
+              {col.header ? col.header({ column: {}, header: {}, table: {} }) : null}
+            </span>
+          ))}
+        </div>
         {isError ? (
           <div data-testid="dt-error">{errorTitle}</div>
         ) : data.length === 0 ? (
@@ -236,6 +243,25 @@ describe('AdminOrdersPage', () => {
     expect(screen.getByTestId('detail-dialog')).toBeInTheDocument();
     expect(screen.getByText('Cool Phone')).toBeInTheDocument();
     expect(screen.getByText('Please leave at reception')).toBeInTheDocument();
+  });
+
+  it('renders detail branches for discount, tracking number and non-stripe payment', () => {
+    (useOrder as Mock).mockReturnValue({
+      data: {
+        ...mockDetailOrder,
+        paymentMethod: 'cash',
+        trackingNumber: 'TRK-9',
+        discount: 15.0,
+        paymentStatus: 'PARTIALLY_REFUNDED',
+        status: 'SHIPPED',
+      },
+      isLoading: false,
+    });
+    render(<AdminOrdersPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: /admin_orders\.view_details/i })[0]);
+    expect(screen.getByTestId('detail-dialog')).toBeInTheDocument();
+    // tracking number is shown in the summary when present
+    expect(screen.getByText('TRK-9')).toBeInTheDocument();
   });
 
   it('submitting the status form calls the mutation', async () => {

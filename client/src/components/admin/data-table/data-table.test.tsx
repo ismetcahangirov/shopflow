@@ -2,7 +2,12 @@ import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { DataTable, DataTableColumnHeader } from './index';
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTableFilterSelect,
+  createSelectionColumn,
+} from './index';
 
 interface Row {
   id: string;
@@ -108,5 +113,67 @@ describe('DataTable', () => {
     const rows = screen.getAllByRole('row');
     // rows[0] is the header row; first data row should now be "Ayan"
     expect(within(rows[1]).getByText('Ayan')).toBeInTheDocument();
+  });
+
+  it('renders the full toolbar (filter select + view options + reset)', () => {
+    const onResetFilters = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        searchValue=""
+        onSearchChange={vi.fn()}
+        searchPlaceholder="Search..."
+        filters={
+          <DataTableFilterSelect
+            value="all"
+            onValueChange={vi.fn()}
+            ariaLabel="Status"
+            placeholder="Status"
+            options={[
+              { value: 'all', label: 'All' },
+              { value: 'x', label: 'X' },
+            ]}
+          />
+        }
+        showViewOptions
+        viewOptionsLabel="Columns"
+        onResetFilters={onResetFilters}
+        isFiltered
+        resetLabel="Reset"
+      />,
+    );
+    expect(screen.getByRole('button', { name: /Columns/i })).toBeInTheDocument();
+    // Reset button visible because isFiltered is true
+    fireEvent.click(screen.getByRole('button', { name: /Reset/i }));
+    expect(onResetFilters).toHaveBeenCalled();
+  });
+
+  it('supports a selection column and reports the selected count', () => {
+    const selectionColumn = createSelectionColumn<Row>('Select row');
+    render(
+      <DataTable
+        columns={[selectionColumn, ...columns]}
+        data={data}
+        enableRowSelection
+        page={1}
+        pageCount={1}
+        total={3}
+        onPageChange={vi.fn()}
+      />,
+    );
+    // Footer selection summary is rendered when selection is enabled
+    expect(screen.getByText(/sətir seçilib/i)).toBeInTheDocument();
+    // Select the first data row via its checkbox
+    const checkboxes = screen.getAllByRole('checkbox', { name: /Select row/i });
+    fireEvent.click(checkboxes[0]);
+    expect(screen.getByText(/1 \/ 3 sətir seçilib/i)).toBeInTheDocument();
+  });
+
+  it('calls onRowClick when a row is clicked', () => {
+    const onRowClick = vi.fn();
+    render(<DataTable columns={columns} data={data} onRowClick={onRowClick} />);
+    fireEvent.click(screen.getByText('Elvin'));
+    expect(onRowClick).toHaveBeenCalledWith(expect.objectContaining({ name: 'Elvin' }));
   });
 });

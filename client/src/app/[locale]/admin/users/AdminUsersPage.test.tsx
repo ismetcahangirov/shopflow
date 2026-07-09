@@ -74,6 +74,13 @@ vi.mock('@/components/admin/data-table', () => ({
           />
         )}
         {filters}
+        <div style={{ display: 'none' }} aria-hidden>
+          {columns.map((col: any, ci: number) => (
+            <span key={`h-${ci}`}>
+              {col.header ? col.header({ column: {}, header: {}, table: {} }) : null}
+            </span>
+          ))}
+        </div>
         {isError ? (
           <div data-testid="dt-error">{errorTitle}</div>
         ) : data.length === 0 ? (
@@ -210,6 +217,31 @@ describe('AdminUsersPage', () => {
     expect(screen.getByText('john@test.com')).toBeInTheDocument();
     expect(screen.getByText('Vendor User')).toBeInTheDocument();
     expect(screen.getByText('Admin User')).toBeInTheDocument();
+  });
+
+  it('renders fallbacks for a user with no name and no order count', () => {
+    (useAdminUsers as Mock).mockReturnValue({
+      data: {
+        data: [
+          {
+            id: 'u9',
+            name: '',
+            email: 'x@y.z',
+            role: 'CUSTOMER',
+            avatar: null,
+            isActive: true,
+            createdAt: '2026-06-08T10:00:00Z',
+          },
+        ],
+        pagination: { total: 1, pages: 1, page: 1, limit: 10 },
+      },
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    render(<AdminUsersPage />);
+    expect(screen.getByText('İstifadəçi')).toBeInTheDocument();
+    expect(screen.getByText('x@y.z')).toBeInTheDocument();
   });
 
   it('role filter refetches with role', () => {

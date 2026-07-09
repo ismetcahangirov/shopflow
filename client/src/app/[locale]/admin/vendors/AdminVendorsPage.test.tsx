@@ -57,6 +57,13 @@ vi.mock('@/components/admin/data-table', () => ({
     return (
       <div>
         {filters}
+        <div style={{ display: 'none' }} aria-hidden>
+          {columns.map((col: any, ci: number) => (
+            <span key={`h-${ci}`}>
+              {col.header ? col.header({ column: {}, header: {}, table: {} }) : null}
+            </span>
+          ))}
+        </div>
         {isError ? (
           <div data-testid="dt-error">{errorTitle}</div>
         ) : data.length === 0 ? (
@@ -248,6 +255,19 @@ describe('AdminVendorsPage', () => {
     fireEvent.click(screen.getByTestId('cancel-btn'));
     await waitFor(() => expect(screen.queryByTestId('status-confirm-dialog')).toBeNull());
     expect(mockMutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('renders badges and the allowed actions for REJECTED and SUSPENDED vendors', () => {
+    setupHooks([
+      buildVendor({ id: 'v-r', status: 'REJECTED' }),
+      buildVendor({ id: 'v-s', status: 'SUSPENDED' }),
+    ]);
+    render(<AdminVendorsPage />);
+    // REJECTED -> approve only
+    expect(screen.getByTestId('action-approved-v-r')).toBeInTheDocument();
+    // SUSPENDED -> approve + reject
+    expect(screen.getByTestId('action-approved-v-s')).toBeInTheDocument();
+    expect(screen.getByTestId('action-rejected-v-s')).toBeInTheDocument();
   });
 
   it('renders error state', () => {
