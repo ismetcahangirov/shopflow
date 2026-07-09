@@ -17,19 +17,19 @@ export const getDashboard = asyncHandler(async (req: Request, res: Response): Pr
   ]);
 
   const revenueData = await prisma.$queryRaw<{ date: string; revenue: number; orders: bigint }[]>`
-    SELECT DATE(created_at) as date, SUM(total) as revenue, COUNT(*)::int as orders
+    SELECT DATE("createdAt") as date, SUM(total) as revenue, COUNT(*)::int as orders
     FROM orders
-    WHERE payment_status = 'PAID' AND created_at >= ${since}
-    GROUP BY DATE(created_at)
+    WHERE "paymentStatus" = 'PAID' AND "createdAt" >= ${since}
+    GROUP BY DATE("createdAt")
     ORDER BY date ASC
   `;
 
   const topProducts = await prisma.$queryRaw<{ id: string; name: string; sales_count: bigint; revenue: number }[]>`
     SELECT p.id, p.name, SUM(oi.quantity)::int as sales_count, SUM(oi.total) as revenue
     FROM order_items oi
-    JOIN products p ON p.id = oi.product_id
-    JOIN orders o ON o.id = oi.order_id
-    WHERE o.payment_status = 'PAID' AND o.created_at >= ${since}
+    JOIN products p ON p.id = oi."productId"
+    JOIN orders o ON o.id = oi."orderId"
+    WHERE o."paymentStatus" = 'PAID' AND o."createdAt" >= ${since}
     GROUP BY p.id, p.name
     ORDER BY revenue DESC
     LIMIT 10
@@ -78,31 +78,31 @@ export const getSalesChart = asyncHandler(async (req: Request, res: Response): P
 
   if (interval === 'month') {
     sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
-      SELECT DATE_TRUNC('month', created_at) as period,
+      SELECT DATE_TRUNC('month', "createdAt") as period,
              SUM(total) as revenue,
              COUNT(*)::int as orders
       FROM orders
-      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      WHERE "paymentStatus" = 'PAID' AND "createdAt" >= ${start} AND "createdAt" <= ${end}
       GROUP BY period
       ORDER BY period ASC
     `;
   } else if (interval === 'year') {
     sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
-      SELECT DATE_TRUNC('year', created_at) as period,
+      SELECT DATE_TRUNC('year', "createdAt") as period,
              SUM(total) as revenue,
              COUNT(*)::int as orders
       FROM orders
-      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      WHERE "paymentStatus" = 'PAID' AND "createdAt" >= ${start} AND "createdAt" <= ${end}
       GROUP BY period
       ORDER BY period ASC
     `;
   } else {
     sales = await prisma.$queryRaw<{ period: string; revenue: number; orders: bigint }[]>`
-      SELECT DATE(created_at) as period,
+      SELECT DATE("createdAt") as period,
              SUM(total) as revenue,
              COUNT(*)::int as orders
       FROM orders
-      WHERE payment_status = 'PAID' AND created_at >= ${start} AND created_at <= ${end}
+      WHERE "paymentStatus" = 'PAID' AND "createdAt" >= ${start} AND "createdAt" <= ${end}
       GROUP BY period
       ORDER BY period ASC
     `;
