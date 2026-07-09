@@ -10,6 +10,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AppSidebar } from '@/components/admin/AppSidebar';
 import { AdminTopbar } from '@/components/admin/AdminTopbar';
+import { Toaster } from '@/components/ui/sonner';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ export default function AdminLayout({ children }: AdminLayoutProps): React.JSX.E
             <AdminTopbar />
             <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
           </SidebarInset>
+          <Toaster position="top-right" richColors closeButton />
         </SidebarProvider>
       </TooltipProvider>
     </ProtectedRoute>

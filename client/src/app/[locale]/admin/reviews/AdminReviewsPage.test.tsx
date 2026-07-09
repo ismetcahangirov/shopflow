@@ -1,95 +1,149 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import AdminReviewsPage from './page';
 import { useAdminReviews, useApproveReview, useDeleteReview } from '@/hooks/useReviews';
 
-// Mock next-intl
+// next-intl: return `namespace.key`
 vi.mock('next-intl', () => ({
-  useTranslations: (namespace?: string) => (key: string) => {
-    return namespace ? `${namespace}.${key}` : key;
-  },
+  useTranslations: (namespace?: string) => (key: string) =>
+    namespace ? `${namespace}.${key}` : key,
 }));
 
-// Mock hooks
+// Sonner toasts are side-effect only in tests
+vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+
 vi.mock('@/hooks/useReviews', () => ({
   useAdminReviews: vi.fn(),
   useApproveReview: vi.fn(),
   useDeleteReview: vi.fn(),
 }));
 
-// Mock UI components to simplify test rendering and prevent portal errors
 vi.mock('@/components/layout/Breadcrumb', () => ({
   Breadcrumb: () => <div data-testid="mock-breadcrumb" />,
 }));
 
-interface MockPageHeaderProps {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
-}
-
 vi.mock('@/components/ui/page-header', () => ({
-  PageHeader: ({ title, description, actions }: MockPageHeaderProps) => (
+  PageHeader: ({ title, actions }: { title: React.ReactNode; actions?: React.ReactNode }) => (
     <div data-testid="mock-page-header">
       <h1>{title}</h1>
-      {description && <p>{description}</p>}
       {actions}
     </div>
   ),
 }));
 
-interface MockPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-vi.mock('@/components/ui/pagination', () => ({
-  Pagination: ({ currentPage, totalPages, onPageChange }: MockPaginationProps) => (
-    <div data-testid="mock-pagination">
-      <span>{currentPage}/{totalPages}</span>
-      <button onClick={() => onPageChange(currentPage - 1)} data-testid="prev-page">Prev</button>
-      <button onClick={() => onPageChange(currentPage + 1)} data-testid="next-page">Next</button>
-    </div>
+vi.mock('@/components/products/StarRating', () => ({
+  StarRating: ({ rating }: { rating: number }) => (
+    <div data-testid="mock-star-rating">Rating: {rating}</div>
   ),
 }));
 
-interface MockConfirmDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-}
-
-vi.mock('@/components/ui/confirm-dialog', () => ({
-  ConfirmDialog: ({ isOpen, onClose, onConfirm, title, message }: MockConfirmDialogProps) => {
-    if (!isOpen) return null;
+// Lightweight DataTable double: renders each row's column cells so the page's
+// cell/action logic is exercised without the Base UI portal machinery.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+vi.mock('@/components/admin/data-table', () => ({
+  DataTableColumnHeader: () => null,
+  DataTableFilterSelect: ({ value, onValueChange, options, ariaLabel }: any) => (
+    <select
+      aria-label={ariaLabel}
+      data-testid={`filter-${ariaLabel}`}
+      value={value}
+      onChange={(e) => onValueChange(e.target.value)}
+    >
+      {options.map((o: any) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  ),
+  DataTable: ({
+    data,
+    columns,
+    isLoading,
+    isError,
+    emptyTitle,
+    errorTitle,
+    searchValue,
+    onSearchChange,
+    searchPlaceholder,
+    filters,
+  }: any) => {
+    if (isLoading) return <div data-testid="dt-loading" />;
     return (
-      <div data-testid="mock-confirm-dialog">
-        <h2>{title}</h2>
-        <p>{message}</p>
-        <button onClick={onConfirm} data-testid="confirm-btn">Confirm</button>
-        <button onClick={onClose} data-testid="cancel-btn">Cancel</button>
+      <div>
+        {onSearchChange && (
+          <input
+            data-testid="dt-search"
+            placeholder={searchPlaceholder}
+            value={searchValue ?? ''}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        )}
+        {filters}
+        <div style={{ display: 'none' }} aria-hidden>
+          {columns.map((col: any, ci: number) => (
+            <span key={`h-${ci}`}>
+              {col.header ? col.header({ column: {}, header: {}, table: {} }) : null}
+            </span>
+          ))}
+        </div>
+        {isError ? (
+          <div data-testid="dt-error">{errorTitle}</div>
+        ) : data.length === 0 ? (
+          <div data-testid="dt-empty">{emptyTitle}</div>
+        ) : (
+          <table>
+            <tbody>
+              {data.map((item: any, index: number) => (
+                <tr key={item.id ?? index}>
+                  {columns.map((col: any, ci: number) => (
+                    <td key={ci}>
+                      {col.cell
+                        ? col.cell({ row: { original: item, index, getValue: (k: string) => item[k] } })
+                        : null}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     );
   },
 }));
 
-interface MockStarRatingProps {
-  rating: number;
-}
-
-vi.mock('@/components/products/StarRating', () => ({
-  StarRating: ({ rating }: MockStarRatingProps) => (
-    <div data-testid="mock-star-rating" data-rating={rating}>
-      Rating: {rating}
-    </div>
+vi.mock('@/components/ui/dropdown-menu', () => ({
+  DropdownMenu: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ render }: any) => render ?? null,
+  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, onClick, disabled, ...rest }: any) => (
+    <button type="button" onClick={onClick} disabled={disabled} data-testid={rest['data-testid']}>
+      {children}
+    </button>
   ),
+  DropdownMenuSeparator: () => null,
 }));
 
-describe('AdminReviewsPage component tests', () => {
+vi.mock('@/components/admin/AdminConfirmDialog', () => ({
+  AdminConfirmDialog: ({ open, onConfirm, onOpenChange, title, children }: any) =>
+    open ? (
+      <div data-testid="confirm-dialog">
+        <h2>{title}</h2>
+        {children}
+        <button data-testid="confirm-btn" onClick={onConfirm}>
+          Confirm
+        </button>
+        <button data-testid="cancel-btn" onClick={() => onOpenChange(false)}>
+          Cancel
+        </button>
+      </div>
+    ) : null,
+}));
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+describe('AdminReviewsPage', () => {
   const mockReviews = [
     {
       id: 'review-1',
@@ -97,10 +151,6 @@ describe('AdminReviewsPage component tests', () => {
       title: 'Very Good',
       body: 'Excellent product quality',
       isApproved: false,
-      isVerified: true,
-      helpfulCount: 0,
-      userId: 'user-1',
-      productId: 'prod-1',
       createdAt: '2026-06-08T10:00:00Z',
       user: { id: 'user-1', name: 'John Doe' },
       product: { id: 'prod-1', name: 'Premium iPhone Case', slug: 'premium-iphone-case' },
@@ -111,141 +161,115 @@ describe('AdminReviewsPage component tests', () => {
       title: 'Amazing',
       body: 'I really love this case!',
       isApproved: true,
-      isVerified: false,
-      helpfulCount: 2,
-      userId: 'user-2',
-      productId: 'prod-2',
       createdAt: '2026-06-08T11:00:00Z',
       user: { id: 'user-2', name: 'Jane Smith' },
       product: { id: 'prod-2', name: 'Wireless Charger', slug: 'wireless-charger' },
     },
   ];
 
-  const mockApproveMutateAsync = vi.fn();
-  const mockDeleteMutateAsync = vi.fn();
+  const mockApprove = vi.fn();
+  const mockDelete = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockApprove.mockResolvedValue(undefined);
+    mockDelete.mockResolvedValue(undefined);
 
     (useAdminReviews as Mock).mockReturnValue({
-      data: {
-        data: mockReviews,
-        pagination: { total: 2, pages: 1, page: 1, limit: 10 },
-      },
+      data: { data: mockReviews, pagination: { total: 2, pages: 1, page: 1, limit: 10 } },
       isLoading: false,
       isError: false,
       refetch: vi.fn(),
     });
-
-    (useApproveReview as Mock).mockReturnValue({
-      mutateAsync: mockApproveMutateAsync,
-      isPending: false,
-    });
-
-    (useDeleteReview as Mock).mockReturnValue({
-      mutateAsync: mockDeleteMutateAsync,
-      isPending: false,
-    });
+    (useApproveReview as Mock).mockReturnValue({ mutateAsync: mockApprove, isPending: false });
+    (useDeleteReview as Mock).mockReturnValue({ mutateAsync: mockDelete, isPending: false });
   });
 
-  it('renders loading skeleton when isLoading is true', () => {
+  it('renders loading state', () => {
     (useAdminReviews as Mock).mockReturnValue({
       data: null,
       isLoading: true,
       isError: false,
       refetch: vi.fn(),
     });
-
     render(<AdminReviewsPage />);
-    expect(screen.getByTestId('mock-page-header')).toBeInTheDocument();
+    expect(screen.getByTestId('dt-loading')).toBeInTheDocument();
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
   });
 
-  it('renders empty state when no reviews found', () => {
+  it('renders empty state when no reviews', () => {
+    (useAdminReviews as Mock).mockReturnValue({
+      data: { data: [], pagination: { total: 0, pages: 0, page: 1, limit: 10 } },
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+    render(<AdminReviewsPage />);
+    expect(screen.getByText('admin_reviews.no_reviews')).toBeInTheDocument();
+  });
+
+  it('renders reviews list', () => {
+    render(<AdminReviewsPage />);
+    expect(screen.getByText('Premium iPhone Case')).toBeInTheDocument();
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Very Good')).toBeInTheDocument();
+    expect(screen.getByText('Excellent product quality')).toBeInTheDocument();
+    expect(screen.getByText('Wireless Charger')).toBeInTheDocument();
+  });
+
+  it('renders fallbacks for a review missing product, user and title', () => {
     (useAdminReviews as Mock).mockReturnValue({
       data: {
-        data: [],
-        pagination: { total: 0, pages: 0, page: 1, limit: 10 },
+        data: [
+          {
+            id: 'r3',
+            rating: 3,
+            title: null,
+            body: 'Anonymous body',
+            isApproved: true,
+            createdAt: '2026-06-08T10:00:00Z',
+            user: null,
+            product: null,
+          },
+        ],
+        pagination: { total: 1, pages: 1, page: 1, limit: 10 },
       },
       isLoading: false,
       isError: false,
       refetch: vi.fn(),
     });
-
     render(<AdminReviewsPage />);
-    expect(screen.getByText('admin_reviews.no_reviews')).toBeInTheDocument();
+    expect(screen.getByText('Məhsul Silinib')).toBeInTheDocument();
+    expect(screen.getByText('Anonim')).toBeInTheDocument();
   });
 
-  it('renders reviews table listing when reviews data is loaded', () => {
+  it('changing the status filter refetches with isApproved=false', () => {
     render(<AdminReviewsPage />);
-
-    expect(screen.getByRole('table')).toBeInTheDocument();
-    expect(screen.getByText('Premium iPhone Case')).toBeInTheDocument();
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('Very Good')).toBeInTheDocument();
-    expect(screen.getByText('Excellent product quality')).toBeInTheDocument();
-
-    expect(screen.getByText('Wireless Charger')).toBeInTheDocument();
-    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
-    expect(screen.getByText('Amazing')).toBeInTheDocument();
-    expect(screen.getByText('I really love this case!')).toBeInTheDocument();
-  });
-
-  it('handles filtering updates', () => {
-    const mockRefetch = vi.fn();
-    (useAdminReviews as Mock).mockReturnValue({
-      data: { data: mockReviews, pagination: { total: 2, pages: 1, page: 1, limit: 10 } },
-      isLoading: false,
-      isError: false,
-      refetch: mockRefetch,
+    fireEvent.change(screen.getByTestId('filter-admin_reviews.status_filter'), {
+      target: { value: 'false' },
     });
-
-    render(<AdminReviewsPage />);
-
-    // Click Pending filter button
-    const pendingButton = screen.getByRole('button', { name: 'admin_reviews.pending' });
-    fireEvent.click(pendingButton);
-
     expect(useAdminReviews).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        isApproved: false,
-        page: 1,
-      })
+      expect.objectContaining({ isApproved: false, page: 1 }),
     );
   });
 
-  it('triggers update approval status mutation when toggle approve/reject is clicked', async () => {
+  it('toggling approval calls the approve mutation', async () => {
     render(<AdminReviewsPage />);
-
-    // Find all rows, get buttons inside them
-    const rows = screen.getAllByRole('row');
-    // Row 1 is header, Row 2 is review-1 (pending, isApproved: false), Row 3 is review-2 (approved, isApproved: true)
-    
-    // Toggle review-1 to approved (isApproved: true)
-    const review1ApproveBtn = within(rows[1]).getAllByRole('button')[0];
-    fireEvent.click(review1ApproveBtn);
-
-    expect(mockApproveMutateAsync).toHaveBeenCalledWith({
-      id: 'review-1',
-      isApproved: true,
+    // review-1 is pending -> shows the "approve" action
+    await act(async () => {
+      fireEvent.click(screen.getByText('admin_reviews.approve'));
     });
+    expect(mockApprove).toHaveBeenCalledWith({ id: 'review-1', isApproved: true });
   });
 
-  it('opens confirm dialog and deletes review upon confirmation', async () => {
+  it('deleting a review opens the confirm dialog and deletes on confirm', async () => {
     render(<AdminReviewsPage />);
-
     const rows = screen.getAllByRole('row');
-    const review1DeleteBtn = within(rows[1]).getAllByRole('button')[1];
-    
-    // Click delete button to open confirm dialog
-    fireEvent.click(review1DeleteBtn);
-
-    expect(screen.getByTestId('mock-confirm-dialog')).toBeInTheDocument();
-    expect(screen.getByText('admin_reviews.delete')).toBeInTheDocument();
-
-    const confirmBtn = screen.getByTestId('confirm-btn');
-    fireEvent.click(confirmBtn);
-
-    expect(mockDeleteMutateAsync).toHaveBeenCalledWith('review-1');
+    fireEvent.click(within(rows[0]).getByText('admin_reviews.delete'));
+    expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('confirm-btn'));
+    });
+    expect(mockDelete).toHaveBeenCalledWith('review-1');
   });
 });
