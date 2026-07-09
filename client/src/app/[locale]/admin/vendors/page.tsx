@@ -211,7 +211,7 @@ export default function AdminVendorsPage(): React.JSX.Element {
             <Button
               variant="outline"
               onClick={() => refetch()}
-              className="rounded-xl border-slate-200 dark:border-slate-800"
+              className="rounded-xl border-border dark:border-border"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               Yenilə
@@ -221,26 +221,26 @@ export default function AdminVendorsPage(): React.JSX.Element {
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm w-full md:flex-row md:items-center">
+      <div className="flex flex-col gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm w-full md:flex-row md:items-center">
         {/* Search */}
         <div className="relative w-full md:w-72">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder={t('search_placeholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/25 dark:border-slate-800"
+            className="pl-9 pr-4 py-2 w-full rounded-xl border border-border focus:outline-none focus:ring-2 focus:ring-indigo-500/25 dark:border-border"
             data-testid="search-vendors-input"
           />
         </div>
 
         {/* Status filter */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider">
+          <span className="text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
             {t('status_filter')}:
           </span>
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 flex-wrap gap-1">
+          <div className="inline-flex rounded-xl bg-muted p-1 dark:bg-background border border-border dark:border-border flex-wrap gap-1">
             {STATUS_FILTERS.map((s) => (
               <button
                 key={s}
@@ -250,8 +250,8 @@ export default function AdminVendorsPage(): React.JSX.Element {
                 className={[
                   'rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-200',
                   statusFilter === s
-                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-450 dark:hover:text-white',
+                    ? 'bg-card text-foreground shadow-sm dark:bg-card dark:text-foreground'
+                    : 'text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-white',
                 ].join(' ')}
               >
                 {t(s === 'ALL' ? 'all' : s === 'PENDING' ? 'pending' : s === 'APPROVED' ? 'approved' : s === 'REJECTED' ? 'rejected' : 'suspended')}
@@ -262,7 +262,7 @@ export default function AdminVendorsPage(): React.JSX.Element {
       </div>
 
       {/* Vendors Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border dark:border-border rounded-2xl shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-16 space-y-4">
             <Skeleton className="h-10 w-full" />
@@ -275,15 +275,15 @@ export default function AdminVendorsPage(): React.JSX.Element {
             <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
               <AlertCircle className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">{t('error_occurred')}</h4>
+            <h4 className="font-extrabold text-foreground dark:text-foreground">{t('error_occurred')}</h4>
           </div>
         ) : !vendorsData?.data || vendorsData.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl text-slate-400">
+            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
               <Store className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">{t('no_vendors')}</h4>
-            <p className="text-sm text-slate-500 dark:text-slate-450 max-w-xs">{t('no_vendors_desc')}</p>
+            <h4 className="font-extrabold text-foreground dark:text-foreground">{t('no_vendors')}</h4>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-xs">{t('no_vendors_desc')}</p>
           </div>
         ) : (
           <div>
@@ -306,7 +306,7 @@ export default function AdminVendorsPage(): React.JSX.Element {
                     return (
                       <TableRow
                         key={vendor.id}
-                        className="group hover:bg-slate-50/20 dark:hover:bg-slate-950/5"
+                        className="group hover:bg-muted/20 dark:hover:bg-background/5"
                         data-testid={`vendor-row-${vendor.id}`}
                       >
                         {/* Store name */}
@@ -318,10 +318,10 @@ export default function AdminVendorsPage(): React.JSX.Element {
                               size="sm"
                             />
                             <div className="flex flex-col">
-                              <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                              <span className="text-sm font-semibold text-foreground dark:text-foreground">
                                 {vendor.storeName}
                               </span>
-                              <span className="text-xs text-slate-450 dark:text-slate-500">
+                              <span className="text-xs text-muted-foreground dark:text-muted-foreground">
                                 /{vendor.slug}
                               </span>
                             </div>
@@ -331,27 +331,27 @@ export default function AdminVendorsPage(): React.JSX.Element {
                         {/* Owner */}
                         <TableCell className="px-6 py-4">
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium text-slate-900 dark:text-white">
+                            <span className="text-sm font-medium text-foreground dark:text-foreground">
                               {vendor.user.name}
                             </span>
-                            <span className="text-xs text-slate-450 dark:text-slate-500">
+                            <span className="text-xs text-muted-foreground dark:text-muted-foreground">
                               {vendor.user.email}
                             </span>
                           </div>
                         </TableCell>
 
                         {/* Products count */}
-                        <TableCell className="px-6 py-4 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
+                        <TableCell className="px-6 py-4 text-center text-sm font-medium text-foreground dark:text-muted-foreground">
                           {vendor.productCount}
                         </TableCell>
 
                         {/* Total sales */}
-                        <TableCell className="px-6 py-4 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
+                        <TableCell className="px-6 py-4 text-center text-sm font-medium text-foreground dark:text-muted-foreground">
                           ₼{vendor.totalSales.toFixed(2)}
                         </TableCell>
 
                         {/* Created at */}
-                        <TableCell className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                        <TableCell className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                           {new Date(vendor.createdAt).toLocaleDateString('az-AZ', {
                             day: '2-digit',
                             month: '2-digit',
@@ -391,7 +391,7 @@ export default function AdminVendorsPage(): React.JSX.Element {
 
             {/* Pagination */}
             {vendorsData.pagination && (
-              <div className="border-t border-slate-50 dark:border-slate-800/80 px-4">
+              <div className="border-t border-border dark:border-border/80 px-4">
                 <Pagination
                   currentPage={page}
                   totalPages={vendorsData.pagination.pages}
@@ -413,18 +413,18 @@ export default function AdminVendorsPage(): React.JSX.Element {
           aria-modal="true"
           data-testid="status-confirm-dialog"
         >
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 space-y-4">
-            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">
+          <div className="bg-card dark:bg-card rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 space-y-4">
+            <h3 className="text-lg font-extrabold text-foreground dark:text-foreground">
               {t('status_change_title')}
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               {t('status_change_confirm')}
             </p>
             {/* Note */}
             <div className="space-y-1">
               <label
                 htmlFor="vendor-status-note"
-                className="text-xs font-semibold text-slate-700 dark:text-slate-300"
+                className="text-xs font-semibold text-foreground dark:text-muted-foreground"
               >
                 {t('note_label')}
               </label>
@@ -434,7 +434,7 @@ export default function AdminVendorsPage(): React.JSX.Element {
                 onChange={(e) => setNoteValue(e.target.value)}
                 placeholder={t('note_placeholder')}
                 rows={3}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/25 resize-none"
+                className="w-full rounded-xl border border-border dark:border-border bg-muted dark:bg-muted px-3 py-2 text-sm text-foreground dark:text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/25 resize-none"
                 data-testid="vendor-status-note"
               />
             </div>

@@ -191,21 +191,21 @@ export default function AdminCouponsPage(): React.JSX.Element {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             id="coupon-search"
             placeholder="Kupon kodu axtar..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-slate-50/50 rounded-xl"
+            className="pl-9 bg-muted/50 rounded-xl"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status:</span>
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-950 border border-slate-100 dark:border-slate-850">
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Status:</span>
+          <div className="inline-flex rounded-xl bg-muted p-1 dark:bg-background border border-border dark:border-border">
             {(['all', 'active', 'inactive'] as const).map((f) => (
               <button
                 key={f}
@@ -214,8 +214,8 @@ export default function AdminCouponsPage(): React.JSX.Element {
                 className={[
                   'rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-200 capitalize',
                   statusFilter === f
-                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-450',
+                    ? 'bg-card text-foreground shadow-sm dark:bg-card dark:text-foreground'
+                    : 'text-muted-foreground hover:text-foreground dark:text-muted-foreground',
                 ].join(' ')}
               >
                 {f === 'all' ? 'Hamısı' : f === 'active' ? 'Aktiv' : 'Deaktiv'}
@@ -226,27 +226,27 @@ export default function AdminCouponsPage(): React.JSX.Element {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border dark:border-border/80 rounded-2xl shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4">
             <Spinner className="h-8 w-8 text-indigo-600" />
-            <p className="text-sm font-semibold text-slate-500">Kuponlar yüklənir...</p>
+            <p className="text-sm font-semibold text-muted-foreground">Kuponlar yüklənir...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
             <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500">
               <AlertCircle className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">Xəta baş verdi</h4>
-            <p className="text-sm text-slate-500 max-w-sm">Kupon siyahısını yükləmək mümkün olmadı.</p>
+            <h4 className="font-extrabold text-foreground dark:text-foreground">Xəta baş verdi</h4>
+            <p className="text-sm text-muted-foreground max-w-sm">Kupon siyahısını yükləmək mümkün olmadı.</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl text-slate-400">
+            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
               <TicketPercent className="h-8 w-8" />
             </div>
-            <h4 className="font-extrabold text-slate-900 dark:text-white">Kupon tapılmadı</h4>
-            <p className="text-sm text-slate-500 max-w-xs">
+            <h4 className="font-extrabold text-foreground dark:text-foreground">Kupon tapılmadı</h4>
+            <p className="text-sm text-muted-foreground max-w-xs">
               {searchTerm ? 'Axtarışa uyğun kupon yoxdur.' : 'Hələ heç bir kupon yaradılmayıb.'}
             </p>
           </div>
@@ -254,7 +254,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-950/20 text-xs font-bold text-slate-400 uppercase tracking-wider select-none">
+                <tr className="border-b border-border dark:border-border/60 bg-muted/50 dark:bg-background/20 text-xs font-bold text-muted-foreground uppercase tracking-wider select-none">
                   <th className="px-6 py-4">Kod</th>
                   <th className="px-6 py-4">Tip</th>
                   <th className="px-6 py-4">Dəyər</th>
@@ -265,24 +265,24 @@ export default function AdminCouponsPage(): React.JSX.Element {
                   <th className="px-6 py-4 text-right">Əməliyyatlar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
+              <tbody className="divide-y divide-border dark:divide-border/40">
                 {filtered.map((coupon) => (
                   <tr
                     key={coupon.id}
-                    className="group hover:bg-slate-50/30 dark:hover:bg-slate-950/5 transition-colors"
+                    className="group hover:bg-muted/30 dark:hover:bg-background/5 transition-colors"
                   >
                     {/* Code */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Tag className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
-                        <span className="font-mono font-bold text-sm text-slate-900 dark:text-white tracking-wider">
+                        <span className="font-mono font-bold text-sm text-foreground dark:text-foreground tracking-wider">
                           {coupon.code}
                         </span>
                       </div>
                     </td>
 
                     {/* Type */}
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                       {coupon.type === 'PERCENTAGE' ? (
                         <Badge variant="secondary">% Faiz</Badge>
                       ) : (
@@ -291,34 +291,34 @@ export default function AdminCouponsPage(): React.JSX.Element {
                     </td>
 
                     {/* Value */}
-                    <td className="px-6 py-4 text-sm font-bold text-slate-800 dark:text-slate-200">
+                    <td className="px-6 py-4 text-sm font-bold text-foreground dark:text-foreground">
                       {coupon.type === 'PERCENTAGE'
                         ? `${coupon.value}%`
                         : `${coupon.value.toFixed(2)} AZN`}
                       {coupon.maxDiscount != null && (
-                        <span className="ml-1.5 text-xs font-normal text-slate-400">
+                        <span className="ml-1.5 text-xs font-normal text-muted-foreground">
                           (max {coupon.maxDiscount} AZN)
                         </span>
                       )}
                     </td>
 
                     {/* Min order */}
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                       {coupon.minOrderValue != null
                         ? `${coupon.minOrderValue.toFixed(2)} AZN`
                         : '—'}
                     </td>
 
                     {/* Usage */}
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                       {coupon.usedCount}
                       {coupon.maxUses != null && (
-                        <span className="text-slate-400"> / {coupon.maxUses}</span>
+                        <span className="text-muted-foreground"> / {coupon.maxUses}</span>
                       )}
                     </td>
 
                     {/* Expires at */}
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
                       {coupon.expiresAt
                         ? new Date(coupon.expiresAt).toLocaleDateString('az-AZ')
                         : '—'}
@@ -345,7 +345,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
                         <Button
                           variant="secondary"
                           onClick={() => openEdit(coupon)}
-                          className="p-2 h-auto text-slate-600 hover:text-indigo-650 bg-slate-50 hover:bg-indigo-50 dark:bg-slate-950 dark:hover:bg-indigo-950/20 rounded-lg transition-colors"
+                          className="p-2 h-auto text-muted-foreground hover:text-indigo-650 bg-muted hover:bg-indigo-50 dark:bg-background dark:hover:bg-indigo-950/20 rounded-lg transition-colors"
                           title="Redaktə Et"
                         >
                           <Edit2 className="h-4 w-4" />
@@ -353,7 +353,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
                         <Button
                           variant="secondary"
                           onClick={() => openDeleteConfirm(coupon.id)}
-                          className="p-2 h-auto text-slate-600 hover:text-red-650 bg-slate-50 hover:bg-red-50 dark:bg-slate-950 dark:hover:bg-red-950/20 rounded-lg transition-colors"
+                          className="p-2 h-auto text-muted-foreground hover:text-red-650 bg-muted hover:bg-red-50 dark:bg-background dark:hover:bg-red-950/20 rounded-lg transition-colors"
                           title="Sil"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -389,7 +389,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
               disabled={!!editingCoupon}
             />
             {!!editingCoupon && (
-              <p className="text-xs text-slate-400">Mövcud kupon kodu dəyişdirilə bilməz.</p>
+              <p className="text-xs text-muted-foreground">Mövcud kupon kodu dəyişdirilə bilməz.</p>
             )}
           </div>
 
@@ -400,7 +400,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
               id="couponType"
               value={form.type}
               onChange={(e) => handleField('type', e.target.value as CouponType)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+              className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
             >
               {(Object.entries(COUPON_TYPE_LABELS) as [CouponType, string][]).map(([val, label]) => (
                 <option key={val} value={val}>{label}</option>
@@ -505,7 +505,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
               id="couponIsActive"
               checked={form.isActive}
               onChange={(e) => handleField('isActive', e.target.checked)}
-              className="h-4 w-4 rounded border-slate-350 text-indigo-600 focus:ring-indigo-500"
+              className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-500"
             />
             <Label htmlFor="couponIsActive" className="cursor-pointer select-none">
               Bu kupon aktivdir
@@ -513,7 +513,7 @@ export default function AdminCouponsPage(): React.JSX.Element {
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-border/80">
             <Button
               type="button"
               variant="secondary"
