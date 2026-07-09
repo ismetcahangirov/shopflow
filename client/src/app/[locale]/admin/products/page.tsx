@@ -1,70 +1,104 @@
 // src/app/[locale]/admin/products/page.tsx
+// Product CRUD management migrated to the shared DataTable + shadcn Dialog with
+// Tabs (basic/pricing/images/attributes/seo), Select/Switch inputs and Sonner
+// toasts. Preserves debounced search, filters, image upload queue, attribute/
+// tag editors and low-stock warnings.
+
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { 
-  Plus, 
-  Search, 
-  Edit2, 
-  Trash2, 
-  Upload, 
-  FolderOpen, 
-  CheckCircle, 
-  XCircle, 
-  AlertCircle, 
+import { useTranslations } from 'next-intl';
+import type { ColumnDef } from '@tanstack/react-table';
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Upload,
+  FolderOpen,
+  CheckCircle,
+  XCircle,
   Image as ImageIcon,
   Loader2,
   Tag,
   DollarSign,
   Layers,
   Globe,
-  Star
+  Star,
+  MoreHorizontal,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { PageHeader } from '@/components/ui/page-header';
 import { Button } from '@/components/ui/button';
-import { Modal } from '@/components/ui/modal';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Spinner } from '@/components/ui/spinner';
-import { Pagination } from '@/components/ui/pagination';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTableFilterSelect,
+} from '@/components/admin/data-table';
+import { AdminConfirmDialog } from '@/components/admin/AdminConfirmDialog';
 import { parseApiError } from '@/lib/api';
-import { 
-  useProductsQuery, 
-  useCreateProductMutation, 
-  useUpdateProductMutation, 
+import {
+  useProductsQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
   useDeleteProductMutation,
   useAddProductImageMutation,
-  useDeleteProductImageMutation 
+  useDeleteProductImageMutation,
 } from '@/hooks/useProducts';
 import { useCategoriesQuery } from '@/hooks/useCategories';
 import type { Product, Category, ProductAttribute } from '@/types';
 
-// Simple slugify function helper
 const slugify = (text: string) => {
   const a = 'àáäâãåăæçèéëêéíïîìñóöôõøœùúüûñç·/_,:;';
   const b = 'aaaaaaaaceeeeeeiiiinooooooouuuunc------';
   const p = new RegExp(a.split('').join('|'), 'g');
-
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
-    .replace(/&/g, '-and-')         // Replace & with 'and'
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word characters
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start
-    .replace(/-+$/, '');            // Trim - from end
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(p, (c) => b.charAt(a.indexOf(c)))
+    .replace(/&/g, '-and-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
 };
+
+type FlatCategory = Category & { level: number };
 
 export default function AdminProductsPage(): React.JSX.Element {
   const t = useTranslations('admin_products');
   const tCommon = useTranslations('common');
 
-  // Filters State
+  // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -73,25 +107,21 @@ export default function AdminProductsPage(): React.JSX.Element {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  // Debounce search term
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
-      setPage(1); // reset to first page on search
+      setPage(1);
     }, 405);
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // Modal State
+  // Dialog state
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'basic' | 'pricing' | 'images' | 'attributes' | 'seo'>('basic');
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  
-  // Product state
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Form Field States
+  // Form fields
   const [formName, setFormName] = useState('');
   const [formSlug, setFormSlug] = useState('');
   const [formDescription, setFormDescription] = useState('');
@@ -101,39 +131,24 @@ export default function AdminProductsPage(): React.JSX.Element {
   const [formSku, setFormSku] = useState('');
   const [formBarcode, setFormBarcode] = useState('');
   const [formWeight, setFormWeight] = useState<number | ''>('');
-  
   const [formPrice, setFormPrice] = useState<number | ''>('');
   const [formComparePrice, setFormComparePrice] = useState<number | ''>('');
   const [formCostPrice, setFormCostPrice] = useState<number | ''>('');
   const [formStock, setFormStock] = useState<number | ''>('');
   const [formLowStockAlert, setFormLowStockAlert] = useState<number>(5);
-
   const [formIsActive, setFormIsActive] = useState(true);
   const [formIsFeatured, setFormIsFeatured] = useState(false);
-
-  // Custom attributes array
   const [formAttributes, setFormAttributes] = useState<Array<{ name: string; value: string }>>([]);
-  // Tags array
   const [formTags, setFormTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-
-  // SEO Meta States
   const [formMetaTitle, setFormMetaTitle] = useState('');
   const [formMetaDesc, setFormMetaDesc] = useState('');
-
-  // Local images upload queue
   const [imagesQueue, setImagesQueue] = useState<File[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
 
-  // API Queries & Mutations
   const { data: categoriesData } = useCategoriesQuery();
 
-  // Prepare product list query params
-  const productQueryParams: Record<string, unknown> = {
-    page,
-    limit,
-    sort: 'newest',
-  };
+  const productQueryParams: Record<string, unknown> = { page, limit, sort: 'newest' };
   if (debouncedSearch) productQueryParams.search = debouncedSearch;
   if (categoryFilter) productQueryParams.categoryId = categoryFilter;
   if (statusFilter !== 'all') productQueryParams.isActive = statusFilter === 'active' ? 'true' : 'false';
@@ -146,27 +161,20 @@ export default function AdminProductsPage(): React.JSX.Element {
   const addImageMutation = useAddProductImageMutation();
   const deleteImageMutation = useDeleteProductImageMutation();
 
-  // Flattened categories for select list
-  const getFlattenedCategories = (cats: Category[] | undefined): Array<Category & { level: number }> => {
-    if (!cats) return [];
-    const flattened: Array<Category & { level: number }> = [];
+  const flattenedCategories = useMemo<FlatCategory[]>(() => {
+    if (!categoriesData) return [];
+    const flattened: FlatCategory[] = [];
     const traverse = (list: Category[], level = 0) => {
       list.forEach((item) => {
         flattened.push({ ...item, level });
-        if (item.children && item.children.length > 0) {
-          traverse(item.children, level + 1);
-        }
+        if (item.children && item.children.length > 0) traverse(item.children, level + 1);
       });
     };
-    const roots = cats.filter((c) => c.parentId === null);
-    traverse(roots);
+    traverse(categoriesData.filter((c) => c.parentId === null || c.parentId === undefined));
     return flattened;
-  };
+  }, [categoriesData]);
 
-  const flattenedCategories = getFlattenedCategories(categoriesData);
-
-  // Reset form
-  const handleOpenCreateModal = () => {
+  const handleOpenCreateModal = useCallback(() => {
     setEditingProduct(null);
     setFormName('');
     setFormSlug('');
@@ -193,9 +201,9 @@ export default function AdminProductsPage(): React.JSX.Element {
     setIsUploadingImages(false);
     setActiveTab('basic');
     setIsFormModalOpen(true);
-  };
+  }, []);
 
-  const handleOpenEditModal = (product: Product) => {
+  const handleOpenEditModal = useCallback((product: Product) => {
     setEditingProduct(product);
     setFormName(product.name);
     setFormSlug(product.slug);
@@ -205,19 +213,15 @@ export default function AdminProductsPage(): React.JSX.Element {
     setFormBrand(product.brand || '');
     setFormSku(product.sku);
     setFormBarcode(product.barcode || '');
-    setFormWeight(product.weight !== null && product.weight !== undefined ? product.weight : '');
+    setFormWeight(product.weight ?? '');
     setFormPrice(product.price);
-    setFormComparePrice(product.comparePrice !== null && product.comparePrice !== undefined ? product.comparePrice : '');
-    setFormCostPrice(product.costPrice !== null && product.costPrice !== undefined ? product.costPrice : '');
+    setFormComparePrice(product.comparePrice ?? '');
+    setFormCostPrice(product.costPrice ?? '');
     setFormStock(product.stock);
     setFormLowStockAlert(product.lowStockAlert || 5);
     setFormIsActive(product.isActive);
     setFormIsFeatured(product.isFeatured);
-    
-    // Map attributes
-    const attrs = product.attributes?.map(a => ({ name: a.name, value: a.value })) || [];
-    setFormAttributes(attrs);
-    
+    setFormAttributes(product.attributes?.map((a) => ({ name: a.name, value: a.value })) || []);
     setFormTags(product.tags || []);
     setTagInput('');
     setFormMetaTitle(product.metaTitle || '');
@@ -226,40 +230,20 @@ export default function AdminProductsPage(): React.JSX.Element {
     setIsUploadingImages(false);
     setActiveTab('basic');
     setIsFormModalOpen(true);
-  };
+  }, []);
 
-  const handleOpenDeleteConfirm = (id: string) => {
-    setDeletingId(id);
-    setIsConfirmOpen(true);
-  };
-
-  // Slugify from name
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setFormName(val);
-    if (!editingProduct) {
-      setFormSlug(slugify(val));
-    }
+    if (!editingProduct) setFormSlug(slugify(val));
   };
 
-  // Attribute Handlers
-  const handleAddAttribute = () => {
-    setFormAttributes([...formAttributes, { name: '', value: '' }]);
-  };
+  const handleAddAttribute = () => setFormAttributes((prev) => [...prev, { name: '', value: '' }]);
+  const handleRemoveAttribute = (index: number) =>
+    setFormAttributes((prev) => prev.filter((_, i) => i !== index));
+  const handleAttributeChange = (index: number, key: 'name' | 'value', value: string) =>
+    setFormAttributes((prev) => prev.map((a, i) => (i === index ? { ...a, [key]: value } : a)));
 
-  const handleRemoveAttribute = (index: number) => {
-    const updated = [...formAttributes];
-    updated.splice(index, 1);
-    setFormAttributes(updated);
-  };
-
-  const handleAttributeChange = (index: number, key: 'name' | 'value', value: string) => {
-    const updated = [...formAttributes];
-    updated[index][key] = value;
-    setFormAttributes(updated);
-  };
-
-  // Tags Handlers
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -270,31 +254,22 @@ export default function AdminProductsPage(): React.JSX.Element {
       }
     }
   };
+  const handleRemoveTag = (tag: string) => setFormTags(formTags.filter((tg) => tg !== tag));
 
-  const handleRemoveTag = (tag: string) => {
-    setFormTags(formTags.filter(t => t !== tag));
-  };
-
-  // Image upload selector
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    const array = Array.from(files);
-    setImagesQueue([...imagesQueue, ...array]);
+    setImagesQueue((prev) => [...prev, ...Array.from(files)]);
   };
+  const handleRemoveFromQueue = (index: number) =>
+    setImagesQueue((prev) => prev.filter((_, i) => i !== index));
 
-  const handleRemoveFromQueue = (index: number) => {
-    setImagesQueue(imagesQueue.filter((_, i) => i !== index));
-  };
-
-  // Submit form handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim() || !formSku.trim() || !formCategoryId || formPrice === '' || formStock === '') {
       setActiveTab('basic');
       return;
     }
-
     const payload: Partial<Product> = {
       name: formName,
       slug: formSlug.trim() || slugify(formName),
@@ -313,7 +288,7 @@ export default function AdminProductsPage(): React.JSX.Element {
       isActive: formIsActive,
       isFeatured: formIsFeatured,
       tags: formTags,
-      attributes: formAttributes.filter(a => a.name.trim() && a.value.trim()) as ProductAttribute[],
+      attributes: formAttributes.filter((a) => a.name.trim() && a.value.trim()) as ProductAttribute[],
       metaTitle: formMetaTitle.trim() || null,
       metaDesc: formMetaDesc.trim() || null,
     };
@@ -321,81 +296,264 @@ export default function AdminProductsPage(): React.JSX.Element {
     try {
       let savedProduct: Product;
       if (editingProduct) {
-        savedProduct = await updateMutation.mutateAsync({
-          id: editingProduct.id,
-          payload,
-        });
+        savedProduct = await updateMutation.mutateAsync({ id: editingProduct.id, payload });
       } else {
         savedProduct = await createMutation.mutateAsync(payload);
       }
-
-      // Handle queued images uploads sequentially
       if (imagesQueue.length > 0) {
         setIsUploadingImages(true);
         for (const file of imagesQueue) {
-          await addImageMutation.mutateAsync({
-            productId: savedProduct.id,
-            file,
-          });
+          await addImageMutation.mutateAsync({ productId: savedProduct.id, file });
         }
       }
-
+      toast.success(t('save_success'));
       setIsFormModalOpen(false);
       refetch();
     } catch (err) {
-      console.error('Save product failed:', err);
+      toast.error(parseApiError(err));
     } finally {
       setIsUploadingImages(false);
     }
   };
 
-  // Delete product handler
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     if (!deletingId) return;
     try {
       await deleteMutation.mutateAsync(deletingId);
-      setIsConfirmOpen(false);
+      toast.success(t('delete_success'));
       setDeletingId(null);
       refetch();
     } catch (err) {
-      console.error('Delete product failed:', err);
+      toast.error(parseApiError(err));
     }
-  };
+  }, [deletingId, deleteMutation, refetch, t]);
 
-  // Delete Image on edit mode
   const handleDeleteProductImage = async (imageId: string) => {
     if (!editingProduct) return;
     try {
-      await deleteImageMutation.mutateAsync({
-        productId: editingProduct.id,
-        imageId,
-      });
-      // Update local state for editingProduct images
+      await deleteImageMutation.mutateAsync({ productId: editingProduct.id, imageId });
       setEditingProduct({
         ...editingProduct,
-        images: editingProduct.images.filter(img => img.id !== imageId),
+        images: editingProduct.images.filter((img) => img.id !== imageId),
       });
     } catch (err) {
-      console.error('Delete image failed:', err);
+      toast.error(parseApiError(err));
     }
   };
+
+  const columns = useMemo<ColumnDef<Product>[]>(
+    () => [
+      {
+        id: 'image',
+        enableSorting: false,
+        enableHiding: false,
+        meta: { title: t('image') },
+        header: () => (
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t('image')}
+          </span>
+        ),
+        cell: ({ row }) => {
+          const p = row.original;
+          const mainImage = p.images?.find((img) => img.isMain) || p.images?.[0];
+          return mainImage ? (
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border">
+              <Image
+                src={mainImage.url}
+                alt={mainImage.alt || p.name}
+                fill
+                sizes="48px"
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
+              <ImageIcon className="h-6 w-6" />
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'name',
+        meta: { title: t('product_name') },
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('product_name')} />,
+        cell: ({ row }) => (
+          <div className="flex flex-col">
+            <span className="line-clamp-1 text-sm font-semibold text-foreground">{row.original.name}</span>
+            {row.original.brand && (
+              <span className="text-xs text-muted-foreground">{row.original.brand}</span>
+            )}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'sku',
+        meta: { title: t('sku') },
+        header: () => (
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t('sku')}
+          </span>
+        ),
+        cell: ({ row }) => (
+          <span className="font-mono text-sm text-muted-foreground">{row.original.sku}</span>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'price',
+        meta: { title: t('price') },
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('price')} />,
+        cell: ({ row }) => (
+          <span className="text-sm font-bold text-foreground">₼{row.original.price}</span>
+        ),
+      },
+      {
+        accessorKey: 'stock',
+        meta: { title: t('stock') },
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('stock')} />,
+        cell: ({ row }) => {
+          const p = row.original;
+          const isLow = p.stock <= (p.lowStockAlert || 5);
+          return (
+            <div className="flex items-center gap-1.5">
+              <span className={`text-sm font-bold ${isLow ? 'text-amber-500' : 'text-foreground'}`}>
+                {p.stock}
+              </span>
+              {p.stock === 0 ? (
+                <Badge variant="destructive" className="px-1.5 py-0 text-[10px]">
+                  {t('inactive')}
+                </Badge>
+              ) : isLow ? (
+                <Badge variant="warning" className="px-1.5 py-0 text-[10px]">
+                  {t('low_stock')}
+                </Badge>
+              ) : null}
+            </div>
+          );
+        },
+      },
+      {
+        id: 'category',
+        accessorFn: (row) => row.category?.name ?? '',
+        meta: { title: t('category') },
+        header: () => (
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t('category')}
+          </span>
+        ),
+        cell: ({ row }) => (
+          <span className="text-sm text-muted-foreground">{row.original.category?.name || '-'}</span>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'isActive',
+        meta: { title: t('status'), className: 'text-center', headerClassName: 'text-center' },
+        header: () => (
+          <span className="block text-center text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t('status')}
+          </span>
+        ),
+        cell: ({ row }) => {
+          const p = row.original;
+          return (
+            <div className="flex flex-col items-center gap-1">
+              {p.isActive ? (
+                <Badge variant="success" className="inline-flex items-center gap-0.5">
+                  <CheckCircle className="h-3 w-3" />
+                  {t('active')}
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="inline-flex items-center gap-0.5">
+                  <XCircle className="h-3 w-3" />
+                  {t('inactive')}
+                </Badge>
+              )}
+              {p.isFeatured && (
+                <Badge variant="warning" className="inline-flex items-center gap-0.5 py-0 text-[9px]">
+                  <Star className="h-2.5 w-2.5 fill-current" />
+                  {t('featured')}
+                </Badge>
+              )}
+            </div>
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        id: 'actions',
+        enableSorting: false,
+        enableHiding: false,
+        meta: { headerClassName: 'text-right', className: 'text-right' },
+        header: () => (
+          <span className="block text-right text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t('actions')}
+          </span>
+        ),
+        cell: ({ row }) => {
+          const p = row.original;
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={t('actions')}
+                    className="ml-auto"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => handleOpenEditModal(p)}>
+                  <Edit2 className="h-4 w-4" />
+                  {tCommon('edit')}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" onClick={() => setDeletingId(p.id)}>
+                  <Trash2 className="h-4 w-4" />
+                  {tCommon('delete')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      },
+    ],
+    [t, tCommon, handleOpenEditModal],
+  );
 
   const products = productsData?.data?.products || [];
   const pagination = productsData?.pagination;
 
+  const categoryOptions = useMemo(
+    () => [
+      { value: 'all', label: `${tCommon('categories')}: ${t('filter_all')}` },
+      ...flattenedCategories.map((cat) => ({
+        value: cat.id,
+        label: `${cat.level > 0 ? '└─ ' : ''}${cat.name}`,
+      })),
+    ],
+    [flattenedCategories, t, tCommon],
+  );
+
+  const isFormPending =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    addImageMutation.isPending ||
+    isUploadingImages;
+
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
       <div>
-        <Breadcrumb items={[{ label: 'Admin', href: '/admin' }, { label: 'Məhsullar' }]} />
+        <Breadcrumb items={[{ label: 'Admin', href: '/admin' }, { label: t('title') }]} />
         <PageHeader
           title={t('title')}
           description={t('subtitle')}
           actions={
-            <Button
-              onClick={handleOpenCreateModal}
-              className="bg-indigo-650 hover:bg-indigo-750 text-white rounded-xl shadow-lg shadow-indigo-500/10 transition-all duration-200"
-            >
+            <Button onClick={handleOpenCreateModal} className="rounded-xl">
               <Plus className="mr-2 h-4 w-4" />
               {t('add_product')}
             </Button>
@@ -403,513 +561,231 @@ export default function AdminProductsPage(): React.JSX.Element {
         />
       </div>
 
-      {/* Filters bar */}
-      <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4 bg-card dark:bg-card p-4 rounded-2xl border border-border dark:border-border shadow-sm">
-        <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
-          <Input
-            placeholder={tCommon('search_placeholder')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-muted/50 focus:bg-card dark:bg-background/50 dark:focus:bg-background rounded-xl"
-          />
-        </div>
-
-        {/* Category filter */}
-        <div>
-          <select
-            value={categoryFilter}
-            onChange={(e) => {
-              setCategoryFilter(e.target.value);
-              setPage(1);
-            }}
-            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
-          >
-            <option value="">{tCommon('categories')}: Hamısı</option>
-            {flattenedCategories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {'  '.repeat(cat.level) + (cat.level > 0 ? '└─ ' : '') + cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Status Filter */}
-        <div>
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value as 'all' | 'active' | 'inactive');
-              setPage(1);
-            }}
-            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
-          >
-            <option value="all">{t('status')}: Hamısı</option>
-            <option value="active">{t('active')}</option>
-            <option value="inactive">{t('inactive')}</option>
-          </select>
-        </div>
-
-        {/* Stock Filter */}
-        <div>
-          <select
-            value={stockFilter}
-            onChange={(e) => {
-              setStockFilter(e.target.value as 'all' | 'instock' | 'outofstock');
-              setPage(1);
-            }}
-            className="w-full rounded-xl border border-border bg-muted/50 px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background/50 dark:text-foreground"
-          >
-            <option value="all">{t('stock')}: Hamısı</option>
-            <option value="instock">{tCommon('free_shipping_congrats') ? 'Stokda var' : 'In stock'}</option>
-            <option value="outofstock">{tCommon('free_shipping_congrats') ? 'Stokda yoxdur' : 'Out of stock'}</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Products Table */}
-      <div className="bg-card dark:bg-card border border-border dark:border-border/80 rounded-2xl shadow-sm overflow-hidden">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-16 space-y-4">
-            <Spinner className="h-8 w-8 text-indigo-650" />
-            <p className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground">{tCommon('loading')}</p>
-          </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-red-500 dark:text-red-400">
-              <AlertCircle className="h-8 w-8" />
-            </div>
-            <h4 className="font-extrabold text-foreground dark:text-foreground">{tCommon('error_occurred')}</h4>
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-sm">{parseApiError(error)}</p>
-          </div>
-        ) : products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-16 space-y-4 text-center">
-            <div className="p-3 bg-muted dark:bg-background rounded-2xl text-muted-foreground">
-              <FolderOpen className="h-8 w-8" />
-            </div>
-            <h4 className="font-extrabold text-foreground dark:text-foreground">{tCommon('no_data')}</h4>
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground max-w-xs">
-              Platformada heç bir məhsul tapılmadı.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-border dark:border-border/60 bg-muted/50 dark:bg-background/20 text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider select-none">
-                  <th className="px-6 py-4">Şəkil</th>
-                  <th className="px-6 py-4">{t('product_name')}</th>
-                  <th className="px-6 py-4">{t('sku')}</th>
-                  <th className="px-6 py-4">{t('price')}</th>
-                  <th className="px-6 py-4">{t('stock')}</th>
-                  <th className="px-6 py-4">{t('category')}</th>
-                  <th className="px-6 py-4 text-center">{t('status')}</th>
-                  <th className="px-6 py-4 text-right">Əməliyyatlar</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border dark:divide-border/40">
-                {products.map((p) => {
-                  const mainImage = p.images?.find(img => img.isMain) || p.images?.[0];
-                  return (
-                    <tr key={p.id} className="group hover:bg-muted/30 dark:hover:bg-background/5 transition-colors">
-                      {/* Image */}
-                      <td className="px-6 py-4">
-                        {mainImage ? (
-                          <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-border dark:border-border">
-                            <Image
-                              src={mainImage.url}
-                              alt={mainImage.alt || p.name}
-                              fill
-                              sizes="48px"
-                              className="object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-12 w-12 rounded-xl bg-muted dark:bg-background flex items-center justify-center text-muted-foreground dark:text-muted-foreground border border-border dark:border-border">
-                            <ImageIcon className="h-6 w-6" />
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Name & Featured Badge */}
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-foreground dark:text-foreground line-clamp-1">{p.name}</span>
-                          {p.brand && <span className="text-xs text-muted-foreground">{p.brand}</span>}
-                        </div>
-                      </td>
-
-                      {/* SKU */}
-                      <td className="px-6 py-4 text-sm font-mono text-muted-foreground dark:text-muted-foreground">
-                        {p.sku}
-                      </td>
-
-                      {/* Price */}
-                      <td className="px-6 py-4 text-sm font-bold text-foreground dark:text-foreground">
-                        ₼{p.price}
-                      </td>
-
-                      {/* Stock */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-sm font-bold ${p.stock <= (p.lowStockAlert || 5) ? 'text-amber-500' : 'text-foreground dark:text-muted-foreground'}`}>
-                            {p.stock}
-                          </span>
-                          {p.stock === 0 ? (
-                            <Badge variant="destructive" className="text-[10px] py-0 px-1.5">{t('inactive')}</Badge>
-                          ) : p.stock <= (p.lowStockAlert || 5) ? (
-                            <Badge variant="warning" className="text-[10px] py-0 px-1.5">Az qalıb</Badge>
-                          ) : null}
-                        </div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="px-6 py-4 text-sm text-muted-foreground dark:text-muted-foreground">
-                        {p.category?.name || '-'}
-                      </td>
-
-                      {/* Statuses */}
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex flex-col items-center gap-1">
-                          {p.isActive ? (
-                            <Badge variant="success" className="inline-flex items-center gap-0.5">
-                              <CheckCircle className="h-3 w-3" />
-                              {t('active')}
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary" className="inline-flex items-center gap-0.5">
-                              <XCircle className="h-3 w-3" />
-                              {t('inactive')}
-                            </Badge>
-                          )}
-                          {p.isFeatured && (
-                            <Badge variant="warning" className="inline-flex items-center gap-0.5 text-[9px] py-0">
-                              <Star className="h-2.5 w-2.5 fill-current" />
-                              {t('featured')}
-                            </Badge>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Actions */}
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="secondary"
-                            onClick={() => handleOpenEditModal(p)}
-                            className="p-2 h-auto text-muted-foreground hover:text-indigo-650 dark:text-muted-foreground dark:hover:text-indigo-400 bg-muted hover:bg-indigo-50 dark:bg-background dark:hover:bg-indigo-950/20 rounded-lg transition-colors duration-200"
-                            title={tCommon('edit')}
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            onClick={() => handleOpenDeleteConfirm(p.id)}
-                            className="p-2 h-auto text-muted-foreground hover:text-red-650 dark:text-muted-foreground dark:hover:text-red-400 bg-muted hover:bg-red-50 dark:bg-background dark:hover:bg-red-950/20 rounded-lg transition-colors duration-200"
-                            title={tCommon('delete')}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {pagination && pagination.pages > 1 && (
-          <div className="p-4 border-t border-border dark:border-border">
-            <Pagination
-              currentPage={page}
-              totalPages={pagination.pages}
-              onPageChange={(p) => setPage(p)}
-              showInfo
-              totalEntries={pagination.total}
-              pageSize={limit}
+      <DataTable
+        columns={columns}
+        data={products}
+        isLoading={isLoading}
+        isError={!!error}
+        onRetry={() => refetch()}
+        errorTitle={tCommon('error_occurred')}
+        errorDescription={error ? parseApiError(error) : undefined}
+        emptyIcon={<FolderOpen className="h-7 w-7" />}
+        emptyTitle={t('no_products')}
+        emptyDescription={t('no_products_desc')}
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder={tCommon('search_placeholder')}
+        filters={
+          <>
+            <DataTableFilterSelect
+              value={categoryFilter || 'all'}
+              onValueChange={(v) => {
+                setCategoryFilter(v === 'all' ? '' : v);
+                setPage(1);
+              }}
+              ariaLabel={t('category')}
+              placeholder={tCommon('categories')}
+              className="min-w-[170px]"
+              options={categoryOptions}
             />
-          </div>
-        )}
-      </div>
+            <DataTableFilterSelect
+              value={statusFilter}
+              onValueChange={(v) => {
+                setStatusFilter(v as 'all' | 'active' | 'inactive');
+                setPage(1);
+              }}
+              ariaLabel={t('status')}
+              placeholder={t('status')}
+              options={[
+                { value: 'all', label: t('filter_all') },
+                { value: 'active', label: t('active') },
+                { value: 'inactive', label: t('inactive') },
+              ]}
+            />
+            <DataTableFilterSelect
+              value={stockFilter}
+              onValueChange={(v) => {
+                setStockFilter(v as 'all' | 'instock' | 'outofstock');
+                setPage(1);
+              }}
+              ariaLabel={t('stock')}
+              placeholder={t('stock')}
+              options={[
+                { value: 'all', label: t('filter_all') },
+                { value: 'instock', label: t('in_stock') },
+                { value: 'outofstock', label: t('out_of_stock') },
+              ]}
+            />
+          </>
+        }
+        showViewOptions
+        viewOptionsLabel={tCommon('columns')}
+        page={page}
+        pageCount={pagination?.pages ?? 1}
+        total={pagination?.total}
+        pageSize={limit}
+        onPageChange={setPage}
+      />
 
-      {/* CRUD Product Modal */}
-      <Modal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        title={editingProduct ? t('edit_product') : t('add_product')}
-        size="lg"
-      >
-        <div className="flex flex-col space-y-4 pt-2 max-h-[78vh] overflow-y-auto pr-1">
-          {/* Tabs bar */}
-          <div className="flex border-b border-border dark:border-border/80 shrink-0">
-            {([
-              { id: 'basic', label: t('tab_basic'), icon: Layers },
-              { id: 'pricing', label: t('tab_pricing'), icon: DollarSign },
-              { id: 'images', label: t('tab_images'), icon: ImageIcon },
-              { id: 'attributes', label: t('tab_attributes'), icon: Tag },
-              { id: 'seo', label: t('tab_seo'), icon: Globe }
-            ] as const).map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={[
-                  'flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-colors select-none',
-                  activeTab === tab.id
-                    ? 'border-indigo-650 text-indigo-650 dark:text-indigo-400 dark:border-indigo-400'
-                    : 'border-transparent text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-white'
-                ].join(' ')}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
+      {/* Product CRUD Dialog */}
+      <Dialog open={isFormModalOpen} onOpenChange={setIsFormModalOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editingProduct ? t('edit_product') : t('add_product')}</DialogTitle>
+          </DialogHeader>
 
-          {/* Form Content */}
-          <form onSubmit={handleSubmit} className="space-y-4 flex-1">
-            
-            {/* Tab 1: Basic Information */}
-            {activeTab === 'basic' && (
-              <div className="space-y-4 animate-in fade-in duration-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            <Tabs
+              value={activeTab}
+              onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+            >
+              <TabsList className="flex w-full flex-wrap">
+                <TabsTrigger value="basic">
+                  <Layers className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tab_basic')}</span>
+                </TabsTrigger>
+                <TabsTrigger value="pricing">
+                  <DollarSign className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tab_pricing')}</span>
+                </TabsTrigger>
+                <TabsTrigger value="images">
+                  <ImageIcon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tab_images')}</span>
+                </TabsTrigger>
+                <TabsTrigger value="attributes">
+                  <Tag className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tab_attributes')}</span>
+                </TabsTrigger>
+                <TabsTrigger value="seo">
+                  <Globe className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tab_seo')}</span>
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Tab: Basic */}
+              <TabsContent value="basic" className="space-y-4 pt-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodName">Məhsul adı *</Label>
-                    <Input
-                      id="prodName"
-                      value={formName}
-                      onChange={handleNameChange}
-                      placeholder="Məs. iPhone 15 Pro 256GB"
-                      required
-                    />
+                    <Label htmlFor="prodName">{t('product_name')} *</Label>
+                    <Input id="prodName" value={formName} onChange={handleNameChange} placeholder="Məs. iPhone 15 Pro 256GB" required />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodSlug">Slug (URL Yolu)</Label>
-                    <Input
-                      id="prodSlug"
-                      value={formSlug}
-                      onChange={(e) => setFormSlug(e.target.value)}
-                      placeholder="iphone-15-pro-256gb"
-                      className="font-mono text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="prodSku">SKU (Stok Kodu) *</Label>
-                    <Input
-                      id="prodSku"
-                      value={formSku}
-                      onChange={(e) => setFormSku(e.target.value)}
-                      placeholder="Məs. IPH15PRO-256"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="prodBarcode">Barkod</Label>
-                    <Input
-                      id="prodBarcode"
-                      value={formBarcode}
-                      onChange={(e) => setFormBarcode(e.target.value)}
-                      placeholder="Məs. 190199000000"
-                    />
+                    <Label htmlFor="prodSlug">Slug</Label>
+                    <Input id="prodSlug" value={formSlug} onChange={(e) => setFormSlug(e.target.value)} placeholder="iphone-15-pro-256gb" className="font-mono text-xs" />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodCategory">Kateqoriya *</Label>
-                    <select
-                      id="prodCategory"
+                    <Label htmlFor="prodSku">{t('sku')} *</Label>
+                    <Input id="prodSku" value={formSku} onChange={(e) => setFormSku(e.target.value)} placeholder="Məs. IPH15PRO-256" required />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="prodBarcode">{t('barcode')}</Label>
+                    <Input id="prodBarcode" value={formBarcode} onChange={(e) => setFormBarcode(e.target.value)} placeholder="Məs. 190199000000" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="prodCategory">{t('category')} *</Label>
+                    <Select
                       value={formCategoryId}
-                      onChange={(e) => setFormCategoryId(e.target.value)}
-                      required
-                      className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
+                      onValueChange={(v) => setFormCategoryId((v as string) ?? '')}
+                      items={Object.fromEntries(flattenedCategories.map((c) => [c.id, c.name]))}
                     >
-                      <option value="">-- Kateqoriya Seçin --</option>
-                      {flattenedCategories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {'  '.repeat(cat.level) + (cat.level > 0 ? '└─ ' : '') + cat.name}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger id="prodCategory" className="w-full rounded-xl">
+                        <SelectValue placeholder={t('select_category')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {flattenedCategories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.level > 0 ? `${'  '.repeat(cat.level)}└─ ` : ''}
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodBrand">Brend</Label>
-                    <Input
-                      id="prodBrand"
-                      value={formBrand}
-                      onChange={(e) => setFormBrand(e.target.value)}
-                      placeholder="Məs. Apple"
-                    />
+                    <Label htmlFor="prodBrand">{t('brand')}</Label>
+                    <Input id="prodBrand" value={formBrand} onChange={(e) => setFormBrand(e.target.value)} placeholder="Məs. Apple" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodWeight">Çəki (kq)</Label>
-                    <Input
-                      id="prodWeight"
-                      type="number"
-                      step="0.01"
-                      value={formWeight}
-                      onChange={(e) => setFormWeight(e.target.value !== '' ? Number(e.target.value) : '')}
-                      placeholder="Məs. 0.18"
-                    />
+                    <Label htmlFor="prodWeight">{t('weight')}</Label>
+                    <Input id="prodWeight" type="number" step="0.01" value={formWeight} onChange={(e) => setFormWeight(e.target.value !== '' ? Number(e.target.value) : '')} placeholder="Məs. 0.18" />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="prodShortDesc">Qısa Təsvir (Siyahı üçün)</Label>
-                  <textarea
-                    id="prodShortDesc"
-                    value={formShortDesc}
-                    onChange={(e) => setFormShortDesc(e.target.value)}
-                    placeholder="Məhsul haqqında qısa məlumat..."
-                    rows={2}
-                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground resize-none"
-                  />
+                  <Label htmlFor="prodShortDesc">Qısa Təsvir</Label>
+                  <Textarea id="prodShortDesc" value={formShortDesc} onChange={(e) => setFormShortDesc(e.target.value)} placeholder="Məhsul haqqında qısa məlumat..." rows={2} className="resize-none" />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="prodDesc">Ətraflı Təsvir *</Label>
-                  <textarea
-                    id="prodDesc"
-                    value={formDescription}
-                    onChange={(e) => setFormDescription(e.target.value)}
-                    placeholder="Məhsul haqqında ətraflı məlumat..."
-                    rows={5}
-                    required
-                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
-                  />
+                  <Textarea id="prodDesc" value={formDescription} onChange={(e) => setFormDescription(e.target.value)} placeholder="Məhsul haqqında ətraflı məlumat..." rows={5} required />
                 </div>
 
-                <div className="flex items-center gap-6 pt-2">
+                <div className="flex flex-wrap items-center gap-6 pt-2">
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="prodIsActive"
-                      checked={formIsActive}
-                      onChange={(e) => setFormIsActive(e.target.checked)}
-                      className="h-4.5 w-4.5 rounded border-border text-indigo-650 focus:ring-indigo-500 dark:border-border dark:bg-background"
-                    />
-                    <Label htmlFor="prodIsActive" className="cursor-pointer select-none">Aktiv (Müştəriyə göstərilsin)</Label>
+                    <Switch id="prodIsActive" checked={formIsActive} onCheckedChange={setFormIsActive} />
+                    <Label htmlFor="prodIsActive" className="cursor-pointer select-none">{t('active')}</Label>
                   </div>
-                  
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="prodIsFeatured"
-                      checked={formIsFeatured}
-                      onChange={(e) => setFormIsFeatured(e.target.checked)}
-                      className="h-4.5 w-4.5 rounded border-border text-indigo-650 focus:ring-indigo-500 dark:border-border dark:bg-background"
-                    />
-                    <Label htmlFor="prodIsFeatured" className="cursor-pointer select-none">Seçilmiş məhsul (Önə çıxan)</Label>
+                    <Switch id="prodIsFeatured" checked={formIsFeatured} onCheckedChange={setFormIsFeatured} />
+                    <Label htmlFor="prodIsFeatured" className="cursor-pointer select-none">{t('featured')}</Label>
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Tab 2: Pricing and Stock */}
-            {activeTab === 'pricing' && (
-              <div className="space-y-4 animate-in fade-in duration-200">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Tab: Pricing */}
+              <TabsContent value="pricing" className="space-y-4 pt-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodPrice">Qiymət (AZN) *</Label>
-                    <Input
-                      id="prodPrice"
-                      type="number"
-                      step="0.01"
-                      value={formPrice}
-                      onChange={(e) => setFormPrice(e.target.value !== '' ? Number(e.target.value) : '')}
-                      placeholder="0.00"
-                      required
-                    />
+                    <Label htmlFor="prodPrice">{t('price')} *</Label>
+                    <Input id="prodPrice" type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value !== '' ? Number(e.target.value) : '')} placeholder="0.00" required />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodComparePrice">Köhnə qiymət (AZN)</Label>
-                    <Input
-                      id="prodComparePrice"
-                      type="number"
-                      step="0.01"
-                      value={formComparePrice}
-                      onChange={(e) => setFormComparePrice(e.target.value !== '' ? Number(e.target.value) : '')}
-                      placeholder="0.00"
-                    />
+                    <Label htmlFor="prodComparePrice">{t('compare_price')}</Label>
+                    <Input id="prodComparePrice" type="number" step="0.01" value={formComparePrice} onChange={(e) => setFormComparePrice(e.target.value !== '' ? Number(e.target.value) : '')} placeholder="0.00" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodCostPrice">Maya Dəyəri (AZN)</Label>
-                    <Input
-                      id="prodCostPrice"
-                      type="number"
-                      step="0.01"
-                      value={formCostPrice}
-                      onChange={(e) => setFormCostPrice(e.target.value !== '' ? Number(e.target.value) : '')}
-                      placeholder="0.00"
-                    />
+                    <Label htmlFor="prodCostPrice">{t('cost_price')}</Label>
+                    <Input id="prodCostPrice" type="number" step="0.01" value={formCostPrice} onChange={(e) => setFormCostPrice(e.target.value !== '' ? Number(e.target.value) : '')} placeholder="0.00" />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodStock">Stok Miqdarı *</Label>
-                    <Input
-                      id="prodStock"
-                      type="number"
-                      value={formStock}
-                      onChange={(e) => setFormStock(e.target.value !== '' ? Number(e.target.value) : '')}
-                      placeholder="0"
-                      required
-                    />
+                    <Label htmlFor="prodStock">{t('stock')} *</Label>
+                    <Input id="prodStock" type="number" value={formStock} onChange={(e) => setFormStock(e.target.value !== '' ? Number(e.target.value) : '')} placeholder="0" required />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="prodLowStock">Kritik Stok Həddi</Label>
-                    <Input
-                      id="prodLowStock"
-                      type="number"
-                      value={formLowStockAlert}
-                      onChange={(e) => setFormLowStockAlert(Number(e.target.value))}
-                      placeholder="5"
-                    />
+                    <Label htmlFor="prodLowStock">{t('low_stock_alert')}</Label>
+                    <Input id="prodLowStock" type="number" value={formLowStockAlert} onChange={(e) => setFormLowStockAlert(Number(e.target.value))} placeholder="5" />
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Tab 3: Images */}
-            {activeTab === 'images' && (
-              <div className="space-y-4 animate-in fade-in duration-200">
-                
-                {/* Upload Zone */}
-                <div>
-                  <label className="relative flex flex-col items-center justify-center border-2 border-border border-dashed rounded-2xl bg-muted/50 hover:bg-muted hover:border-indigo-400 dark:border-border dark:bg-background/50 dark:hover:bg-background dark:hover:border-indigo-900 cursor-pointer p-6 transition-all duration-200">
-                    <Upload className="h-8 w-8 text-muted-foreground dark:text-muted-foreground mb-2 animate-bounce" />
-                    <p className="text-sm font-bold text-foreground dark:text-muted-foreground">Resim Yükle</p>
-                    <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">JPEG, PNG veya WEBP. Max. 5MB</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
+              {/* Tab: Images */}
+              <TabsContent value="images" className="space-y-4 pt-4">
+                <label className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted/50 p-6 transition-all duration-200 hover:border-indigo-400 hover:bg-muted">
+                  <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
+                  <p className="text-sm font-bold text-foreground">{t('upload_image')}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{t('upload_image_hint')}</p>
+                  <input type="file" accept="image/*" multiple onChange={handleImageFileChange} className="hidden" />
+                </label>
 
-                {/* Upload queue list */}
                 {imagesQueue.length > 0 && (
                   <div className="space-y-2">
-                    <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Yüklənəcək Şəkillər ({imagesQueue.length})</h5>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <h5 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      {t('queued_images')} ({imagesQueue.length})
+                    </h5>
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
                       {imagesQueue.map((file, i) => (
-                        <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border dark:border-border bg-muted dark:bg-background p-1 flex items-center justify-center">
-                          <span className="text-[10px] text-muted-foreground dark:text-muted-foreground max-w-[85px] truncate font-semibold">{file.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveFromQueue(i)}
-                            className="absolute top-1.5 right-1.5 p-1 bg-black/75 rounded-full text-white hover:bg-black/90 transition-colors shadow"
-                          >
+                        <div key={i} className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border bg-muted p-1">
+                          <span className="max-w-[85px] truncate text-[10px] font-semibold text-muted-foreground">{file.name}</span>
+                          <button type="button" onClick={() => handleRemoveFromQueue(i)} className="absolute right-1.5 top-1.5 rounded-full bg-black/75 p-1 text-white shadow transition-colors hover:bg-black/90">
                             <XCircle className="h-3.5 w-3.5" />
                           </button>
                         </div>
@@ -918,29 +794,21 @@ export default function AdminProductsPage(): React.JSX.Element {
                   </div>
                 )}
 
-                {/* Already uploaded images (Edit mode) */}
                 {editingProduct && editingProduct.images && editingProduct.images.length > 0 && (
-                  <div className="space-y-2 border-t border-border dark:border-border pt-4">
-                    <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Mövcud Şəkillər ({editingProduct.images.length})</h5>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="space-y-2 border-t border-border pt-4">
+                    <h5 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      {t('existing_images')} ({editingProduct.images.length})
+                    </h5>
+                    <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
                       {editingProduct.images.map((img) => (
-                        <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-border dark:border-border shadow-sm group">
-                          <Image
-                            src={img.url}
-                            alt={img.alt || ''}
-                            fill
-                            sizes="120px"
-                            className="object-cover"
-                          />
+                        <div key={img.id} className="group relative aspect-square overflow-hidden rounded-xl border border-border shadow-sm">
+                          <Image src={img.url} alt={img.alt || ''} fill sizes="120px" className="object-cover" />
                           {img.isMain && (
-                            <Badge variant="warning" className="absolute top-1.5 left-1.5 text-[8px] py-0 px-1 border-none font-bold uppercase">Əsas</Badge>
+                            <Badge variant="warning" className="absolute left-1.5 top-1.5 border-none px-1 py-0 text-[8px] font-bold uppercase">
+                              {t('main_image')}
+                            </Badge>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteProductImage(img.id)}
-                            className="absolute top-1.5 right-1.5 p-1 bg-red-650 rounded-full text-white hover:bg-red-700 transition-colors shadow"
-                            title="Şəkli sil"
-                          >
+                          <button type="button" onClick={() => handleDeleteProductImage(img.id)} className="absolute right-1.5 top-1.5 rounded-full bg-red-650 p-1 text-white shadow transition-colors hover:bg-red-700" title={tCommon('delete')}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
@@ -948,53 +816,29 @@ export default function AdminProductsPage(): React.JSX.Element {
                     </div>
                   </div>
                 )}
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Tab 4: Attributes and Tags */}
-            {activeTab === 'attributes' && (
-              <div className="space-y-5 animate-in fade-in duration-200">
-                {/* Attributes Section */}
+              {/* Tab: Attributes */}
+              <TabsContent value="attributes" className="space-y-5 pt-4">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between border-b border-border dark:border-border pb-2">
-                    <h5 className="text-sm font-bold text-foreground dark:text-muted-foreground">{t('attributes_title')}</h5>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={handleAddAttribute}
-                      className="px-2.5 py-1.5 h-auto text-xs font-bold bg-muted hover:bg-indigo-50 border border-border text-muted-foreground hover:text-indigo-650"
-                    >
+                  <div className="flex items-center justify-between border-b border-border pb-2">
+                    <h5 className="text-sm font-bold text-foreground">{t('attributes_title')}</h5>
+                    <Button type="button" variant="secondary" size="sm" onClick={handleAddAttribute} className="rounded-lg">
                       <Plus className="mr-1 h-3.5 w-3.5" />
                       {t('add_attribute')}
                     </Button>
                   </div>
-
                   {formAttributes.length === 0 ? (
-                    <p className="text-xs text-muted-foreground dark:text-muted-foreground italic">Heç bir xüsusiyyət əlavə edilməyib (məs. Rəng, Yaddaş, Ekran və s.).</p>
+                    <p className="text-xs italic text-muted-foreground">{t('no_attributes')}</p>
                   ) : (
                     <div className="space-y-3">
                       {formAttributes.map((attr, index) => (
-                        <div key={index} className="flex items-center gap-3 animate-in slide-in-from-top-1 duration-150">
-                          <div className="flex-1 grid grid-cols-2 gap-3">
-                            <Input
-                              placeholder={t('attribute_name_placeholder')}
-                              value={attr.name}
-                              onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                              className="rounded-xl py-2 px-3 text-xs"
-                            />
-                            <Input
-                              placeholder={t('attribute_value_placeholder')}
-                              value={attr.value}
-                              onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
-                              className="rounded-xl py-2 px-3 text-xs"
-                            />
+                        <div key={index} className="flex items-center gap-3">
+                          <div className="grid flex-1 grid-cols-2 gap-3">
+                            <Input placeholder={t('attribute_name_placeholder')} value={attr.name} onChange={(e) => handleAttributeChange(index, 'name', e.target.value)} className="text-xs" />
+                            <Input placeholder={t('attribute_value_placeholder')} value={attr.value} onChange={(e) => handleAttributeChange(index, 'value', e.target.value)} className="text-xs" />
                           </div>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => handleRemoveAttribute(index)}
-                            className="p-2 h-auto text-muted-foreground hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent rounded-lg shrink-0"
-                          >
+                          <Button type="button" variant="ghost" size="icon-sm" onClick={() => handleRemoveAttribute(index)} className="shrink-0 text-muted-foreground hover:text-destructive">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -1003,117 +847,74 @@ export default function AdminProductsPage(): React.JSX.Element {
                   )}
                 </div>
 
-                {/* Tags Section */}
-                <div className="space-y-2 border-t border-border dark:border-border pt-4">
+                <div className="space-y-2 border-t border-border pt-4">
                   <Label htmlFor="tagInput">{t('tags')}</Label>
-                  <div className="flex flex-wrap gap-2 mb-2 p-2 bg-muted/50 dark:bg-background/20 border border-border dark:border-border rounded-xl min-h-[46px]">
-                    {formTags.map(tag => (
-                      <span key={tag} className="inline-flex items-center gap-1 bg-muted hover:bg-muted text-foreground dark:bg-muted dark:text-muted-foreground rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm">
+                  <div className="mb-2 flex min-h-[46px] flex-wrap gap-2 rounded-xl border border-border bg-muted/50 p-2">
+                    {formTags.map((tag) => (
+                      <span key={tag} className="inline-flex items-center gap-1 rounded-lg bg-muted px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm">
                         <span>#{tag}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveTag(tag)}
-                          className="text-muted-foreground hover:text-muted-foreground focus:outline-none"
-                        >
+                        <button type="button" onClick={() => handleRemoveTag(tag)} className="text-muted-foreground hover:text-foreground focus:outline-none">
                           <XCircle className="h-3.5 w-3.5 fill-current" />
                         </button>
                       </span>
                     ))}
                     {formTags.length === 0 && (
-                      <span className="text-xs text-muted-foreground dark:text-muted-foreground italic p-1">Heç bir teq əlavə edilməyib.</span>
+                      <span className="p-1 text-xs italic text-muted-foreground">{t('no_tags')}</span>
                     )}
                   </div>
-                  <Input
-                    id="tagInput"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleAddTag}
-                    placeholder={t('tag_placeholder')}
-                  />
+                  <Input id="tagInput" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={handleAddTag} placeholder={t('tag_placeholder')} />
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Tab 5: SEO Meta Tags */}
-            {activeTab === 'seo' && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              {/* Tab: SEO */}
+              <TabsContent value="seo" className="space-y-4 pt-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="prodMetaTitle">Meta Başlıq (Meta Title)</Label>
-                  <Input
-                    id="prodMetaTitle"
-                    value={formMetaTitle}
-                    onChange={(e) => setFormMetaTitle(e.target.value)}
-                    placeholder="Məs. Apple iPhone 15 Pro ucuz qiymətə alın | ShopFlow"
-                    maxLength={160}
-                  />
-                  <p className="text-[10px] text-muted-foreground font-bold select-none">{formMetaTitle.length}/160</p>
+                  <Label htmlFor="prodMetaTitle">{t('meta_title')}</Label>
+                  <Input id="prodMetaTitle" value={formMetaTitle} onChange={(e) => setFormMetaTitle(e.target.value)} placeholder="Məs. Apple iPhone 15 Pro | ShopFlow" maxLength={160} />
+                  <p className="select-none text-[10px] font-bold text-muted-foreground">{formMetaTitle.length}/160</p>
                 </div>
-                
                 <div className="space-y-1.5">
-                  <Label htmlFor="prodMetaDesc">Meta Təsvir (Meta Description)</Label>
-                  <textarea
-                    id="prodMetaDesc"
-                    value={formMetaDesc}
-                    onChange={(e) => setFormMetaDesc(e.target.value)}
-                    placeholder="Axtarış motorlarında görünən qısa reklam mətni..."
-                    rows={3}
-                    maxLength={320}
-                    className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground focus:border-indigo-500 focus:outline-none dark:border-border dark:bg-background dark:text-foreground"
-                  />
-                  <p className="text-[10px] text-muted-foreground font-bold select-none">{formMetaDesc.length}/320</p>
+                  <Label htmlFor="prodMetaDesc">{t('meta_desc')}</Label>
+                  <Textarea id="prodMetaDesc" value={formMetaDesc} onChange={(e) => setFormMetaDesc(e.target.value)} placeholder="Axtarış motorlarında görünən qısa mətn..." rows={3} maxLength={320} />
+                  <p className="select-none text-[10px] font-bold text-muted-foreground">{formMetaDesc.length}/320</p>
                 </div>
-              </div>
-            )}
+              </TabsContent>
+            </Tabs>
 
-            {/* Form actions */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border dark:border-border/80 shrink-0">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setIsFormModalOpen(false)}
-                className="rounded-xl font-bold"
-              >
-                Ləğv Et
+            <div className="flex items-center justify-end gap-3 border-t border-border pt-4">
+              <Button type="button" variant="outline" onClick={() => setIsFormModalOpen(false)}>
+                {tCommon('cancel')}
               </Button>
               <Button
                 type="submit"
-                disabled={
-                  createMutation.isPending || 
-                  updateMutation.isPending || 
-                  addImageMutation.isPending ||
-                  isUploadingImages ||
-                  !formName.trim() ||
-                  !formSku.trim() ||
-                  formPrice === '' ||
-                  formStock === ''
-                }
-                className="bg-indigo-650 hover:bg-indigo-750 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/10 transition-all duration-200"
+                disabled={isFormPending || !formName.trim() || !formSku.trim() || formPrice === '' || formStock === ''}
               >
                 {(createMutation.isPending || updateMutation.isPending || isUploadingImages) && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {isUploadingImages 
-                  ? 'Şəkillər yüklənir...' 
-                  : editingProduct 
-                    ? 'Dəyişiklikləri Saxla' 
-                    : 'Məhsulu Yarat'
-                }
+                {isUploadingImages
+                  ? t('uploading_images')
+                  : editingProduct
+                    ? t('save_changes')
+                    : t('create_btn')}
               </Button>
             </div>
           </form>
-        </div>
-      </Modal>
+        </DialogContent>
+      </Dialog>
 
-      {/* Delete Confirmation */}
-      <ConfirmDialog
-        isOpen={isConfirmOpen}
-        onClose={() => setIsConfirmOpen(false)}
+      <AdminConfirmDialog
+        open={deletingId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeletingId(null);
+        }}
         onConfirm={handleDelete}
         title={t('delete_product')}
-        message={t('delete_confirm')}
-        confirmText="Bəli, Sil"
-        cancelText="Ləğv Et"
+        description={t('delete_confirm')}
+        confirmLabel={tCommon('delete')}
+        cancelLabel={tCommon('cancel')}
         variant="destructive"
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );
