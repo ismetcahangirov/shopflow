@@ -31,6 +31,7 @@ vi.mock('@/components/ui/dropdown-menu', async () => {
   return {
     DropdownMenu: Passthrough,
     DropdownMenuContent: Passthrough,
+    DropdownMenuGroup: Passthrough,
     DropdownMenuLabel: Passthrough,
     DropdownMenuSeparator: () => <hr />,
     DropdownMenuTrigger: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
