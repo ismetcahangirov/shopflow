@@ -104,8 +104,8 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: any) => <div>{children}</div>,
   DropdownMenuTrigger: ({ render }: any) => render ?? null,
   DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, variant, inset, ...props }: any) => (
-    <button type="button" {...props}>
+  DropdownMenuItem: ({ children, onClick, disabled, ...rest }: any) => (
+    <button type="button" onClick={onClick} disabled={disabled} data-testid={rest['data-testid']}>
       {children}
     </button>
   ),
