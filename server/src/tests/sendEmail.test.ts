@@ -3,6 +3,8 @@ import {
   buildResetPasswordHtml,
   buildVerifyEmailHtml,
   sendEmail,
+  extractSenderDomain,
+  isUnverifiableSenderDomain,
 } from '../utils/sendEmail';
 import { config } from '../config/env';
 
@@ -108,5 +110,30 @@ describe('email template builders', () => {
         html: '<p>Hello</p>',
       }),
     ).rejects.toThrow('API unavailable');
+  });
+});
+
+describe('sender domain detection (issue #89)', () => {
+  it('extracts the domain from a bare address', () => {
+    expect(extractSenderDomain('no-reply@shopflow.az')).toBe('shopflow.az');
+  });
+
+  it('extracts the domain from a "Name <addr>" form', () => {
+    expect(extractSenderDomain('ShopFlow <No-Reply@ShopFlow.AZ>')).toBe('shopflow.az');
+  });
+
+  it('returns null when there is no address', () => {
+    expect(extractSenderDomain('not-an-email')).toBeNull();
+  });
+
+  it('flags public mailbox domains Resend cannot verify', () => {
+    expect(isUnverifiableSenderDomain('ShopFlow <shopflow@gmail.com>')).toBe(true);
+    expect(isUnverifiableSenderDomain('someone@outlook.com')).toBe(true);
+    expect(isUnverifiableSenderDomain('someone@yahoo.com')).toBe(true);
+  });
+
+  it('accepts a custom/verifiable domain', () => {
+    expect(isUnverifiableSenderDomain('ShopFlow <no-reply@shopflow.az>')).toBe(false);
+    expect(isUnverifiableSenderDomain('onboarding@resend.dev')).toBe(false);
   });
 });
