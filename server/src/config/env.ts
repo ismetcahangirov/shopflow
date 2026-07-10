@@ -20,6 +20,12 @@ const envSchema = z.object({
   // Client
   CLIENT_URL: z.string().url('CLIENT_URL must be a valid URL'),
 
+  // Refresh-token cookie SameSite mode. Optional — when unset it defaults to
+  // 'none' in production (frontend + API are cross-site on *.vercel.app) and
+  // 'lax' otherwise. Set to 'lax'/'strict' when the API is same-site with the
+  // frontend (custom domain) to drop the third-party cookie. See utils/cookieOptions.
+  COOKIE_SAMESITE: z.enum(['strict', 'lax', 'none']).optional(),
+
   // CORS — extra allowed origins (comma-separated, e.g. production/custom domains)
   // so new frontend URLs can be whitelisted via env without a code change.
   CORS_EXTRA_ORIGINS: z.string().optional(),

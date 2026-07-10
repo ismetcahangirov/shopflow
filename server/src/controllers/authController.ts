@@ -18,17 +18,18 @@ import { sendEmail, buildVerifyEmailHtml, buildResetPasswordHtml } from '../util
 import { slugify } from '../utils/slugify';
 import { config } from '../config/env';
 import { logger } from '../config/logger';
+import {
+  resolveRefreshCookieOptions,
+  resolveClearRefreshCookieOptions,
+} from '../utils/cookieOptions';
 
 // ── Constants ────────────────────────────────────────────
 const SALT_ROUNDS = 12;
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: config.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  path: '/',
-};
+// Cross-site aware cookie attributes — see utils/cookieOptions (issue #90).
+const cookieEnv = { nodeEnv: config.NODE_ENV, sameSite: config.COOKIE_SAMESITE };
+const COOKIE_OPTIONS = resolveRefreshCookieOptions(cookieEnv);
+const CLEAR_COOKIE_OPTIONS = resolveClearRefreshCookieOptions(cookieEnv);
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
 
 const googleClient = new OAuth2Client(config.GOOGLE_CLIENT_ID);
@@ -40,7 +41,7 @@ function setRefreshTokenCookie(res: Response, token: string): void {
 
 // ── Helper: clear refresh token cookie ───────────────────
 function clearRefreshTokenCookie(res: Response): void {
-  res.clearCookie(REFRESH_TOKEN_COOKIE, { path: '/' });
+  res.clearCookie(REFRESH_TOKEN_COOKIE, CLEAR_COOKIE_OPTIONS);
 }
 
 // ── Helper: generate safe token hash ─────────────────────
@@ -380,10 +381,16 @@ export const forgotPassword = asyncHandler(async (req: Request, res: Response): 
   });
 
   const resetUrl = `${config.CLIENT_URL}/reset-password/${resetTokenRaw}`;
-  await sendEmail({
+  // Non-blocking send: a delivery failure (e.g. an unverified sender domain — #89)
+  // must not turn this into a 500, nor leak whether the email exists via a
+  // different status/timing. Log it and still return the generic 200 below.
+  sendEmail({
     to: user.email,
     subject: 'ShopFlow — Şifrəni Sıfırla',
     html: buildResetPasswordHtml(user.name, resetUrl),
+  }).catch((err: unknown) => {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    logger.warn('[sendEmail] reset password email failed', { message });
   });
 
   successResponse(res, {

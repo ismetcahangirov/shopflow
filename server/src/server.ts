@@ -14,6 +14,7 @@ import { corsOptions } from './config/corsOptions';
 import { logger } from './config/logger';
 import { apiLimiter } from './middleware/rateLimiter';
 import { errorMiddleware } from './middleware/errorMiddleware';
+import { warnIfSenderUnverifiable } from './utils/sendEmail';
 
 import healthRoutes from './routes/healthRoutes';
 import authRoutes from './routes/authRoutes';
@@ -34,6 +35,12 @@ import { stripeWebhook } from './controllers/paymentController';
 
 // ── App setup ────────────────────────────────────────────
 const app = express();
+
+// Surface an unverifiable EMAIL_FROM immediately on boot (Vercel cold start or
+// local) rather than only via silently-failed emails later (issue #89).
+if (config.NODE_ENV !== 'test') {
+  warnIfSenderUnverifiable();
+}
 
 // ── Trust proxy ──────────────────────────────────────────
 // On Vercel every request arrives through Vercel's proxy, so `X-Forwarded-For`

@@ -7,6 +7,61 @@ import { logger } from '../config/logger';
 
 const resend = new Resend(config.RESEND_API_KEY);
 
+// Public mailbox providers that Resend can never let you send *from* — you can't
+// domain-verify gmail.com et al. Sending from one yields a 403 "domain is not
+// verified" and every transactional email silently fails (issue #89).
+const UNVERIFIABLE_SENDER_DOMAINS = new Set([
+  'gmail.com',
+  'googlemail.com',
+  'outlook.com',
+  'hotmail.com',
+  'live.com',
+  'msn.com',
+  'yahoo.com',
+  'ymail.com',
+  'icloud.com',
+  'me.com',
+  'mac.com',
+  'aol.com',
+  'proton.me',
+  'protonmail.com',
+  'yandex.com',
+  'mail.com',
+]);
+
+/** Extract the lowercased domain from an EMAIL_FROM value, handling both
+ *  "Name <addr@domain>" and bare "addr@domain" forms. Returns null if none. */
+export function extractSenderDomain(from: string): string | null {
+  const angle = from.match(/<([^>]+)>/);
+  const address = (angle ? angle[1] : from).trim();
+  const at = address.lastIndexOf('@');
+  if (at === -1) {
+    return null;
+  }
+  const domain = address.slice(at + 1).trim().replace(/>$/, '').toLowerCase();
+  return domain || null;
+}
+
+/** True when EMAIL_FROM uses a public mailbox domain Resend cannot verify. */
+export function isUnverifiableSenderDomain(from: string): boolean {
+  const domain = extractSenderDomain(from);
+  return domain !== null && UNVERIFIABLE_SENDER_DOMAINS.has(domain);
+}
+
+/** Log a loud, actionable warning at startup if EMAIL_FROM will be rejected by
+ *  Resend, so the misconfiguration is visible immediately instead of surfacing
+ *  only as silently-undelivered verification/reset emails. */
+export function warnIfSenderUnverifiable(from: string = config.EMAIL_FROM): void {
+  if (isUnverifiableSenderDomain(from)) {
+    logger.warn(
+      `EMAIL_FROM "${from}" uses a public mailbox domain Resend cannot verify — ` +
+        'verification and password-reset emails will fail with a 403 "domain is not ' +
+        'verified". Set EMAIL_FROM to an address on a Resend-verified domain (e.g. ' +
+        '"ShopFlow <no-reply@shopflow.az>"), or "onboarding@resend.dev" for local testing.',
+    );
+  }
+}
+
 interface SendEmailOptions {
   to: string;
   subject: string;
