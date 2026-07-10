@@ -8,12 +8,17 @@
 import type { Express } from 'express';
 
 function loadApp(): Express {
-  let app: Express;
+  let app: Express | undefined;
   jest.isolateModules(() => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    app = require('../server').app as Express;
+    // Reload server.ts fresh so it re-reads process.env.VERCEL at import time.
+    // require (not import) is what jest.isolateModules can capture synchronously.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    app = (require('../server') as { app: Express }).app;
   });
-  return app!;
+  if (!app) {
+    throw new Error('Failed to load Express app from ../server');
+  }
+  return app;
 }
 
 describe('trust proxy configuration', () => {
