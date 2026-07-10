@@ -35,6 +35,18 @@ import { stripeWebhook } from './controllers/paymentController';
 // ── App setup ────────────────────────────────────────────
 const app = express();
 
+// ── Trust proxy ──────────────────────────────────────────
+// On Vercel every request arrives through Vercel's proxy, so `X-Forwarded-For`
+// is always present. Tell Express to trust exactly one proxy hop so
+// express-rate-limit (and req.ip) can resolve the real client IP instead of
+// throwing ERR_ERL_UNEXPECTED_X_FORWARDED_FOR. We intentionally do NOT use
+// `true`: trusting every proxy would let a client spoof `X-Forwarded-For` and
+// evade the rate limiter. Off Vercel (local dev/tests) there is no proxy, so the
+// setting stays at Express's safe default of `false`.
+if (process.env.VERCEL) {
+  app.set('trust proxy', 1);
+}
+
 // ── Security headers ─────────────────────────────────────
 app.use(
   helmet({
